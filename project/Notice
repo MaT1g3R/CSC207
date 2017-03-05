@@ -1,1 +1,3 @@
 To view and edit the UML diagram, open the UML.xml file in <https://www.draw.io/>, and save it back here.
+Some classes and methods stub has been created, but of course they are not final.
+When you commit to git, please only add the files that's needed for the project, i.e. don't add your IDE's preferences files to git.
