@@ -1,8 +1,12 @@
+package warehouse;
+
+import java.util.ArrayList;
+
 public class TruckLoader {
 
-  private Truck[] trucks;
+  private ArrayList<Truck> trucks;
 
-  public TruckLoader(Truck[] trucks) {
+  public TruckLoader(ArrayList<Truck> trucks) {
     this.trucks = trucks;
   }
 
@@ -17,7 +21,7 @@ public class TruckLoader {
 
   }
 
-  public void loadTruck(String[] pallets) {
+  public void loadTruck(ArrayList<String> pallets) {
 
   }
 

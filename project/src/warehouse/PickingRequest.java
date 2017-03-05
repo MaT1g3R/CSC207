@@ -1,12 +1,15 @@
+package warehouse;
+
 import java.awt.List;
+import java.util.ArrayList;
 
 public class PickingRequest {
 
-  private String[] fascias;
-  private String[] pallets;
+  private ArrayList<String> fascias;
+  private ArrayList<String> pallets;
   private List OptimizedList;
 
-  public PickingRequest(String[] orders) {
+  public PickingRequest(ArrayList<String> orders) {
   }
 
   public void pick() {
@@ -21,7 +24,7 @@ public class PickingRequest {
 
   }
 
-  public String[] getPallets() {
+  public ArrayList<String> getPallets() {
     return pallets;
   }
 

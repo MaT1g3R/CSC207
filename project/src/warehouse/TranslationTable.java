@@ -1,3 +1,5 @@
+package warehouse;
+
 public class TranslationTable {
 
   public TranslationTable(String path) {

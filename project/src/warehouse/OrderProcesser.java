@@ -1,6 +1,10 @@
+package warehouse;
+
+import java.util.ArrayList;
+
 public class OrderProcesser {
 
-  private String[] allOrders;
+  private ArrayList<String> allOrders;
 
   public void addOrder(String order) {
 

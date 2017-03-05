@@ -1,3 +1,5 @@
+package warehouse;
+
 import java.util.HashMap;
 
 public class WarehouseFloor {
