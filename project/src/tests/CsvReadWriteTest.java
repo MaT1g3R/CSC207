@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.Assert;
 import warehouse.CsvReadWrite;
 
 /**
  * The unit tests for the CsvReadWrite class.
  */
-class CsvReadWriteTest {
+public class CsvReadWriteTest {
 
   /**
    * The path of the test file.
@@ -34,8 +35,8 @@ class CsvReadWriteTest {
    *
    * @throws IOException File not found, probably
    */
-  @BeforeEach
-  void setUp() throws IOException {
+  @Before
+  public void setUp() throws IOException {
     FileWriter fw = new FileWriter(PATH);
     for (String data : defaultData) {
       fw.write(data + "\n");
@@ -46,8 +47,8 @@ class CsvReadWriteTest {
   /**
    * Delete the test file after each test.
    */
-  @AfterEach
-  void tearDown() {
+  @After
+  public void tearDown() {
     File f = new File(PATH);
     f.delete();
   }
@@ -58,9 +59,9 @@ class CsvReadWriteTest {
    * @throws IOException File not found, probably
    */
   @Test
-  void readCsv() throws IOException {
+  public void readCsv() throws IOException {
     ArrayList<String> result = CsvReadWrite.readCsv(PATH);
-    Assertions.assertEquals(defaultData, result);
+    Assert.assertEquals(defaultData, result);
   }
 
   /**
@@ -69,7 +70,7 @@ class CsvReadWriteTest {
    * @throws IOException File not found, probably
    */
   @Test
-  void addLine() throws IOException {
+  public void addLine() throws IOException {
     CsvReadWrite.addLine("New Line!", PATH);
     ArrayList<String> result = CsvReadWrite.readCsv(PATH);
     ArrayList<String> expected = new ArrayList<>();
@@ -77,7 +78,7 @@ class CsvReadWriteTest {
       expected.add(s);
     }
     expected.add("New Line!");
-    Assertions.assertEquals(expected, result);
+    Assert.assertEquals(expected, result);
   }
 
   /**
@@ -86,7 +87,7 @@ class CsvReadWriteTest {
    * @throws IOException ile not found, probably
    */
   @Test
-  void overWrite() throws IOException {
+  public void overWrite() throws IOException {
     CsvReadWrite.overWrite(new ArrayList<>(
         Collections.singletonList("Content")), PATH);
 
@@ -95,6 +96,6 @@ class CsvReadWriteTest {
     ArrayList<String> expected = new ArrayList<>(
         Collections.singletonList("Content"));
 
-    Assertions.assertEquals(expected, result);
+    Assert.assertEquals(expected, result);
   }
 }

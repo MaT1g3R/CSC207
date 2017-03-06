@@ -1,34 +1,34 @@
 package tests;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
-class TruckTest {
+public class TruckTest {
 
-  @BeforeEach
-  void setUp() {
-
-  }
-
-  @AfterEach
-  void tearDown() {
+  @Before
+  public void setUp() {
 
   }
 
-  @Test
-  void getCargo() {
+  @After
+  public void tearDown() {
 
   }
 
   @Test
-  void isFull() {
+  public void getCargo() {
 
   }
 
   @Test
-  void setCargo() {
+  public void isFull() {
+
+  }
+
+  @Test
+  public void setCargo() {
 
   }
 

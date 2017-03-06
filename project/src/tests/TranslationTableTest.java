@@ -1,24 +1,24 @@
 package tests;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
-class TranslationTableTest {
+public class TranslationTableTest {
 
-  @BeforeEach
-  void setUp() {
+  @Before
+  public void setUp() {
 
   }
 
-  @AfterEach
-  void tearDown() {
+  @After
+  public void tearDown() {
 
   }
 
   @Test
-  void translate() {
+  public void translate() {
 
   }
 

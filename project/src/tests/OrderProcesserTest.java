@@ -1,31 +1,31 @@
 package tests;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by umi on 05/03/17.
  */
-class OrderProcesserTest {
+public class OrderProcesserTest {
 
-  @BeforeEach
-  void setUp() {
-
-  }
-
-  @AfterEach
-  void tearDown() {
+  @Before
+  public void setUp() {
 
   }
 
-  @Test
-  void addOrder() {
+  @After
+  public void tearDown() {
 
   }
 
   @Test
-  void sendOrder() {
+  public void addOrder() {
+
+  }
+
+  @Test
+  public void sendOrder() {
 
   }
 

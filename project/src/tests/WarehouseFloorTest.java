@@ -1,23 +1,23 @@
 package tests;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-class WarehouseFloorTest {
+public class WarehouseFloorTest {
 
-  @BeforeEach
-  void setUp() {
+  @Before
+  public void setUp() {
 
   }
 
-  @AfterEach
-  void tearDown() {
+  @After
+  public void tearDown() {
 
   }
 
   @Test
-  void update() {
+  public void update() {
 
   }
 
