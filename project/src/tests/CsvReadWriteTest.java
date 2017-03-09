@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import warehouse.CsvReadWrite;
 
 /**
  * The unit tests for the CsvReadWrite class.
  */
 public class CsvReadWriteTest {
+
 
   /**
    * The path of the test file.
@@ -84,7 +84,7 @@ public class CsvReadWriteTest {
   /**
    * Test for the overWrite method.
    *
-   * @throws IOException ile not found, probably
+   * @throws IOException File not found, probably
    */
   @Test
   public void overWrite() throws IOException {
@@ -96,6 +96,36 @@ public class CsvReadWriteTest {
     ArrayList<String> expected = new ArrayList<>(
         Collections.singletonList("Content"));
 
+    Assert.assertEquals(expected, result);
+  }
+
+  /**
+   * Test for when the file doesn't exist
+   *
+   * @throws IOException I dunno
+   */
+  @Test
+  public void overWriteEmpty() throws IOException {
+    String newName = "Kappa.txt";
+    CsvReadWrite.overWrite(defaultData, newName);
+    ArrayList<String> result = CsvReadWrite.readCsv(newName);
+    Assert.assertEquals(defaultData, result);
+    File f = new File(newName);
+    f.delete();
+  }
+
+  /**
+   * Test for reading as arrays.
+   *
+   * @throws IOException File not found, probably
+   */
+  @Test
+  public void readAsArrays() throws IOException {
+    ArrayList<ArrayList<String>> expected = new ArrayList<>();
+    for (String s : defaultData) {
+      expected.add(new ArrayList<>(Arrays.asList(s.split(","))));
+    }
+    ArrayList<ArrayList<String>> result = CsvReadWrite.readAsArrays(PATH);
     Assert.assertEquals(expected, result);
   }
 }
