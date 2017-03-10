@@ -5,6 +5,4 @@
 
 \.project
 
-project/bin/tests/
-
-project/bin/warehouse/
+/project/bin/
