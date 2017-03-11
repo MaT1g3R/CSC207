@@ -1,34 +1,36 @@
 package warehouse;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+
 import java.awt.List;
 import java.util.ArrayList;
 
 public class PickingRequest {
 
-  private ArrayList<String> fascias;
-  private ArrayList<String> pallets;
-  private List OptimizedList;
-
-  public PickingRequest(ArrayList<String> orders) {
+  private ArrayList<Order> orders;
+  private  int id;
+  private  boolean loadReady;
+  public PickingRequest(ArrayList<Order> orders, int id) {
+  }
+  public int getId() {
+    return id;
   }
 
-  public void pick() {
-
+  public ArrayList<Order> getOrders() {
+    return orders;
   }
 
-  private void updateWarehouse(WarehouseFloor warehouseFloor) {
-
+  public boolean isLoadReady() {
+    return loadReady;
   }
 
-  private void putPallet() {
-
+  public boolean setReady(boolean rdy) {
+    loadReady = rdy;
   }
 
-  public ArrayList<String> getPallets() {
-    return pallets;
-  }
 
-  private List optimize() {
-    return null;
-  }
+
+
+
+
 }
