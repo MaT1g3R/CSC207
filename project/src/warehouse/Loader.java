@@ -10,10 +10,20 @@ import java.util.LinkedList;
 
 public class Loader extends Worker {
 
+  /**
+   * Initializes a new Loader.
+   * 
+   * @param name The Loader's name.
+   * @param worksAt The Warehouse object of which this worker works at.
+   */
   public Loader(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
+  /**
+   * Loads pallets onto the first available truck if the Loader and PickingRequest are both ready.
+   * Creates a new Truck if none are available.
+   */
   public void load() {
     if (!super.getIsReady() || !currPickingReq.getLoadReady()) {
       // If either the loader is not ready or the request is not ready, do nothing.
@@ -37,6 +47,9 @@ public class Loader extends Worker {
     }
   }
 
+  /**
+   * Outputs the current orders to a csv.
+   */
   private void outputToCsv() {
     ArrayList<Order> currentOrders = currPickingReq.getOrders();
     for (int i = 0; i < currentOrders.size(); i++) {
@@ -44,10 +57,13 @@ public class Loader extends Worker {
     }
   }
 
+  /**
+   * Returns a LinkedList containing the SKU's in order of which they should be scanned.
+   */
   @Override
-  protected LinkedList<Integer> getScanOrder(PickingRequest currPick) {
+  protected LinkedList<Integer> getScanOrder() {
     LinkedList<Integer> scanOrder = new LinkedList<>();
-    ArrayList<Order> currentOrders = currPick.getOrders();
+    ArrayList<Order> currentOrders = currPickingReq.getOrders();
     for (int i = 0; i < currentOrders.size(); i++) {
       scanOrder.add(currentOrders.get(i).getSkus()[0]);
     }
