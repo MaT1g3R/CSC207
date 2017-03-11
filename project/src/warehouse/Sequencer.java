@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * @author Andrew
  *
  */
-public class Sequencer {
+public class Sequencer extends Worker {
 
   /**
    * 
@@ -22,7 +22,7 @@ public class Sequencer {
 
   public LinkedList<Integer> getScanOrder(PickingRequest currPick){
     LinkedList<Integer> scanOrderSkus = new LinkedList<>();
-    ArrayList<Integer> skus = currPick.getSKU;
+    ArrayList<Integer> skus = currPick.getSkus();
     
     ArrayList<Integer> frontSkus = new ArrayList<Integer>();
     ArrayList<Integer> backSkus = new ArrayList<Integer>();
