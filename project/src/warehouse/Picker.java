@@ -27,7 +27,7 @@ public class Picker extends Worker {
   @Override
   public void scan(int sku) {
     //Items are assumed to be taken when scanned
-    if (isReady) {
+    if (getIsReady()) {
       super.scan(sku);
       worksAt.removeFascia(sku);
     }
@@ -38,7 +38,7 @@ public class Picker extends Worker {
   @Override
   public void wrongScanHandle() {
     //pickers just get a notification
-    System.out.println(this.role + " " + this.name + " scanned wrong sku.");
+    System.out.println(this.role + " " + getName() + " scanned wrong sku.");
 
   }
 
@@ -46,7 +46,7 @@ public class Picker extends Worker {
    * When the worker notifies the system they've gone to the marshalling area
    */
   public void goToMarshaling() {
-    System.out.println(this.role + " " + this.name + " has gone to marshalling");
+    System.out.println(this.role + " " + getName() + " has gone to marshalling");
     worksAt.addSequencingRequest(currPickingReq);
   }
 

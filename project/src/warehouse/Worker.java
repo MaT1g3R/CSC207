@@ -23,11 +23,11 @@ public abstract class Worker {
 
   protected abstract LinkedList<Integer> getScanOrder();
 
-  
+
   public String getName() {
     return name;
   }
-  
+
   /**
    * @param sku the SKU to be scanned.
    */
@@ -37,14 +37,14 @@ public abstract class Worker {
       if (sku != toBeScanned.pop()) {
         System.out.println(role + " " + name + " Wrong Scan");
         wrongScanHandle();
-      }else{
+      } else {
         System.out.println(role + " " + name + " Correct Scan");
       }
-    }else{
+    } else {
       System.out.println(role + " " + name + " Unneeded Scan!");
     }
   }
- 
+
   /**
    * Handles the worker in the event of a wrong scan.
    */
@@ -53,8 +53,8 @@ public abstract class Worker {
     worksAt.pickingRequests.add();
     finish();
   }
-  
-  
+
+
   /**
    * Tells the worker that they are finished their current task,
    * and sets them to be ready for the next task.
@@ -72,12 +72,12 @@ public abstract class Worker {
   public boolean getIsReady() {
     return isReady;
   }
-  
+
 
   /**
    * @param currPickingReq the start button that a worker clicks.
    */
-  public void start(PickingRequest currPickingReq)  {
+  public void start(PickingRequest currPickingReq) {
     this.isReady = false;
     this.currPickingReq = currPickingReq;
     this.toBeScanned = getScanOrder();

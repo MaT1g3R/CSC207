@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public class Sequencer extends Worker {
 
-  
+
   public Sequencer(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
@@ -44,12 +44,11 @@ public class Sequencer extends Worker {
     System.out.println("Sequence attempt " + role + " " + this.getName());
     if (this.getIsReady() || !this.toBeScanned.isEmpty()) {
       System.out.println("You have more left to do " + role + " " + this.getName());
-    }
-    else {
+    } else {
       System.out.println(
           role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
       currPickingReq.setLoadReady(true);
     }
   }
-  
+
 }
