@@ -13,9 +13,9 @@ public abstract class Worker {
 
   private String name;
   private LinkedList<Integer> toBeScanned;
-  private Warehouse worksAt;
+  protected Warehouse worksAt;
   private boolean isReady = true;
-  private PickingRequest currPickingReq;
+  protected PickingRequest currPickingReq;
 
   protected Worker(String name, Warehouse worksAt) {
     this.name = name;
