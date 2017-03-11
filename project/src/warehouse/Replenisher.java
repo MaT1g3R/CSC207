@@ -19,16 +19,6 @@ public class Replenisher extends Worker {
     super(name, worksAt);
   }
 
-  /**
-   * This method isn't used.
-   *
-   * @param currPick doesn't matter.
-   * @return null
-   */
-  @Override
-  protected LinkedList<Integer> getScanOrder(final PickingRequest currPick) {
-    return null;
-  }
 
   /**
    * This method replenishes the warehouse with Fascia of the SKU number.
@@ -49,6 +39,15 @@ public class Replenisher extends Worker {
   public void scan(final int sku) {
     System.out.println("Fascia with SKU number " + String.valueOf(sku) + " "
         + "has been replenished");
+  }
+
+  /**
+   * This method should never be used.
+   * Throws UnsupportedOperationException when called
+   */
+  @Override
+  protected LinkedList<Integer> getScanOrder() {
+    throw new UnsupportedOperationException();
   }
 
 }
