@@ -4,6 +4,7 @@
 package warehouse;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @author Andrew
@@ -12,14 +13,18 @@ import java.util.ArrayList;
 public abstract class Worker {
 
   private String name;
-  private ArrayList<Fascia> currentFascias;
-  private String logFilePath;
+  private LinkedList<Integer> toBeScanned;
+  private Warehouse worksAt;
+  private boolean isReady;
+  private PickingRequest currPickingReq;
   
-  protected Worker (String name, String logFilePath, ArrayList<Fascia> currentFascias){
+  protected Worker (String name, Warehouse worksAt){
     this.name = name;
-    this.logFilePath = logFilePath;
-    this.currentFascias = currentFascias;
+    this.worksAt = worksAt;
+  
   }
+  
+  protected abstract LinkedList<Integer> getScanOrder(PickingRequest currPick);
 
   /**
    * @return the name of the worker
@@ -28,22 +33,38 @@ public abstract class Worker {
     return name;
   }
 
-  /**
-   * @param name the name to change to if the worker decides to change their name
-   */
-  public void changeName(String name) {
-    this.name = name;
-  }
   
   /**
-   * @return the currentFascias
+   * @param sku the SKU to be scanned. 
    */
-  public ArrayList<Fascia> getCurrentFascias() {
-    return currentFascias;
+  public void scan (int sku){
+    if (sku == toBeScanned.pop()){
+      System.out.println("Scan successful - correct SKU selected.");
+    }
+    else{
+      System.out.println("ERROR: Scan unsuccessful - incorrect SKU selected.");
+    }
+  }
+  
+
+  /**
+   * @return true or false if a worker is ready or not, respectively
+   */
+  public boolean getIsReady() {
+    return isReady;
   }
 
-  protected abstract void logEvent();
-  protected abstract void performJob();
+  /**
+   * @param changes if a worker is ready or not
+   */
+  public void setIsReady(boolean isReady) {
+    this.isReady = isReady;
+  }
+  
+  public void setCurrPickingReq(PickingRequest currPickingReq){
+    this.currPickingReq = currPickingReq;
+  }
+  
   
   
 }
