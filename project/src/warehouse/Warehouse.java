@@ -2,12 +2,12 @@ package warehouse;
 
 import java.util.HashMap;
 
-public class WarehouseFloor {
+public class Warehouse {
 
   private HashMap<String, HashMap<Integer, HashMap<Integer, HashMap<Integer, Integer>>>> floor;
   private String loggerPath;
 
-  public WarehouseFloor(String loggerPath) {
+  public Warehouse(String loggerPath) {
     this.loggerPath = loggerPath;
   }
 
