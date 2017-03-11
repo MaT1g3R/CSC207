@@ -15,12 +15,13 @@ public abstract class Worker {
   private String name;
   private LinkedList<Integer> toBeScanned;
   private Warehouse worksAt;
-  private boolean isReady;
+  private boolean isReady = true;
   private PickingRequest currPickingReq;
   
   protected Worker (String name, Warehouse worksAt){
     this.name = name;
     this.worksAt = worksAt;
+    this.toBeScanned = getScanOrder(currPickingReq);
   
   }
   
