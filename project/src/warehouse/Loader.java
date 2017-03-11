@@ -10,18 +10,18 @@ import java.util.LinkedList;
 
 public class Loader extends Worker {
 
-  private int[] frontPallet = new int[4];
-  private int[] backPallet = new int[4];
-
   public Loader(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
-  public void load(int[] frontPallet, int[] backPallet) {
-    if (!super.getIsReady()) {
+  public void load() {
+    if (!super.getIsReady() || !currPickingReq.getLoadReady()) {
+      // If either the loader is not ready or the request is not ready, do nothing.
       System.out.println(
           "Loader " + super.getName() + " did not load PickingRequest " + currPickingReq.getId());
     } else {
+      int[] frontPallet = currPickingReq.getSequencedPallets()[0];
+      int[] backPallet = currPickingReq.getSequencedPallets()[1];
       ArrayList<Truck> trucks = worksAt.getTrucks();
       int truckNum = trucks.size();
       // Creates a new truck if none exist or the latest one is full.

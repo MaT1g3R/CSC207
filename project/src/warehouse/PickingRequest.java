@@ -64,7 +64,7 @@ public class PickingRequest {
    *
    * @return Nested int array. First element is front skus, second is back skus
    */
-  public int[][] getSeqeuncedPallets() {
+  public int[][] getSequencedPallets() {
     int [][] output = new int[2][4];
     for (int x = 0; x < orders.size(); x++) {
       output[0][x] = orders.get(x).getSkus()[0];
