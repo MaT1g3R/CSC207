@@ -39,8 +39,15 @@ public class Loader extends Worker {
 
   @Override
   protected LinkedList<Integer> getScanOrder(PickingRequest currPick) {
-    // TODO Auto-generated method stub
-    return null;
+    LinkedList<Integer> scanOrder = new LinkedList<>();
+    ArrayList<Order> currentOrders = currPick.getOrders();
+    for(int i = 0; i < currentOrders.size(); i++){
+      scanOrder.add(currentOrders.get(i).getSkus()[0]);
+    }
+    for(int i = 0; i < currentOrders.size(); i++){
+      scanOrder.add(currentOrders.get(i).getSkus()[1]);
+    }
+    return scanOrder;
   }
 
 }
