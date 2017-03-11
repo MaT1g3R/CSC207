@@ -37,15 +37,18 @@ public class Warehouse {
   }
 
   /**
-   * Removes one quantity of SKU from inventory if there are any. If the quantity is <= 5 a
-   * replenish request is created for that SKU if there isn't any.
+   * Removes one quantity of SKU from inventory if there are any. If the
+   * quantity is <= 5 a replenish request is created for that SKU if there isn't
+   * any.
+   *
    * @param sku: the sku being removed
    */
   public void removeFascia(int sku) {
     int amount = inventory.get(sku);
     //Nothing happens if you try to remove something with 0 quantity
     if (amount > 0) {
-      System.out.println("Removed one sku " + Integer.toString(sku) + " from inventory.");
+      System.out.println(
+          "Removed one sku " + Integer.toString(sku) + " from inventory.");
       this.inventory.put(sku, amount - 1);
       //If  <= 5, and theres no request to replenish it, it needs to be replenished
       if (this.inventory.get(sku) <= 5 && replenishRequests.contains(sku)) {
@@ -55,32 +58,35 @@ public class Warehouse {
   }
 
   /**
-   * Adds a replenish request, to the end of the list of pending replenishRequests. Prints that
-   * it has been added.
+   * Adds a replenish request, to the end of the list of pending
+   * replenishRequests. Prints that it has been added.
+   *
    * @param sku: the sku for the request
    */
   public void addReplenishRequest(int sku) {
-    System.out.println("Replenish request for sku " + Integer.toString(sku) + ".");
+    System.out
+        .println("Replenish request for sku " + Integer.toString(sku) + ".");
     replenishRequests.add(sku);
 
   }
 
   public void addOrder(Order order) {
   }
-  public HashMap<String, Picker> getPickers() {
-    return pickers;
+
+  public Picker getPickerByName(final String name) {
+    return this.pickers.get(name);
   }
 
-  public HashMap<String, Loader> getLoaders() {
-    return loaders;
+  public Loader getLoaderByName(final String name) {
+    return this.loaders.get(name);
   }
 
-  public HashMap<String, Sequencer> getSequencers() {
-    return sequencers;
+  public Sequencer getSequencerByName(final String name) {
+    return this.sequencers.get(name);
   }
 
-  public HashMap<String, Replenisher> getReplenishers() {
-    return replenishers;
+  public Replenisher getReplenisherByName(final String name) {
+    return this.replenishers.get(name);
   }
 
   public HashMap<Integer, Integer> getInventory() {
