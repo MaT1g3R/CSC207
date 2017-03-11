@@ -24,5 +24,8 @@ public class Picker extends Worker {
 
   }
 
+  @Override
+  public  void scan(int sku){}
+
 
 }
