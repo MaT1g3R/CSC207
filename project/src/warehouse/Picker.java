@@ -16,7 +16,7 @@ public class Picker extends Worker {
   public LinkedList<Integer> getScanOrder(PickingRequest currPickReq) {
     ArrayList<String> loc = WarehousePicking.optimize(currPickingReq.getSkus());
     LinkedList<Integer> output = new LinkedList<>();
-    for(String x:loc) {
+    for (String x : loc) {
 
       output.add(SkuTranslator.getSkuFromLocation(x.split(",")));
     }
@@ -25,7 +25,10 @@ public class Picker extends Worker {
   }
 
   @Override
-  public  void scan(int sku){}
+  public void scan(int sku) {
+  }
 
+  public void goToMarshaling() {
+  }
 
 }

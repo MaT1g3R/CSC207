@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package warehouse;
 
@@ -8,35 +8,38 @@ import java.util.LinkedList;
 
 /**
  * @author Andrew
- *
  */
 public class Sequencer extends Worker {
 
   /**
-   * 
+   *
    */
   public Sequencer(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
-  
 
-  public LinkedList<Integer> getScanOrder(PickingRequest currPick){
+
+  @Override
+  public LinkedList<Integer> getScanOrder(PickingRequest currPick) {
     LinkedList<Integer> scanOrderSkus = new LinkedList<>();
     ArrayList<Integer> skus = currPick.getSkus();
-    
+
     ArrayList<Integer> frontSkus = new ArrayList<Integer>();
     ArrayList<Integer> backSkus = new ArrayList<Integer>();
-    
-    for (int i = 0; i < skus.size(); i += 2){
+
+    for (int i = 0; i < skus.size(); i += 2) {
       frontSkus.add(skus.get(i));
-      backSkus.add(skus.get(i+1));
+      backSkus.add(skus.get(i + 1));
     }
-    
+
     scanOrderSkus.addAll(frontSkus);
     scanOrderSkus.addAll(backSkus);
-    
+
     return scanOrderSkus;
-    
+
+  }
+
+  public void sequence() {
   }
 
 }

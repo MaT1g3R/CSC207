@@ -33,8 +33,10 @@ Picker Bob pick 6
 Picker Bob pick 7
 Picker Alice ready
 Picker Alice pick 1
+Sequencer Sue ready
 Sequencer Sue sequences
 Picker Alice pick 2
+Loader Bill ready
 Loader Bill loads
 Order S Gold
 Picker Bob pick 8
