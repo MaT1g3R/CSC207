@@ -94,17 +94,22 @@ public class Warehouse {
   }
 
 
-  public void addPicker(Picker picker) {
+  public void addPicker(final Picker picker) {
+    this.pickers.put(picker.getName(), picker);
   }
 
-  public void addLoader(Loader loader) {
+  public void addLoader(final Loader loader) {
+    this.loaders.put(loader.getName(), loader);
   }
 
-  public void addSequencer(Sequencer sequencer) {
+  public void addSequencer(final Sequencer sequencer) {
+    this.sequencers.put(sequencer.getName(), sequencer);
   }
 
-  public void addReplenisher(Replenisher replenisher) {
+  public void addReplenisher(final Replenisher replenisher) {
+    this.replenishers.put(replenisher.getName(), replenisher);
   }
+
 
   public ArrayList<Truck> getTrucks() {
     return null;
