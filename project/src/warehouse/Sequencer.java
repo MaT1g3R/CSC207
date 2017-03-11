@@ -20,9 +20,9 @@ public class Sequencer extends Worker {
 
 
   @Override
-  public LinkedList<Integer> getScanOrder(PickingRequest currPick) {
+  public LinkedList<Integer> getScanOrder() {
     LinkedList<Integer> scanOrderSkus = new LinkedList<>();
-    ArrayList<Integer> skus = currPick.getSkus();
+    ArrayList<Integer> skus = currPickingReq.getSkus();
 
     ArrayList<Integer> frontSkus = new ArrayList<Integer>();
     ArrayList<Integer> backSkus = new ArrayList<Integer>();
@@ -40,6 +40,19 @@ public class Sequencer extends Worker {
   }
 
   public void sequence() {
+    System.out.println("Sequence attempt " + role + " " + this.getName());
+    
+    if (this.getIsReady() || !this.toBeScanned.isEmpty()){
+      System.out.println("You have more left to do " + role + " " + this.getName());
+    }
+    
+    else{
+      System.out.println(role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
+      currPickingReq.setLoadReady(true);
+    }
+    
+    
+    
   }
 
 }

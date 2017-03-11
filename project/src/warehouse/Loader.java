@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
+ * A class to represent Loaders.
+ * 
  * @author Chaitanya
- *
  */
 
 public class Loader extends Worker {
