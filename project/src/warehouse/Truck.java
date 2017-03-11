@@ -13,13 +13,24 @@ public class Truck {
   private ArrayList<ArrayList<int[]>> cargo;
 
   private int currentLevel; // Current level that the pallets should be added to.
-  private boolean addToLeft; // Decides whether to add to left side of truck or right.
+  private boolean addToRight; // Decides whether to add to left side of truck or right.
 
   public Truck() {
     cargo = new ArrayList<>();
     cargo.add(new ArrayList<>()); // adding the first level to cargo
-    addToLeft = true;
+    addToRight = true;
     currentLevel = 0;
+  }
+
+  // loader gets 2 pallets(4 facsia each) from sequencer and adds it to truck.
+  public void addCargo(int[] frontPallet, int[] backPallet) {
+
+    this.cargo.get(currentLevel).add(frontPallet);
+    this.cargo.get(currentLevel).add(backPallet);
+    if (addToRight) {
+      currentLevel++;
+    }
+    addToRight = !addToRight; // Next time add to the other side.
   }
 
   public ArrayList<ArrayList<int[]>> getCargo() {
@@ -35,14 +46,4 @@ public class Truck {
     return true;
   }
 
-  // loader gets 2 pallets(4 facsia each) from sequencer and adds it to truck.
-  public void addCargo(int[] frontPallet, int[] backPallet) {
-    // if(addToLeft){
-    // this.cargo.get(currentLevel).get
-    // } else{
-    // this.cargo.bad
-    // currentLevel++;
-    // }
-    // addToLeft = !addToLeft; //Next time add to the other side.
-  }
 }
