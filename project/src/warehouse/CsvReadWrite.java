@@ -26,23 +26,27 @@ public final class CsvReadWrite {
    *
    * @param fileName The file name
    * @return An ArrayList representing the file
-   * @throws IOException File not found, probably
    */
-  public static ArrayList<String> readCsv(final String fileName)
-      throws IOException {
+  public static ArrayList<String> readCsv(final String fileName) {
     ArrayList<String> result = new ArrayList<>();
     Path pathToFile = Paths.get(fileName);
-    BufferedReader br = Files.newBufferedReader(pathToFile);
-    // read the first line from the text file
-    String line = br.readLine();
+    try {
+      BufferedReader br = Files.newBufferedReader(pathToFile);
+      // read the first line from the text file
+      String line = br.readLine();
 
-    // loop until all lines are read
-    while (line != null) {
-      result.add(line);
-      line = br.readLine();
+      // loop until all lines are read
+      while (line != null) {
+        result.add(line);
+        line = br.readLine();
+      }
+
+    } catch (IOException e) {
+      return null;
     }
-
     return result;
+
+
   }
 
   /**
@@ -51,24 +55,28 @@ public final class CsvReadWrite {
    *
    * @param fileName The file name
    * @return An ArrayList of ArrayList, representing the file.
-   * @throws IOException File not found, probably
    */
   public static ArrayList<ArrayList<String>> readAsArrays(
-      final String fileName) throws IOException {
+      final String fileName) {
     ArrayList<ArrayList<String>> result = new ArrayList<>();
     Path pathToFile = Paths.get(fileName);
-    BufferedReader br = Files.newBufferedReader(pathToFile);
-    // read the first line from the text file
-    String line = br.readLine();
+    try {
+      BufferedReader br = Files.newBufferedReader(pathToFile);
+      // read the first line from the text file
+      String line = br.readLine();
 
-    // loop until all lines are read
-    while (line != null) {
-      ArrayList<String> lineList = new ArrayList<>(
-          Arrays.asList(line.split(",")));
-      result.add(lineList);
-      line = br.readLine();
+      // loop until all lines are read
+      while (line != null) {
+        ArrayList<String> lineList = new ArrayList<>(
+            Arrays.asList(line.split(",")));
+        result.add(lineList);
+        line = br.readLine();
+      }
+    } catch (IOException e) {
+      return null;
     }
     return result;
+
   }
 
   /**
@@ -76,13 +84,15 @@ public final class CsvReadWrite {
    *
    * @param content The string to be appended
    * @param fileName The name of the file
-   * @throws IOException File not found, probably
    */
-  public static void addLine(final String content, final String fileName)
-      throws IOException {
-    FileWriter output = new FileWriter(fileName, true);
-    output.append(content);
-    output.close();
+  public static void addLine(final String content, final String fileName) {
+    try {
+      FileWriter output = new FileWriter(fileName, true);
+      output.append(content);
+      output.close();
+    } catch (IOException e) {
+      System.out.println("Cannot read the file");
+    }
   }
 
   /**
@@ -90,19 +100,22 @@ public final class CsvReadWrite {
    *
    * @param content An ArrayList, each item is a new line
    * @param fileName The name of the file
-   * @throws IOException File not found, probably
    */
   public static void overWrite(final ArrayList<String> content,
-      final String fileName) throws IOException {
-    File f = new File(fileName);
-    if (!f.exists() && !f.createNewFile()) {
-      throw new IOException();
+      final String fileName) {
+    try {
+      File f = new File(fileName);
+      if (!f.exists() && !f.createNewFile()) {
+        throw new IOException();
+      }
+      FileWriter output = new FileWriter(f);
+      for (String s : content) {
+        output.write(s + "\n");
+      }
+      output.close();
+    } catch (IOException e) {
+      System.out.println("Cannot read the file");
     }
-    FileWriter output = new FileWriter(f);
-    for (String s : content) {
-      output.write(s + "\n");
-    }
-    output.close();
   }
 
 }
