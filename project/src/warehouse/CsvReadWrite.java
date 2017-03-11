@@ -12,6 +12,8 @@ import java.util.Arrays;
 
 /**
  * This class reads and writes to files.
+ *
+ * @author Peijun
  */
 public final class CsvReadWrite {
 
