@@ -13,7 +13,7 @@ public class Picker extends Worker {
   }
 
   @Override
-  public LinkedList<Integer> getScanOrder(PickingRequest currPickReq) {
+  public LinkedList<Integer> getScanOrder() {
     ArrayList<String> loc = WarehousePicking.optimize(currPickingReq.getSkus());
     LinkedList<Integer> output = new LinkedList<>();
     for (String x : loc) {
@@ -24,11 +24,26 @@ public class Picker extends Worker {
 
   }
 
-  @Override
   public void scan(int sku) {
+    //Items are assumed to be taken when scanned
+    if (isReady) {
+      super.scan(sku);
+      worksAt.removeFascia(sku);
+    }
+
+
+  }
+
+  @Override
+  public void wrongScanHandle() {
+    //pickers just get a notification
+    System.out.println(this.role + " " + this.name + " scanned wrong sku.");
+
   }
 
   public void goToMarshaling() {
+    System.out.println(this.role + " " + this.name + " has gone to marshalling");
+    worksAt.addSequencingRequest(currPickingReq);
   }
 
 }
