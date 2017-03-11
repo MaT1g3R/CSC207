@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *  This class is responsible for taking in csv files that have data about SKUs and returning
- *  information for a particular set of that data, or about an SKU
+ *  information for a particular set of that data, or about an SKU.
  *
  */
 
@@ -13,7 +13,7 @@ public class SkuTranslator {
 
   private SkuTranslator() {
   }
-  
+
   private static ArrayList<ArrayList<String>> locations;
   private static ArrayList<ArrayList<String>> properties;
 
@@ -78,7 +78,7 @@ public class SkuTranslator {
 
 
   /**
-   *  Using traversal table, fetches sku stored in <location></location>
+   *  Using traversal table, fetches sku stored in <location></location>.
    * @param location is in String array format {Zone, Aisle, Rack, Rack Level}
    * @return sku stored in given area according to translation table
    */
@@ -93,7 +93,7 @@ public class SkuTranslator {
   }
 
   /**
-   *  Sets the traversal table to the csv file located in <path></path>
+   *  Sets the traversal table to the csv file located in <path></path>.
    * @param path must be a valid path to a csv file
    */
   public static void setLocations(String path)  {
@@ -103,7 +103,7 @@ public class SkuTranslator {
   }
 
   /**
-   *  Sets the translation table to the csv file located in <path></path>
+   *  Sets the translation table to the csv file located in <path></path>.
    * @param path must be a valid path to a csv file
    */
   public static void setProperties(String path) {
