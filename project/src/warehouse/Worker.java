@@ -12,11 +12,11 @@ import java.util.LinkedList;
 public abstract class Worker {
 
   private String name;
-  private LinkedList<Integer> toBeScanned;
+  protected LinkedList<Integer> toBeScanned;
   protected Warehouse worksAt;
   private boolean isReady = true;
   protected PickingRequest currPickingReq;
-  private String role;
+  protected String role;
 
   protected Worker(String name, Warehouse worksAt) {
     this.name = name;
@@ -32,6 +32,7 @@ public abstract class Worker {
   public String getName() {
     return name;
   }
+  
 
 
   /**
@@ -75,13 +76,7 @@ public abstract class Worker {
     return isReady;
   }
 
-  /**
-   * @param changes if a worker is ready or not
-   */
-  public void setIsReady(boolean isReady) {
-    this.isReady = isReady;
-  }
- 
+
   public void start (PickingRequest currPickingReq){
     
     this.isReady = false;
