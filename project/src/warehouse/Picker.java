@@ -24,6 +24,7 @@ public class Picker extends Worker {
 
   }
 
+  @Override
   public void scan(int sku) {
     //Items are assumed to be taken when scanned
     if (isReady) {
@@ -41,6 +42,9 @@ public class Picker extends Worker {
 
   }
 
+  /**
+   * When the worker notifies the system they've gone to the marshalling area
+   */
   public void goToMarshaling() {
     System.out.println(this.role + " " + this.name + " has gone to marshalling");
     worksAt.addSequencingRequest(currPickingReq);
