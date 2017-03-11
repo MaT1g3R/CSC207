@@ -1,5 +1,6 @@
 package warehouse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Warehouse {
@@ -62,6 +63,10 @@ public class Warehouse {
   }
 
   public void addReplenisher(Replenisher replenisher) {
+  }
+
+  public ArrayList<Truck> getTrucks() {
+    return null;
   }
 
 }
