@@ -1,8 +1,5 @@
 package warehouse;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-
-import java.awt.List;
 import java.util.ArrayList;
 
 public class PickingRequest {
@@ -24,8 +21,12 @@ public class PickingRequest {
     return loadReady;
   }
 
-  public boolean setReady(boolean rdy) {
+  public void setReady(boolean rdy) {
     loadReady = rdy;
+  }
+
+  public ArrayList<Integer> getSKU{
+    return new ArrayList<Integer>;
   }
 
 
