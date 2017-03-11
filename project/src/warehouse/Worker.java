@@ -1,13 +1,10 @@
-/**
- *
- */
+
 package warehouse;
 
 import java.util.LinkedList;
 
-
 /**
- * @author Andrew
+ * @author Andrew.
  */
 public abstract class Worker {
 
@@ -26,43 +23,43 @@ public abstract class Worker {
 
   protected abstract LinkedList<Integer> getScanOrder();
 
-  /**
-   * @return the name of the worker
-   */
+  
   public String getName() {
     return name;
   }
   
-
-
   /**
    * @param sku the SKU to be scanned.
    */
   public void scan(int sku) {
-    System.out.println(role + " " + name + " Scanned " + sku );
+    System.out.println(role + " " + name + " Scanned " + sku);
     if (!toBeScanned.isEmpty()) {
-      if (sku != toBeScanned.pop()){
+      if (sku != toBeScanned.pop()) {
         System.out.println(role + " " + name + " Wrong Scan");
         wrongScanHandle();
-      }
-      else{
+      }else{
         System.out.println(role + " " + name + " Correct Scan");
       }
-    } 
-    else{
+    }else{
       System.out.println(role + " " + name + " Unneeded Scan!");
     }
   }
-  
-  public void wrongScanHandle(){
-    //default behaviour is wrongScan = new picking request.
-    //REPLENEISHER MUST OVERRIDE THIS METHOD SINCE THEY DONT HANDLE PICK REQUESTS
+ 
+  /**
+   * Handles the worker in the event of a wrong scan.
+   */
+  public void wrongScanHandle() {
     System.out.println("Aborting action of " + role + " " + name);
     worksAt.pickingRequests.add();
     finish();
   }
   
-  public void finish(){
+  
+  /**
+   * Tells the worker that they are finished their current task,
+   * and sets them to be ready for the next task.
+   */
+  public void finish() {
     System.out.println("Current action of " + role + " " + name + " has finished.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
@@ -70,20 +67,20 @@ public abstract class Worker {
 
 
   /**
-   * @return true or false if a worker is ready or not, respectively
+   * @return true or false if a worker is ready or not, respectively.
    */
   public boolean getIsReady() {
     return isReady;
   }
+  
 
-
-  public void start (PickingRequest currPickingReq){
-    
+  /**
+   * @param currPickingReq the start button that a worker clicks.
+   */
+  public void start(PickingRequest currPickingReq)  {
     this.isReady = false;
     this.currPickingReq = currPickingReq;
     this.toBeScanned = getScanOrder();
-    
   }
-
 
 }

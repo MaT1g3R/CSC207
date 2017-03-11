@@ -1,19 +1,18 @@
 /**
  *
  */
+
 package warehouse;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * @author Andrew
+ * @author Andrew.
  */
 public class Sequencer extends Worker {
 
-  /**
-   *
-   */
+  
   public Sequencer(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
@@ -36,23 +35,21 @@ public class Sequencer extends Worker {
     scanOrderSkus.addAll(backSkus);
 
     return scanOrderSkus;
-
   }
 
+  /**
+   * The button a worker presses to begin sequencing.
+   */
   public void sequence() {
     System.out.println("Sequence attempt " + role + " " + this.getName());
-    
-    if (this.getIsReady() || !this.toBeScanned.isEmpty()){
+    if (this.getIsReady() || !this.toBeScanned.isEmpty()) {
       System.out.println("You have more left to do " + role + " " + this.getName());
     }
-    
-    else{
-      System.out.println(role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
+    else {
+      System.out.println(
+          role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
       currPickingReq.setLoadReady(true);
     }
-    
-    
-    
   }
-
+  
 }
