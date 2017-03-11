@@ -89,49 +89,49 @@ public class Simulator {
       } else if (Pattern.matches("Picker \\w+ ready", s)) {
         // Picker ready
         String name = s.split("\\s")[1];
-        if (!warehouse.getPickers().containsKey(name)) {
+        if (warehouse.getPickerByName(name) != null) {
           this.warehouse.addPicker(new Picker(name, this.warehouse));
         }
       } else if (Pattern.matches("Picker \\w+ pick [0-9]", s)) {
         // Picker picks
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getPickers().get(name).scan(sku);
+        this.warehouse.getPickerByName(name).scan(sku);
       } else if (Pattern.matches("Picker \\w+ to Marshaling", s)) {
         // Picker to marshaling
         String name = s.split("\\s")[1];
-        this.warehouse.getPickers().get(name).goToMarshaling();
+        this.warehouse.getPickerByName(name).goToMarshaling();
       } else if (Pattern.matches("Sequencer \\w+ ready", s)) {
         // Sequencer ready
         String name = s.split("\\s")[1];
-        if (!warehouse.getSequencers().containsKey(name)) {
+        if (warehouse.getSequencerByName(name) != null) {
           this.warehouse.addSequencer(new Sequencer(name, this.warehouse));
         }
       } else if (Pattern.matches("Sequencer \\w+ sequences", s)) {
         // Sequencer sequences
         String name = s.split("\\s")[1];
-        this.warehouse.getSequencers().get(name).sequence();
+        this.warehouse.getSequencerByName(name).sequence();
       } else if (Pattern.matches("Loader \\w+ ready", s)) {
         // Loader ready
         String name = s.split("\\s")[1];
-        if (!warehouse.getLoaders().containsKey(name)) {
+        if (warehouse.getLoaderByName(name) != null) {
           this.warehouse.addLoader(new Loader(name, this.warehouse));
         }
       } else if (Pattern.matches("Loader \\w+ loads", s)) {
         // Loader loads
         String name = s.split("\\s")[1];
-        this.warehouse.getLoaders().get(name).load();
+        this.warehouse.getLoaderByName(name).load();
       } else if (Pattern.matches("Replenisher \\w+ ready", s)) {
         // Replenisher ready
         String name = s.split("\\s")[1];
-        if (!warehouse.getReplenishers().containsKey(name)) {
+        if (warehouse.getReplenisherByName(name) != null) {
           this.warehouse.addReplenisher(new Replenisher(name, this.warehouse));
         }
       } else if (Pattern.matches("Replenisher \\w+ replenish [0-9]+", s)) {
         // Replenisher replenish
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getReplenishers().get(name).replenish(sku);
+        this.warehouse.getReplenisherByName(name).replenish(sku);
       }
     }
     outPutResult();
