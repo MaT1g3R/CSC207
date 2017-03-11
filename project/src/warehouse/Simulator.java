@@ -21,7 +21,7 @@ public class Simulator {
   private ArrayList<String> eventList;
 
   /**
-   * The file path to the reanslation table.
+   * The file path to the retranslation table.
    */
   private String translationPath;
 
@@ -50,9 +50,7 @@ public class Simulator {
    * @param outFilePath the file path for output
    */
   public Simulator(final String eventFile, final String warehouseFilePath,
-      final String translationFilePath, final String traversalFilePath,
-      final String
-          outFilePath) {
+      final String translationFilePath, final String traversalFilePath, final String outFilePath) {
     this.eventList = CsvReadWrite.readCsv(eventFile);
     this.warehouse = new Warehouse(warehouseFilePath);
     this.translationPath = translationFilePath;
@@ -65,8 +63,7 @@ public class Simulator {
    */
   private void outPutResult() {
     ArrayList<String> result = new ArrayList<>();
-    for (HashMap.Entry<Integer, Integer> entry : this.warehouse.getInventory()
-        .entrySet()) {
+    for (HashMap.Entry<Integer, Integer> entry : this.warehouse.getInventory().entrySet()) {
       if (entry.getValue() < MAX_STOCK) {
         String location = SkuTranslator.getLocation(entry.getKey());
         result.add(location + "," + entry.getValue());
