@@ -1,6 +1,10 @@
 package warehouse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Warehouse {
 
@@ -20,7 +24,7 @@ public class Warehouse {
   private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
   public Warehouse(String warehouseFilePath) {
-    
+
   }
 
   private void assignNonReplenishers(String type) {
@@ -39,8 +43,9 @@ public class Warehouse {
     }
     for (Worker worker : people) {
       if (worker.getIsReady() && !requests.isEmpty()) {
-        PickingRequest request = requests.remove();
+        PickingRequest request = requests.peek();
         if (!(worker instanceof Loader) || request.getLoadReady()) {
+          requests.remove();
           worker.start(request);
         }
       }
@@ -119,8 +124,9 @@ public class Warehouse {
    */
   public void addUnpickedPickingRequest(PickingRequest request) {
     unPickedPickingRequests.add(0, request);
+    System.out.println("Added PickingRequest " + request.getId() + "to front.");
   }
-  
+
   /**
    * Creates a new PickingRequest and adds it to the back of the queue;
    * 
@@ -131,10 +137,16 @@ public class Warehouse {
     unPickedPickingRequests.add(request);
     numPickingRequests++;
     loadingRequests.add(request);
+    System.out.println("Added new PickingRequest " + request.getId() + "to end.");
   }
-  
+
   public void addOrder(Order order) {
     outstandingOrders.add(order);
+    System.out.println("Added order " + order.toString());
+    if (outstandingOrders.size() == 4) {
+      createPickingRequest(outstandingOrders);
+      outstandingOrders = new ArrayList<Order>();
+    }
   }
 
   public Picker getPickerByName(final String name) {
@@ -156,7 +168,11 @@ public class Warehouse {
   public HashMap<Integer, Integer> getInventory() {
     return inventory;
   }
-
+  
+  public ArrayList<Truck> getTrucks() {
+    return trucks;
+  }
+  
   public void addPicker(final Picker picker) {
     this.pickers.put(picker.getName(), picker);
   }
@@ -172,10 +188,4 @@ public class Warehouse {
   public void addReplenisher(final Replenisher replenisher) {
     this.replenishers.put(replenisher.getName(), replenisher);
   }
-
-
-  public ArrayList<Truck> getTrucks() {
-    return trucks;
-  }
-
 }
