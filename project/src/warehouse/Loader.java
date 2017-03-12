@@ -27,10 +27,10 @@ public class Loader extends Worker {
    * Creates a new Truck if none are available.
    */
   public void load() {
-    if (!super.getIsReady() || !currPickingReq.getLoadReady()) {
-      // If either the loader is not ready or the request is not ready, do nothing.
+    if (this.getIsReady() || !this.toBeScanned.isEmpty()) {
+      // If doesn't have a duty  or didn't finish scanning, do nothing.
       System.out.println(
-          "Loader " + super.getName() + " did not load PickingRequest " + currPickingReq.getId());
+          "Loader " + super.getName() + " failed to load");
     } else {
       int[] frontPallet = currPickingReq.getSequencedPallets()[0];
       int[] backPallet = currPickingReq.getSequencedPallets()[1];
