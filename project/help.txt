@@ -1,0 +1,20 @@
+This tutorial assumes you have already cloned the repo and changed directory to it. 
+
+The following 3 commands should be entered into the terminal to compile and execute the program:
+-------------------
+cd src
+javac warehouse/Main.java
+java warehouse/Main
+-------------------
+
+Once the program starts, you will be prompted to enter the paths for various files.
+You can enter the following 5 inputs to the 5 prompts, in order:
+-------------------
+16orders.txt
+initial.csv
+translation.csv
+traversal_table.csv
+../project
+-------------------
+
+After this, the program should run.
