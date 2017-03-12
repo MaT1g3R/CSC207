@@ -27,7 +27,6 @@ public class Picker extends Worker {
   @Override
   public void scan(int sku) {
     //Items are assumed to be taken when scanned
-
       super.scan(sku);
       worksAt.removeFascia(sku);
 
