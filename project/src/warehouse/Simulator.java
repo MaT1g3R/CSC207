@@ -66,7 +66,7 @@ public class Simulator {
 
     final int skuIndex = 3;
     for (String s : this.eventList) {
-      if (Pattern.matches("Order [A-Z]+ [A-Z][a-z]+", s)) {
+      if (Pattern.matches("Order [A-Z][a-z]+ [A-Z]+", s)) {
         // Process an order
         this.warehouse.addOrder(new Order(s));
       } else if (Pattern.matches("Picker \\w+ ready", s)) {
