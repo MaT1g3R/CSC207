@@ -17,7 +17,6 @@ public class SkuTranslator {
   private static ArrayList<ArrayList<String>> locations;
   private static ArrayList<ArrayList<String>> properties;
 
-
 //  /**
 //   * Using the given translation table, this function takes in a <sku></sku> as
 //   * an int and returns its properties like Model, Colour, and whether or not
