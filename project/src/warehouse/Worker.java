@@ -65,6 +65,7 @@ public abstract class Worker {
         .println("Current action of " + role + " " + name + " has finished.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
+    worksAt.assignWorkers(getClass().getSimpleName());
   }
 
 

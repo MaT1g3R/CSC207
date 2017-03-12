@@ -48,6 +48,7 @@ public class Sequencer extends Worker {
       System.out.println(
           role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
       currPickingReq.setLoadReady(true);
+      worksAt.assignWorkers("loader");
     }
   }
 
