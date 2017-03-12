@@ -18,27 +18,7 @@ public class Simulator {
    * The list of events the simulator is simulating.
    */
   private ArrayList<String> eventList;
-
-  /**
-   * The file path to the retranslation table.
-   */
-  private String translationPath;
-
-  /**
-   * The file path to the transversal table.
-   */
-  private String traversalPath;
-
-  /**
-   * The file path to the output file.
-   */
-  private String outPath;
-
-  /**
-   * The max amout on a rack is 30.
-   */
-  private static final int MAX_STOCK = 30;
-
+  
   /**
    * This initialize a simulator object.
    *
