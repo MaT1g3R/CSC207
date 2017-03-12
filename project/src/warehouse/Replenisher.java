@@ -15,7 +15,7 @@ public class Replenisher extends Worker {
    * @param name the name of the Replenisher
    * @param worksAt where the Replenisher works at
    */
-  public Replenisher(final String name, final Warehouse worksAt) {
+  public Replenisher(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
@@ -25,7 +25,7 @@ public class Replenisher extends Worker {
    *
    * @param sku the SKU number.
    */
-  public void replenish(final int sku) {
+  public void replenish(int sku) {
     super.worksAt.addFacsia(sku);
     scan(sku);
   }
@@ -36,9 +36,14 @@ public class Replenisher extends Worker {
    * @param sku the SKU to be scanned.
    */
   @Override
-  public void scan(final int sku) {
+  public void scan(int sku) {
     System.out.println("Fascia with SKU number " + String.valueOf(sku) + " "
         + "has been replenished");
+  }
+  
+  public void start(int sku) {
+    isReady = false;
+    replenish(sku);
   }
 
   /**
