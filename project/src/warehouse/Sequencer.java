@@ -38,8 +38,8 @@ public class Sequencer extends Worker {
   }
 
   /**
-   * The button a worker presses to begin sequencing.
-   */
+   * The button a worker presses to begin sequencing. Takes proper action.
+   **/
   public void sequence() {
     System.out.println("Sequence attempt " + role + " " + this.name);
     if (this.shouldScanOrGetReady()) {

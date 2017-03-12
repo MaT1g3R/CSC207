@@ -68,7 +68,7 @@ public abstract class Worker {
   }
 
   /**
-   * checks if the worker should do anything other than scanning or gettingReady
+   * checks if the worker should do anything other than scanning or gettingReady.
    */
   protected boolean shouldScanOrGetReady() {
     return this.isReady || !toBeScanned.isEmpty();
@@ -91,6 +91,11 @@ public abstract class Worker {
     this.isReady = false;
     this.currPickingReq = currPickingReq;
     this.toBeScanned = getScanOrder();
+    String msg = this.role + " " + this.name + " should scan in order: ";
+    for (int x: toBeScanned) {
+      msg += " " + Integer.toString(x);
+    }
+    System.out.println(msg);
   }
 
 }
