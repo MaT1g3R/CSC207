@@ -19,3 +19,13 @@ various tiny mistakes in other classes such as a subclass
 not extending its parent or doing style fixes. We all took
 part in the design decisions for the program. I also handled
 some of the debugging near the end.
+
+==================Venkata Chaitanya Peesapati===================
+I created, implemented, and documented the Loader, Truck and Order classes.
+I also implemented some of the methods in the Warehouse class.
+I created and wrote the help.txt file. I was also noting down any 
+important design decisions that were made during our discussions.
+Everyone the group was involved in fixing various tiny mistakes 
+in other files. We all took part in the design decisions for the
+program. I helped contribute to some of the testing done at the end.
+
