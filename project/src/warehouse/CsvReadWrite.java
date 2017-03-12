@@ -43,7 +43,7 @@ public final class CsvReadWrite {
         line = br.readLine();
       }
 
-    } catch (IOException e) {
+    } catch (IOException error) {
       return null;
     }
     return result;
@@ -94,7 +94,7 @@ public final class CsvReadWrite {
       FileWriter output = new FileWriter(fileName, true);
       output.append(content + "\n");
       output.close();
-    } catch (IOException e) {
+    } catch (IOException error) {
       System.out.println("Cannot read the file");
     }
   }
@@ -108,16 +108,16 @@ public final class CsvReadWrite {
   public static void overWrite(final ArrayList<String> content,
       final String fileName) {
     try {
-      File f = new File(fileName);
-      if (!f.exists() && !f.createNewFile()) {
+      File file = new File(fileName);
+      if (!file.exists() && !file.createNewFile()) {
         throw new IOException();
       }
-      FileWriter output = new FileWriter(f);
+      FileWriter output = new FileWriter(file);
       for (String s : content) {
         output.write(s + "\n");
       }
       output.close();
-    } catch (IOException e) {
+    } catch (IOException error) {
       System.out.println("Cannot read the file");
     }
   }

@@ -37,7 +37,7 @@ public class Replenisher extends Worker {
    */
   @Override
   public void scan(int sku) {
-    System.out.println("Fascia with SKU number " + String.valueOf(sku) + " "
+    System.out.println("SKU number " + String.valueOf(sku) + " "
         + "has been replenished");
   }
   
