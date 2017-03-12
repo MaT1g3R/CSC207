@@ -18,27 +18,27 @@ public class SkuTranslator {
   private static ArrayList<ArrayList<String>> properties;
 
 
-  /**
-   * Using the given translation table, this function takes in a <sku></sku> as
-   * an int and returns its properties like Model, Colour, and whether or not
-   * it's a front or back fascia.
-   *
-   * @param sku The SKU who's property is being looked for.
-   * @return String array representing properties of sku. The format is [model,
-   * colour, direction]
-   */
-  public static String[] getProperties(int sku) {
-    String[] output = {"None", "None", "None"};
-    for (ArrayList<String> x : properties) {
-      if ((x.get(x.size() - 1)).equals(Integer.toString(sku))) {
-        output = new String[]{x.get(1), x.get(0), "Back"};
-      } else if ((x.get(x.size() - 2)).equals(Integer.toString(sku))) {
-        output = new String[]{x.get(1), x.get(0), "Front"};
-      }
-    }
-    return output;
-
-  }
+//  /**
+//   * Using the given translation table, this function takes in a <sku></sku> as
+//   * an int and returns its properties like Model, Colour, and whether or not
+//   * it's a front or back fascia.
+//   *
+//   * @param sku The SKU who's property is being looked for.
+//   * @return String array representing properties of sku. The format is [model,
+//   * colour, direction]
+//   */
+//  public static String[] getProperties(int sku) {
+//    String[] output = {"None", "None", "None"};
+//    for (ArrayList<String> x : properties) {
+//      if ((x.get(x.size() - 1)).equals(Integer.toString(sku))) {
+//        output = new String[]{x.get(1), x.get(0), "Back"};
+//      } else if ((x.get(x.size() - 2)).equals(Integer.toString(sku))) {
+//        output = new String[]{x.get(1), x.get(0), "Front"};
+//      }
+//    }
+//    return output;
+//
+//  }
 
   /**
    * Using given translation table, returns SKU unit given the info.
@@ -116,7 +116,16 @@ public class SkuTranslator {
     properties = CsvReadWrite.readAsArrays(path);
   }
 
-  public int[] getAllSku() {
-    return null;
+  /**
+   * Get a list of all skus from translation table.
+   *
+   * @return a list of all skus from translation table.
+   */
+  public static ArrayList<Integer> getAllSku() {
+    ArrayList<Integer> res = new ArrayList<>();
+    for (ArrayList<String> loc : locations) {
+      res.add(getSkuFromLocation((String[]) loc.toArray()));
+    }
+    return res;
   }
 }

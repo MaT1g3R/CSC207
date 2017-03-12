@@ -27,14 +27,20 @@ public class Warehouse {
   public Warehouse(String warehouseFilePath) {
     ArrayList<ArrayList<String>> input = CsvReadWrite
         .readAsArrays(warehouseFilePath);
-    if (input == null) {
-    } else {
+
+    for (int sku : SkuTranslator.getAllSku()) {
+      this.inventory.put(sku, 30);
+    }
+
+    if (input != null) {
       for (ArrayList<String> s : input) {
         //{Zone, Aisle, Rack, Rack Level}
         int sku = SkuTranslator.getSkuFromLocation((String[]) s.subList(0, 3)
             .toArray());
       }
     }
+
+
   }
 
   private void assignNonReplenishers(String type) {
