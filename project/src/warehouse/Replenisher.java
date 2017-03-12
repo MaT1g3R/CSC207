@@ -23,7 +23,7 @@ public class Replenisher extends Worker {
   /**
    * This method replenishes the warehouse with Fascia of the SKU number.
    *
-   * @param sku the sku number
+   * @param sku the SKU number.
    */
   public void replenish(final int sku) {
     super.worksAt.addFacsia(sku);
@@ -31,7 +31,7 @@ public class Replenisher extends Worker {
   }
 
   /**
-   * A barcide scanning action that takes place when Fascia is replenished.
+   * A barcode scanning action that takes place when Fascia is replenished.
    *
    * @param sku the SKU to be scanned.
    */
@@ -43,7 +43,7 @@ public class Replenisher extends Worker {
 
   /**
    * This method should never be used.
-   * Throws UnsupportedOperationException when called
+   * Throws UnsupportedOperationException when called.
    */
   @Override
   protected LinkedList<Integer> getScanOrder() {
