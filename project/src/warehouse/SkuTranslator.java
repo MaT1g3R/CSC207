@@ -123,7 +123,8 @@ public class SkuTranslator {
   public static ArrayList<Integer> getAllSku() {
     ArrayList<Integer> res = new ArrayList<>();
     for (ArrayList<String> loc : locations) {
-      res.add(getSkuFromLocation((String[]) loc.toArray()));
+      ArrayList<String> temp = new ArrayList<>(loc.subList(0, loc.size() - 1));
+      res.add(getSkuFromLocation(temp.toArray(new String[temp.size()])));
     }
     return res;
   }

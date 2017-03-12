@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public abstract class Worker {
 
   protected String name;
-  protected LinkedList<Integer> toBeScanned;
+  protected LinkedList<Integer> toBeScanned = new LinkedList<>();
   protected Warehouse worksAt;
   protected boolean isReady = true;
   protected PickingRequest currPickingReq;
@@ -61,7 +61,8 @@ public abstract class Worker {
    * and sets them to be ready for the next task.
    */
   public void finish() {
-    System.out.println("Current action of " + role + " " + name + " has finished.");
+    System.out
+        .println("Current action of " + role + " " + name + " has finished.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
   }

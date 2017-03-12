@@ -60,9 +60,10 @@ public final class CsvReadWrite {
    */
   public static ArrayList<ArrayList<String>> readAsArrays(
       final String fileName) {
-    ArrayList<ArrayList<String>> result = new ArrayList<>();
-    Path pathToFile = Paths.get(fileName);
     try {
+      ArrayList<ArrayList<String>> result = new ArrayList<>();
+      Path pathToFile = Paths.get(fileName);
+
       BufferedReader br = Files.newBufferedReader(pathToFile);
       // read the first line from the text file
       String line = br.readLine();
@@ -74,10 +75,11 @@ public final class CsvReadWrite {
         result.add(lineList);
         line = br.readLine();
       }
-    } catch (IOException e) {
+      return result;
+    } catch (IOException | NullPointerException ex) {
       return null;
     }
-    return result;
+
 
   }
 

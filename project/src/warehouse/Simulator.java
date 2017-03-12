@@ -1,7 +1,6 @@
 package warehouse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -50,21 +49,21 @@ public class Simulator {
    * @param outFilePath the file path for output
    */
   public Simulator(final String eventFile, final String warehouseFilePath,
-      final String translationFilePath, final String traversalFilePath, final String outFilePath) {
+      final String translationFilePath, final String traversalFilePath,
+      final String outFilePath) {
     this.eventList = CsvReadWrite.readCsv(eventFile);
+    SkuTranslator.setLocations(traversalFilePath);
+    SkuTranslator.setProperties(translationFilePath);
     this.warehouse = new Warehouse(warehouseFilePath, outFilePath);
-    this.translationPath = translationFilePath;
-    this.traversalPath = traversalFilePath;
-  }
 
+  }
 
 
   /**
    * The main event loop.
    */
   public void run() {
-    SkuTranslator.setLocations(traversalPath);
-    SkuTranslator.setProperties(translationPath);
+
     final int skuIndex = 3;
     for (String s : this.eventList) {
       if (Pattern.matches("Order [A-Z]+ [A-Z][a-z]+", s)) {
@@ -73,7 +72,7 @@ public class Simulator {
       } else if (Pattern.matches("Picker \\w+ ready", s)) {
         // Picker ready
         String name = s.split("\\s")[1];
-        if (warehouse.getPickerByName(name) != null) {
+        if (warehouse.getPickerByName(name) == null) {
           this.warehouse.addPicker(new Picker(name, this.warehouse));
         }
       } else if (Pattern.matches("Picker \\w+ pick [0-9]", s)) {
@@ -88,7 +87,7 @@ public class Simulator {
       } else if (Pattern.matches("Sequencer \\w+ ready", s)) {
         // Sequencer ready
         String name = s.split("\\s")[1];
-        if (warehouse.getSequencerByName(name) != null) {
+        if (warehouse.getSequencerByName(name) == null) {
           this.warehouse.addSequencer(new Sequencer(name, this.warehouse));
         }
       } else if (Pattern.matches("Sequencer \\w+ sequences", s)) {
@@ -98,7 +97,7 @@ public class Simulator {
       } else if (Pattern.matches("Loader \\w+ ready", s)) {
         // Loader ready
         String name = s.split("\\s")[1];
-        if (warehouse.getLoaderByName(name) != null) {
+        if (warehouse.getLoaderByName(name) == null) {
           this.warehouse.addLoader(new Loader(name, this.warehouse));
         }
       } else if (Pattern.matches("Loader \\w+ loads", s)) {
@@ -108,7 +107,7 @@ public class Simulator {
       } else if (Pattern.matches("Replenisher \\w+ ready", s)) {
         // Replenisher ready
         String name = s.split("\\s")[1];
-        if (warehouse.getReplenisherByName(name) != null) {
+        if (warehouse.getReplenisherByName(name) == null) {
           this.warehouse.addReplenisher(new Replenisher(name, this.warehouse));
         }
       } else if (Pattern.matches("Replenisher \\w+ replenish [0-9]+", s)) {

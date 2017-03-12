@@ -15,7 +15,6 @@ public class Warehouse {
   private ArrayList<Order> outstandingOrders = new ArrayList<>();
 
 
-
   //The directory where final.csv and orders.csv will be saved
   private String outputFileDir;
   private HashMap<Integer, Integer> inventory = new HashMap<>();
@@ -35,27 +34,31 @@ public class Warehouse {
   public Warehouse(String inputFilePath, String outputFileDirPath) {
     this(inputFilePath, outputFileDirPath, 30);
   }
+
   public Warehouse(String inputFilePath, String outputFileDirPath, int Max) {
     this.outputFileDir = outputFileDirPath;
     this.setInventoryFromFile(inputFilePath);
     this.MAX_STOCK = Max;
   }
+
   /**
    * This output the final inventory as csv.
    */
   public void outPutInventory() {
     ArrayList<String> result = new ArrayList<>();
     for (HashMap.Entry<Integer, Integer> entry : inventory.entrySet()) {
-      if (entry.getValue() < MAX_STOCK ) {
+      if (entry.getValue() < MAX_STOCK) {
         String location = SkuTranslator.getLocation(entry.getKey());
         result.add(location + "," + entry.getValue());
       }
     }
-    CsvReadWrite.overWrite(result, outputFileDir + File.separator + "final.csv");
+    CsvReadWrite
+        .overWrite(result, outputFileDir + File.separator + "final.csv");
   }
 
   private void setInventoryFromFile(String inputFilePath) {
-    ArrayList<ArrayList<String>> input = CsvReadWrite.readAsArrays(inputFilePath);
+    ArrayList<ArrayList<String>> input = CsvReadWrite
+        .readAsArrays(inputFilePath);
 
     for (int sku : SkuTranslator.getAllSku()) {
       this.inventory.put(sku, 30);
@@ -65,11 +68,13 @@ public class Warehouse {
     if (input != null) {
       for (ArrayList<String> s : input) {
         //{Zone, Aisle, Rack, Rack Level}
-        int sku = SkuTranslator.getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
+        int sku = SkuTranslator
+            .getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
         this.inventory.put(sku, Integer.parseInt(s.get(4)));
       }
     }
   }
+
   private void assignNonReplenishers(String type) {
     Queue<PickingRequest> requests = new LinkedList<>();
     Collection<Worker> people = new LinkedList<>();
@@ -233,9 +238,11 @@ public class Warehouse {
   public void addSequencer(final Sequencer sequencer) {
     this.sequencers.put(sequencer.getName(), sequencer);
   }
+
   public String getOutputFileDir() {
     return outputFileDir;
   }
+
   public void addReplenisher(final Replenisher replenisher) {
     this.replenishers.put(replenisher.getName(), replenisher);
   }
