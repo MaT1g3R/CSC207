@@ -7,7 +7,6 @@ public class Warehouse {
   private int numPickingRequests = 0;
   private ArrayList<Order> outstandingOrders;
   private HashMap<Integer, Integer> inventory;
-  private String loggerPath;
   private HashMap<String, Picker> pickers;
   private HashMap<String, Loader> loaders;
   private HashMap<String, Sequencer> sequencers;
@@ -15,12 +14,13 @@ public class Warehouse {
   private LinkedList<Integer> replenishRequests;
   private LinkedList<PickingRequest> unPickedPickingRequests;
   private LinkedList<PickingRequest> sequenceRequests;
+  private ArrayList<Truck> trucks;
 
   // Items are queued in order of pickingRequestID
   private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
-  public Warehouse(String loggerPath) {
-    this.loggerPath = loggerPath;
+  public Warehouse(String warehouseFilePath) {
+    
   }
 
   private void assignNonReplenishers(String type) {
@@ -134,7 +134,7 @@ public class Warehouse {
   }
   
   public void addOrder(Order order) {
-    
+    outstandingOrders.add(order);
   }
 
   public Picker getPickerByName(final String name) {
@@ -157,7 +157,6 @@ public class Warehouse {
     return inventory;
   }
 
-
   public void addPicker(final Picker picker) {
     this.pickers.put(picker.getName(), picker);
   }
@@ -176,7 +175,7 @@ public class Warehouse {
 
 
   public ArrayList<Truck> getTrucks() {
-    return null;
+    return trucks;
   }
 
 }
