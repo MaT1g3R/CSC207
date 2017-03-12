@@ -1,36 +1,77 @@
 package warehouse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Queue;
+import java.util.*;
 
 public class Warehouse {
 
-
+  private int numPickingRequests = 0;
+  private ArrayList<Order> outstandingOrders;
   private HashMap<Integer, Integer> inventory;
   private String loggerPath;
   private HashMap<String, Picker> pickers;
   private HashMap<String, Loader> loaders;
   private HashMap<String, Sequencer> sequencers;
   private HashMap<String, Replenisher> replenishers;
-  private ArrayList<Integer> replenishRequests;
-  private ArrayList<PickingRequest> unPickedPickingRequests;
-  private ArrayList<PickingRequest> sequenceRequests;
+  private LinkedList<Integer> replenishRequests;
+  private LinkedList<PickingRequest> unPickedPickingRequests;
+  private LinkedList<PickingRequest> sequenceRequests;
 
   //Items are queued in order of pickingRequestID
-  private Queue<PickingRequest> loadingRequests;
+  private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
   public Warehouse(String loggerPath) {
     this.loggerPath = loggerPath;
   }
 
-  public void update(PickingRequest request) {
+  private void assignNonReplenishers(String type) {
+    Queue<PickingRequest> requests = new LinkedList<>();
+    Collection<Worker> people = new LinkedList<>();
+    if (type.toLowerCase().equals("sequencer")) {
+      requests = sequenceRequests;
+      people = new LinkedList<>(sequencers.values());
+    } else if (type.toLowerCase().equals("picker")) {
+      requests = unPickedPickingRequests;
+      people = new LinkedList<>(pickers.values());
+
+    } else if (type.toLowerCase().equals("loader")) {
+      requests = loadingRequests;
+      people = new LinkedList<>(loaders.values());
+    }
+    for (Worker worker : people) {
+      if (worker.getIsReady() && !requests.isEmpty()) {
+        PickingRequest request = requests.remove();
+        if (!(worker instanceof Loader) || request.getLoadReady()) {
+          worker.start(request);
+        }
+      }
+    }
 
   }
 
-  private void eventLogger() {
-
+  /**
+   * Looks through requests for <type></type> and assigns any ready worker or <type></type> to it.
+   *
+   * @param type can be replenisher, picker, loader, or sequencer.
+   */
+  public void assignWorkers(String type) {
+    if (type.toLowerCase().equals("replenisher")) {
+      assignReplenishers();
+    } else {
+      assignNonReplenishers(type);
+    }
   }
+
+
+  private void assignReplenishers() {
+    Queue<Integer> requests = replenishRequests;
+    for (Replenisher replenisher : replenishers.values()) {
+      if (replenisher.getIsReady()) {
+        replenisher.start(requests.remove());
+      }
+    }
+  }
+
+
 
   public void addFacsia(int sku) {
     this.inventory.put(sku, this.inventory.get(sku) + 25);
@@ -68,6 +109,17 @@ public class Warehouse {
         .println("Replenish request for sku " + Integer.toString(sku) + ".");
     replenishRequests.add(sku);
 
+  }
+
+  public void addSequencingRequest(PickingRequest request) {
+  }
+
+  public void addUnpickedPickingRequest(PickingRequest request) {
+  }
+
+  //make sure to increment numPickingRequests after creating, add to unpickedPickingRequests, and
+  // to loadRequests
+  public void createPickingRequest(ArrayList<Order> orders) {
   }
 
   public void addOrder(Order order) {

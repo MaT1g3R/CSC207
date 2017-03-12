@@ -8,10 +8,10 @@ import java.util.LinkedList;
  */
 public abstract class Worker {
 
-  private String name;
+  protected String name;
   protected LinkedList<Integer> toBeScanned;
   protected Warehouse worksAt;
-  private boolean isReady = true;
+  protected boolean isReady = true;
   protected PickingRequest currPickingReq;
   protected String role;
 
@@ -33,7 +33,7 @@ public abstract class Worker {
    */
   public void scan(int sku) {
     System.out.println(role + " " + name + " Scanned " + sku);
-    if (!toBeScanned.isEmpty()) {
+    if (!toBeScanned.isEmpty() && !getIsReady()) {
       if (sku != toBeScanned.pop()) {
         System.out.println(role + " " + name + " Wrong Scan");
         wrongScanHandle();
@@ -50,7 +50,7 @@ public abstract class Worker {
    */
   public void wrongScanHandle() {
     System.out.println("Aborting action of " + role + " " + name);
-    worksAt.pickingRequests.add();
+    worksAt.addUnpickedPickingRequest(currPickingReq);
     finish();
   }
 
