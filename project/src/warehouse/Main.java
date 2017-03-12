@@ -12,13 +12,13 @@ public class Main {
    */
   public static void main(String[] args) {
 
-    String eventFile = "../group0376/project/16orders.txt";
-    String warehouseFile = "../group0376/project/initial.csv";
-    String translationFile = "../group0376/project"
+    String eventFile = "../16orders.txt";
+    String warehouseFile = "../initial.csv";
+    String translationFile = ".."
         + "/translation.csv";
-    String traversalFile = "../group0376/project"
+    String traversalFile = ".."
         + "/traversal_table.csv";
-    String outFile = "../group0376/project/";
+    String outFile = "../";
 
     Simulator mySim = new Simulator(eventFile, warehouseFile, translationFile,
         traversalFile, outFile);
