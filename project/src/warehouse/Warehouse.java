@@ -188,7 +188,7 @@ public class Warehouse {
   public void addUnpickedPickingRequest(PickingRequest request) {
     unPickedPickingRequests.add(0, request);
     this.assignWorkers("picker");
-    System.out.println("Added PickingRequest " + request.getId() + "to front.");
+    System.out.println("Added PickingRequest " + request.getId() + " to front.");
   }
 
   /**
@@ -201,7 +201,7 @@ public class Warehouse {
     loadingRequests.add(request);
     this.assignWorkers("picker");
     System.out
-        .println("Added new PickingRequest " + request.getId() + "to end.");
+        .println("Added new PickingRequest " + request.getId() + " to end.");
   }
 
   public void addOrder(Order order) {
