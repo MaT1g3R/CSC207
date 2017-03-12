@@ -47,7 +47,7 @@ public final class CsvReadWrite {
       return null;
     }
     return result;
-    
+
   }
 
   /**
