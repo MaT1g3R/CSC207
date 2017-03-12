@@ -41,12 +41,12 @@ public class Sequencer extends Worker {
    * The button a worker presses to begin sequencing.
    */
   public void sequence() {
-    System.out.println("Sequence attempt " + role + " " + this.getName());
-    if (this.getIsReady() || !this.toBeScanned.isEmpty()) {
-      System.out.println("You have more left to do " + role + " " + this.getName());
+    System.out.println("Sequence attempt " + role + " " + this.name);
+    if (this.canDoActionBesidesScanOrGetReady()) {
+      System.out.println("You have more left to do " + role + " " + this.name);
     } else {
       System.out.println(
-          role + " " + this.getName() + " sequenced pickingRequest ID " + currPickingReq.getId());
+          role + " " + this.name + " sequenced pickingRequest ID " + currPickingReq.getId());
       currPickingReq.setLoadReady(true);
       worksAt.assignWorkers("loader");
     }

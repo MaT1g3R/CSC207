@@ -68,6 +68,14 @@ public abstract class Worker {
     worksAt.assignWorkers(this.getClass().getSimpleName());
   }
 
+  /**
+   * checks if the worker should do anything other than scanning or gettingReady
+   */
+  protected boolean canDoActionBesidesScanOrGetReady() {
+    return this.isReady || !toBeScanned.isEmpty();
+
+  }
+
 
   /**
    * @return true or false if a worker is ready or not, respectively.

@@ -27,10 +27,11 @@ public class Loader extends Worker {
    * Creates a new Truck if none are available.
    */
   public void load() {
-    if (this.getIsReady() || !this.toBeScanned.isEmpty()) {
+    System.out.println("Loader " + name + " load attempt");
+    if (canDoActionBesidesScanOrGetReady()) {
       // If doesn't have a duty  or didn't finish scanning, do nothing.
       System.out.println(
-          "Loader " + super.getName() + " failed to load");
+          "Loader " + name + " failed to load");
     } else {
       int[] frontPallet = currPickingReq.getSequencedPallets()[0];
       int[] backPallet = currPickingReq.getSequencedPallets()[1];
@@ -44,7 +45,7 @@ public class Loader extends Worker {
       // Assuming sequencer outputs in order.
       trucks.get(truckNum - 1).addCargo(frontPallet, backPallet);
       System.out.println(
-          "Loader " + super.getName() + " loaded PickingRequest " + currPickingReq.getId());
+          "Loader " + name + " loaded PickingRequest " + currPickingReq.getId());
       outputToCsv();
     }
   }
