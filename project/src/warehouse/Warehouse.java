@@ -25,9 +25,15 @@ public class Warehouse {
   private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
   public Warehouse(String warehouseFilePath) {
-    for (ArrayList<String> s : CsvReadWrite.readAsArrays(warehouseFilePath)) {
-      //{Zone, Aisle, Rack, Rack Level}
-      SkuTranslator.getSkuFromLocation((String[]) s.subList(0, 3).toArray());
+    ArrayList<ArrayList<String>> input = CsvReadWrite
+        .readAsArrays(warehouseFilePath);
+    if (input == null) {
+    } else {
+      for (ArrayList<String> s : input) {
+        //{Zone, Aisle, Rack, Rack Level}
+        int sku = SkuTranslator.getSkuFromLocation((String[]) s.subList(0, 3)
+            .toArray());
+      }
     }
   }
 

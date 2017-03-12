@@ -109,4 +109,8 @@ public class SkuTranslator {
   public static void setProperties(String path) {
     properties = CsvReadWrite.readAsArrays(path);
   }
+
+  public int[] getAllSku(){
+    return null;
+  }
 }
