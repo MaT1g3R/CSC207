@@ -48,7 +48,6 @@ public class Picker extends Worker {
   public void goToMarshaling() {
     System.out.println(role + " " + name + " has gone to marshalling");
     worksAt.addSequencingRequest(currPickingReq);
-    worksAt.assignWorkers("sequencer");
   }
 
 }
