@@ -19,6 +19,7 @@ public abstract class Worker {
     this.name = name;
     this.worksAt = worksAt;
     this.role = this.getClass().getSimpleName();
+    //try to get request as soon as created
   }
 
   protected abstract LinkedList<Integer> getScanOrder();
@@ -64,7 +65,7 @@ public abstract class Worker {
         .println(role + " " + name + " is now ready.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
-    worksAt.assignWorkers(this.getClass().getSimpleName());
+    worksAt.assignWorkers(this.getClass().getSimpleName().toLowerCase());
   }
 
   /**

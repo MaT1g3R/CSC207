@@ -1,48 +1,48 @@
 package warehouse;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Warehouse {
 
   private final int MAX_STOCK;
   private int numPickingRequests = 0;
 
+  //orders that haven't been made into a picking request yet
   private ArrayList<Order> outstandingOrders = new ArrayList<>();
 
 
   //The directory where final.csv and orders.csv will be saved
   private String outputFileDir;
+  //maps sku:quantity
   private HashMap<Integer, Integer> inventory = new HashMap<>();
-  private HashMap<String, Picker> pickers = new HashMap<>();
-  private HashMap<String, Loader> loaders = new HashMap<>();
-  private HashMap<String, Sequencer> sequencers = new HashMap<>();
-  private HashMap<String, Replenisher> replenishers = new HashMap<>();
-  private LinkedList<Integer> replenishRequests = new LinkedList<>();
-  private LinkedList<PickingRequest> unPickedPickingRequests = new
-      LinkedList<>();
-  private LinkedList<PickingRequest> sequenceRequests = new LinkedList<>();
-  private ArrayList<Truck> trucks = new ArrayList<>();
+  //The field maps (job title as lower case string):(worker name, proper case String):(instance)
+  private HashMap<String, HashMap<String,Worker>> workers = new HashMap<>();
 
-  // Items are queued in order of pickingRequestID
-  private Queue<PickingRequest> loadingRequests = new LinkedList<>();
+  // job title of request as string: instance of request as linkedList
+  private HashMap<String,LinkedList> requests = new HashMap<>();
+  private ArrayList<Truck> trucks = new ArrayList<>();
 
   public Warehouse(String inputFilePath, String outputFileDirPath) {
     this(inputFilePath, outputFileDirPath, 30);
   }
 
   public Warehouse(String inputFilePath, String outputFileDirPath, int Max) {
+    this.workers.put("picker",new HashMap<>());
+    this.workers.put("replenisher",new HashMap<>());
+    this.workers.put("loader",new HashMap<>());
+    this.workers.put("sequencer",new HashMap<>());
+    this.requests.put("picker",new LinkedList());
+    this.requests.put("replenisher",new LinkedList());
+    this.requests.put("loader",new LinkedList());
+    this.requests.put("sequencer",new LinkedList());
     this.outputFileDir = outputFileDirPath;
     this.setInventoryFromFile(inputFilePath);
     this.MAX_STOCK = Max;
   }
 
   /**
-   * This output the final inventory as csv.
+   * This output the final inventory as csv to the outputFileDir.
    */
   public void outPutInventory() {
     ArrayList<String> result = new ArrayList<>();
@@ -75,41 +75,7 @@ public class Warehouse {
     }
   }
 
-  private void assignNonReplenishers(String type) {
-    Queue<PickingRequest> requests = new LinkedList<>();
-    Collection<Worker> people = new LinkedList<>();
-    if (type.toLowerCase().equals("sequencer")) {
-      requests = sequenceRequests;
-      people = new LinkedList<>(sequencers.values());
-    } else if (type.toLowerCase().equals("picker")) {
-      requests = unPickedPickingRequests;
-      people = new LinkedList<>(pickers.values());
 
-    } else if (type.toLowerCase().equals("loader")) {
-      requests = loadingRequests;
-      people = new LinkedList<>(loaders.values());
-    }
-    for (Worker worker : people) {
-      if (worker.isReady() && !requests.isEmpty()) {
-        PickingRequest request = requests.peek();
-//        if (request != null && (!(worker instanceof Loader) || request
-//            .getLoadReady())) {
-//          requests.remove();
-//          worker.start(request);
-//          }
-        if (request != null && worker instanceof Loader && request
-            .getLoadReady()) {
-          worker.start(request);
-          requests.remove();
-        } else if (request != null && !(worker instanceof Loader) && !request
-            .getLoadReady()) {
-          worker.start(request);
-          requests.remove();
-        }
-      }
-    }
-
-  }
 
   /**
    * Looks through requests for <type></type> and assigns any ready worker or
@@ -118,22 +84,32 @@ public class Warehouse {
    * @param type can be replenisher, picker, loader, or sequencer.
    */
   public void assignWorkers(String type) {
-    if (type.toLowerCase().equals("replenisher")) {
-      assignReplenishers();
-    } else {
-      assignNonReplenishers(type);
-    }
-  }
-
-
-  private void assignReplenishers() {
-    Queue<Integer> requests = replenishRequests;
-    for (Replenisher replenisher : replenishers.values()) {
-      if (replenisher.isReady() && !requests.isEmpty()) {
-        replenisher.start(requests.remove());
+    Queue<Object> requests;
+    Collection<Worker> people = new LinkedList<>();
+    people = workers.get(type.toLowerCase()).values();
+    requests = this.requests.get(type.toLowerCase());
+    for (Worker worker : people) {
+      if (worker.isReady() && !requests.isEmpty()) {
+        //Replenishers start method take int instead of PickingRequest
+        if(worker instanceof Replenisher){
+          ((Replenisher)worker).start((int)requests.remove());
+        }
+        else {
+          PickingRequest request = (PickingRequest) requests.peek();
+          //loaders can only get assigned requests in order of pickingRequest ID and
+          //pickingRequest has to be load ready
+          if (request != null && (!(worker instanceof Loader) || request
+              .getLoadReady())) {
+            worker.start(request);
+            requests.remove();
+          }
+        }
       }
     }
+
   }
+
+
 
 
   public void addFacsia(int sku) {
@@ -155,12 +131,15 @@ public class Warehouse {
           "Removed one sku " + Integer.toString(sku) + " from inventory.");
       this.inventory.put(sku, amount - 1);
       // If <= 5, and theres no request to replenish it, it needs to be replenished
-      if (this.inventory.get(sku) <= 5 && replenishRequests.contains(sku)) {
+      if (this.inventory.get(sku) <= 5 && requests.get("replenisher").contains(sku)) {
         addReplenishRequest(sku);
       }
     }
   }
 
+  public Worker getWorker(String name, String title) {
+    return workers.get(title).get(name);
+  }
   /**
    * Adds a replenish request, to the end of the list of pending
    * replenishRequests. Prints that it has been added.
@@ -170,14 +149,14 @@ public class Warehouse {
   public void addReplenishRequest(int sku) {
     System.out
         .println("Replenish request for sku " + Integer.toString(sku) + ".");
-    replenishRequests.add(sku);
+    requests.get("replenisher").add(sku);
     this.assignWorkers("replenisher");
 
 
   }
 
   public void addSequencingRequest(PickingRequest request) {
-    sequenceRequests.add(request);
+    requests.get("sequencer").add(request);
     this.assignWorkers("sequencer");
 
   }
@@ -186,7 +165,7 @@ public class Warehouse {
    * Adds picking request to the front of the queue.
    */
   public void addUnpickedPickingRequest(PickingRequest request) {
-    unPickedPickingRequests.add(0, request);
+    requests.get("picker").add(0, request);
     this.assignWorkers("picker");
     System.out.println("Added high-priority PickingRequest " + request.getId());
   }
@@ -196,9 +175,9 @@ public class Warehouse {
    */
   public void createPickingRequest(ArrayList<Order> orders) {
     PickingRequest request = new PickingRequest(orders, numPickingRequests);
-    unPickedPickingRequests.add(request);
+    requests.get("picker").add(request);
     numPickingRequests++;
-    loadingRequests.add(request);
+    requests.get("loader").add(request);
     this.assignWorkers("picker");
     System.out
         .println("Added new PickingRequest " + request.getId());
@@ -213,22 +192,6 @@ public class Warehouse {
     }
   }
 
-  public Picker getPickerByName(final String name) {
-    return this.pickers.get(name);
-  }
-
-  public Loader getLoaderByName(final String name) {
-    return this.loaders.get(name);
-  }
-
-  public Sequencer getSequencerByName(final String name) {
-    return this.sequencers.get(name);
-  }
-
-  public Replenisher getReplenisherByName(final String name) {
-    return this.replenishers.get(name);
-  }
-
   public HashMap<Integer, Integer> getInventory() {
     return inventory;
   }
@@ -237,23 +200,11 @@ public class Warehouse {
     return trucks;
   }
 
-  public void addPicker(final Picker picker) {
-    this.pickers.put(picker.getName(), picker);
+  public void addWorker(final Worker person, String type) {
+    this.workers.get(type).put(person.getName(),person);
   }
-
-  public void addLoader(final Loader loader) {
-    this.loaders.put(loader.getName(), loader);
-  }
-
-  public void addSequencer(final Sequencer sequencer) {
-    this.sequencers.put(sequencer.getName(), sequencer);
-  }
-
   public String getOutputFileDir() {
     return outputFileDir;
   }
 
-  public void addReplenisher(final Replenisher replenisher) {
-    this.replenishers.put(replenisher.getName(), replenisher);
-  }
 }

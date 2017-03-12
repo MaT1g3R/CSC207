@@ -52,60 +52,60 @@ public class Simulator {
       } else if (Pattern.matches("Picker \\w+ ready", s)) {
         // Picker ready
         String name = s.split("\\s")[1];
-        if (warehouse.getPickerByName(name) == null) {
-          this.warehouse.addPicker(new Picker(name, this.warehouse));
+        if (warehouse.getWorker(name, "picker") == null) {
+          this.warehouse.addWorker(new Picker(name, this.warehouse), "picker");
         }
-        this.warehouse.getPickerByName(name).getReady();
+        this.warehouse.getWorker(name, "picker").getReady();
       } else if (Pattern.matches("Picker \\w+ pick [0-9]+", s)) {
         // Picker picks
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getPickerByName(name).scan(sku);
+        this.warehouse.getWorker(name, "picker").scan(sku);
       } else if (Pattern.matches("Picker \\w+ to Marshaling", s)) {
         // Picker to marshaling
         String name = s.split("\\s")[1];
-        this.warehouse.getPickerByName(name).goToMarshaling();
+        ((Picker) this.warehouse.getWorker(name, "picker")).goToMarshaling();
       } else if (Pattern.matches("Sequencer \\w+ ready", s)) {
         // Sequencer ready
         String name = s.split("\\s")[1];
-        if (warehouse.getSequencerByName(name) == null) {
-          this.warehouse.addSequencer(new Sequencer(name, this.warehouse));
+        if (warehouse.getWorker(name, "sequencer") == null) {
+          this.warehouse.addWorker(new Sequencer(name, this.warehouse), "sequencer");
         }
-        this.warehouse.getSequencerByName(name).getReady();
+        this.warehouse.getWorker(name, "sequencer").getReady();
       } else if (Pattern.matches("Sequencer \\w+ sequences", s)) {
         // Sequencer sequences
         String name = s.split("\\s")[1];
-        this.warehouse.getSequencerByName(name).sequence();
+        ((Sequencer)this.warehouse.getWorker(name, "sequencer")).sequence();
       } else if (Pattern.matches("Loader \\w+ ready", s)) {
         // Loader ready
         String name = s.split("\\s")[1];
-        if (warehouse.getLoaderByName(name) == null) {
-          this.warehouse.addLoader(new Loader(name, this.warehouse));
+        if (warehouse.getWorker(name, "loader") == null) {
+          this.warehouse.addWorker(new Loader(name, this.warehouse), "loader");
         }
-        this.warehouse.getLoaderByName(name).getReady();
+        this.warehouse.getWorker(name, "loader").getReady();
       } else if (Pattern.matches("Loader \\w+ loads", s)) {
         // Loader loads
         String name = s.split("\\s")[1];
-        this.warehouse.getLoaderByName(name).load();
+        ((Loader)this.warehouse.getWorker(name, "loader")).load();
       } else if (Pattern.matches("Replenisher \\w+ ready", s)) {
         // Replenisher ready
         String name = s.split("\\s")[1];
-        if (warehouse.getReplenisherByName(name) == null) {
-          this.warehouse.addReplenisher(new Replenisher(name, this.warehouse));
+        if (warehouse.getWorker(name, "replenisher") == null) {
+          this.warehouse.addWorker(new Replenisher(name, this.warehouse), "replenisher");
         }
       } else if (Pattern.matches("Replenisher \\w+ replenish [0-9]+", s)) {
         // Replenisher replenish
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getReplenisherByName(name).replenish(sku);
+        ((Replenisher)this.warehouse.getWorker(name, "replenisher")).replenish(sku);
       } else if (Pattern.matches("Sequencer \\w+ scans [0-9]+", s)) {
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getSequencerByName(name).scan(sku);
+        this.warehouse.getWorker(name, "sequencer").scan(sku);
       } else if (Pattern.matches("Loader \\w+ scans [0-9]+", s)) {
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
-        this.warehouse.getLoaderByName(name).scan(sku);
+        this.warehouse.getWorker(name, "loader").scan(sku);
       }
     }
     warehouse.outPutInventory();
