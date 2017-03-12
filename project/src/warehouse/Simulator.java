@@ -76,7 +76,7 @@ public class Simulator {
           this.warehouse.addPicker(new Picker(name, this.warehouse));
         }
         this.warehouse.getPickerByName(name).finish();
-      } else if (Pattern.matches("Picker \\w+ pick [0-9]", s)) {
+      } else if (Pattern.matches("Picker \\w+ pick [0-9]+", s)) {
         // Picker picks
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
@@ -118,8 +118,14 @@ public class Simulator {
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
         this.warehouse.getReplenisherByName(name).replenish(sku);
-      } else if (Pattern.matches("", s)) {
-
+      } else if (Pattern.matches("Sequencer \\w+ scans [0-9]+]", s)) {
+        String name = s.split("\\s")[1];
+        int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
+        this.warehouse.getSequencerByName(name).scan(sku);
+      } else if (Pattern.matches("Loader \\w+ scans [0-9]+", s)) {
+        String name = s.split("\\s")[1];
+        int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
+        this.warehouse.getLoaderByName(name).scan(sku);
       }
     }
   }
