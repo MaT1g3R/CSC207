@@ -1,5 +1,6 @@
 package warehouse;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -54,7 +55,8 @@ public class Loader extends Worker {
   private void outputToCsv() {
     ArrayList<Order> currentOrders = currPickingReq.getOrders();
     for (int i = 0; i < currentOrders.size(); i++) {
-      CsvReadWrite.addLine(currentOrders.get(i).toString(), "orders.csv");
+      CsvReadWrite.addLine(currentOrders.get(i).toString(), worksAt.getOutputFileDir()
+          + File.separator +"orders.csv");
     }
   }
 
