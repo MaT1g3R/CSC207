@@ -28,7 +28,7 @@ public class Loader extends Worker {
    */
   public void load() {
     System.out.println("Loader " + name + " load attempt");
-    if (canDoActionBesidesScanOrGetReady()) {
+    if (shouldScanOrGetReady()) {
       // If doesn't have a duty  or didn't finish scanning, do nothing.
       System.out.println(
           "Loader " + name + " failed to load");

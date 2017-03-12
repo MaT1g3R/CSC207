@@ -90,13 +90,13 @@ public class Warehouse {
       people = new LinkedList<>(loaders.values());
     }
     for (Worker worker : people) {
-      if (worker.getIsReady() && !requests.isEmpty()) {
+      if (worker.isReady() && !requests.isEmpty()) {
         PickingRequest request = requests.peek();
 //        if (request != null && (!(worker instanceof Loader) || request
 //            .getLoadReady())) {
 //          requests.remove();
 //          worker.start(request);
-//        }
+//          }
         if (request != null && worker instanceof Loader && request
             .getLoadReady()) {
           worker.start(request);
@@ -129,7 +129,7 @@ public class Warehouse {
   private void assignReplenishers() {
     Queue<Integer> requests = replenishRequests;
     for (Replenisher replenisher : replenishers.values()) {
-      if (replenisher.getIsReady() && !requests.isEmpty()) {
+      if (replenisher.isReady() && !requests.isEmpty()) {
         replenisher.start(requests.remove());
       }
     }
@@ -188,7 +188,7 @@ public class Warehouse {
   public void addUnpickedPickingRequest(PickingRequest request) {
     unPickedPickingRequests.add(0, request);
     this.assignWorkers("picker");
-    System.out.println("Added PickingRequest " + request.getId() + " to front.");
+    System.out.println("Added high-priority PickingRequest " + request.getId());
   }
 
   /**
@@ -201,9 +201,9 @@ public class Warehouse {
     loadingRequests.add(request);
     this.assignWorkers("picker");
     System.out
-        .println("Added new PickingRequest " + request.getId() + " to end.");
+        .println("Added new PickingRequest " + request.getId());
   }
-
+  
   public void addOrder(Order order) {
     outstandingOrders.add(order);
     System.out.println("Added order " + order.toString());

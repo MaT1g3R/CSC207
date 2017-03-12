@@ -45,7 +45,7 @@ public class Picker extends Worker {
    */
   public void goToMarshaling() {
     System.out.println(role + " " + name + " has gone to marshalling");
-    if(this.getIsReady() || !this.toBeScanned.isEmpty()) {
+    if(this.isReady() || !this.toBeScanned.isEmpty()) {
       System.out.println(role + " " + name + " should not be in marshalling");
     } else {
       worksAt.addSequencingRequest(currPickingReq);

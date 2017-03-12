@@ -33,7 +33,7 @@ public abstract class Worker {
    */
   public void scan(int sku) {
     System.out.println(role + " " + name + " Scanned " + sku);
-    if (!toBeScanned.isEmpty() && !getIsReady()) {
+    if (!toBeScanned.isEmpty() && !isReady()) {
       if (sku != toBeScanned.pop()) {
         System.out.println(role + " " + name + " Wrong Scan");
         wrongScanHandle();
@@ -52,17 +52,16 @@ public abstract class Worker {
     System.out.println("Aborting action of " + role + " " + name);
     worksAt.addUnpickedPickingRequest(currPickingReq);
     worksAt.assignWorkers("seqencer");
-    finish();
+    getReady();
   }
 
 
   /**
-   * Tells the worker that they are finished their current task,
-   * and sets them to be ready for the next task.
+   * Sets the worker to be ready for the next task, if any.
    */
-  public void finish() {
+  public void getReady() {
     System.out
-        .println("Current action of " + role + " " + name + " has finished.");
+        .println(role + " " + name + " is now ready.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
     worksAt.assignWorkers(this.getClass().getSimpleName());
@@ -71,7 +70,7 @@ public abstract class Worker {
   /**
    * checks if the worker should do anything other than scanning or gettingReady
    */
-  protected boolean canDoActionBesidesScanOrGetReady() {
+  protected boolean shouldScanOrGetReady() {
     return this.isReady || !toBeScanned.isEmpty();
 
   }
@@ -80,7 +79,7 @@ public abstract class Worker {
   /**
    * @return true or false if a worker is ready or not, respectively.
    */
-  public boolean getIsReady() {
+  public boolean isReady() {
     return isReady;
   }
 

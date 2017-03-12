@@ -42,7 +42,7 @@ public class Sequencer extends Worker {
    */
   public void sequence() {
     System.out.println("Sequence attempt " + role + " " + this.name);
-    if (this.canDoActionBesidesScanOrGetReady()) {
+    if (this.shouldScanOrGetReady()) {
       System.out.println("You have more left to do " + role + " " + this.name);
     } else {
       System.out.println(
