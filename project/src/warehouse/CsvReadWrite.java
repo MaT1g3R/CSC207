@@ -89,10 +89,10 @@ public final class CsvReadWrite {
    * @param content The string to be appended
    * @param fileName The name of the file
    */
-  public static void addLine(final String content, final String fileName) {
+  public static void addLine(String content, final String fileName) {
     try {
       FileWriter output = new FileWriter(fileName, true);
-      output.append(content);
+      output.append(content + "\n");
       output.close();
     } catch (IOException e) {
       System.out.println("Cannot read the file");
