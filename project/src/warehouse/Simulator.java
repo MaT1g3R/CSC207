@@ -93,6 +93,7 @@ public class Simulator {
         if (warehouse.getWorker(name, "replenisher") == null) {
           this.warehouse.addWorker(new Replenisher(name, this.warehouse), "replenisher");
         }
+        this.warehouse.getWorker(name,"replenisher").getReady();
       } else if (Pattern.matches("Replenisher \\w+ replenish [0-9]+", s)) {
         // Replenisher replenish
         String name = s.split("\\s")[1];

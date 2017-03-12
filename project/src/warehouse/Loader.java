@@ -57,8 +57,9 @@ public class Loader extends Worker {
     ArrayList<Order> currentOrders = currPickingReq.getOrders();
     for (int i = 0; i < currentOrders.size(); i++) {
       CsvReadWrite.addLine(currentOrders.get(i).toString(), worksAt.getOutputFileDir()
-          + File.separator +"orders.csv");
+          + File.separator + "orders.csv");
     }
+    System.out.println("Updated orders.csv for PickingRequest " + currPickingReq.getId());
   }
 
   /**
