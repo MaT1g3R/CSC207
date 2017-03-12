@@ -7,14 +7,5 @@ javac warehouse/Main.java
 java warehouse/Main
 -------------------
 
-Once the program starts, you will be prompted to enter the paths for various files.
-You can enter the following 5 inputs to the 5 prompts, in order:
--------------------
-16orders.txt
-initial.csv
-translation.csv
-traversal_table.csv
-../project
--------------------
-
-After this, the program should run.
+After this, the program should run and automatically select files for input.
+It will output to orders.csv and final.csv in the same directory.
