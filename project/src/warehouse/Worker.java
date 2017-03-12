@@ -18,7 +18,7 @@ public abstract class Worker {
   protected Worker(String name, Warehouse worksAt) {
     this.name = name;
     this.worksAt = worksAt;
-    this.role = String.class.getSimpleName();
+    this.role = this.getClass().getSimpleName();
   }
 
   protected abstract LinkedList<Integer> getScanOrder();
@@ -65,7 +65,7 @@ public abstract class Worker {
         .println("Current action of " + role + " " + name + " has finished.");
     toBeScanned = new LinkedList<>();
     this.isReady = true;
-    worksAt.assignWorkers(getClass().getSimpleName());
+    worksAt.assignWorkers(this.getClass().getSimpleName());
   }
 
 

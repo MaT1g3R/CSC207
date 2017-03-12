@@ -92,7 +92,8 @@ public class Warehouse {
     for (Worker worker : people) {
       if (worker.getIsReady() && !requests.isEmpty()) {
         PickingRequest request = requests.peek();
-        if (!(worker instanceof Loader) || request.getLoadReady()) {
+        if (request != null && !(worker instanceof Loader) || request
+            .getLoadReady()) {
           requests.remove();
           worker.start(request);
         }

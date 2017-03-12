@@ -53,8 +53,6 @@ Sequencer Sue scans 7
 Sequencer Sue scans 8
 Sequencer Sue sequences
 Picker Alice pick 18
-Loader Bill ready
-Loader Bill loads
 Picker Bob pick 16
 Sequencer Sue ready
 Picker Alice pick 19
@@ -66,6 +64,7 @@ Picker Bob pick 25
 Picker Bob pick 26
 Picker Alice pick 22
 Picker Bob pick 27
+Sequencer Sue ready
 Sequencer Sue scans 9
 Sequencer Sue scans 10
 Sequencer Sue scans 11
@@ -92,6 +91,7 @@ Sequencer Sue ready
 Picker Bob pick 29
 Picker Alice to Marshaling
 Picker Bob pick 30
+Sequencer Sue ready
 Sequencer Sue scans 17
 Sequencer Sue scans 18
 Sequencer Sue scans 19
@@ -105,6 +105,7 @@ Picker Bob pick 31
 Replenisher Ruby replenish A 1 1 2
 Picker Bob pick 32
 Sequencer Sue ready
+Loader Bill ready
 Loader Bill scans 9
 Loader Bill scans 10
 Loader Bill scans 11
@@ -116,6 +117,7 @@ Loader Bill scans 16
 Loader Bill loads
 Picker Bob to Marshaling
 Sequencer Sue sequences
+Loader Bill ready
 Loader Bill scans 17
 Loader Bill scans 18
 Loader Bill scans 19
@@ -124,4 +126,14 @@ Loader Bill scans 21
 Loader Bill scans 22
 Loader Bill scans 23
 Loader Bill scans 24
+Loader Bill loads
+Loader Bill ready
+Loader Bill scans 25
+Loader Bill scans 26
+Loader Bill scans 27
+Loader Bill scans 28
+Loader Bill scans 29
+Loader Bill scans 30
+Loader Bill scans 31
+Loader Bill scans 32
 Loader Bill loads
