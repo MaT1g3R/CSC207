@@ -14,3 +14,5 @@ addFacsia method won't accept incorrect type of SKU
 made pickers refuse to go to marshal if orders not complete.
 
 arraylists in sequencer and truck beds for expandibility.
+
+replenishers require a request to even start. 
