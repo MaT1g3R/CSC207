@@ -51,6 +51,7 @@ public abstract class Worker {
   public void wrongScanHandle() {
     System.out.println("Aborting action of " + role + " " + name);
     worksAt.addUnpickedPickingRequest(currPickingReq);
+    worksAt.assignWorkers("seqencer");
     finish();
   }
 
