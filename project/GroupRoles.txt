@@ -1,0 +1,10 @@
+========================Tasbir Rahman=====================
+I created, impelemented, and documented the SkuTranslator, 
+PickingRequest, and Picker classes and all associated 
+methods (except for one in SkuTranslator). I also wrote 
+the three methods for assigning workers to do certain 
+requests. Everyone in my group was involved in fixing 
+various tiny mistakes in other classes such as a subclass 
+not extending its parent or doing style fixes. We all took
+part in the design decisions for the program. I also handled 
+some of the debugging near the end.
