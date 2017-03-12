@@ -98,7 +98,7 @@ public class Simulator {
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
         this.warehouse.getReplenisherByName(name).replenish(sku);
-      } else if (Pattern.matches("Sequencer \\w+ scans [0-9]+]", s)) {
+      } else if (Pattern.matches("Sequencer \\w+ scans [0-9]+", s)) {
         String name = s.split("\\s")[1];
         int sku = Integer.parseInt(s.split("\\s")[skuIndex]);
         this.warehouse.getSequencerByName(name).scan(sku);
@@ -108,6 +108,7 @@ public class Simulator {
         this.warehouse.getLoaderByName(name).scan(sku);
       }
     }
+    warehouse.outPutInventory();
   }
 
 }
