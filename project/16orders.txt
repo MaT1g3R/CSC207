@@ -102,6 +102,7 @@ Sequencer Sue scans 23
 Sequencer Sue scans 24
 Sequencer Sue sequences
 Picker Bob pick 31
+Replenisher Ruby ready
 Replenisher Ruby replenish A 1 1 2
 Picker Bob pick 32
 Sequencer Sue ready
