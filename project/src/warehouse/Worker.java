@@ -51,7 +51,7 @@ public abstract class Worker {
   public void wrongScanHandle() {
     System.out.println("Aborting action of " + role + " " + name);
     worksAt.addUnpickedPickingRequest(currPickingReq);
-    worksAt.assignWorkers("seqencer");
+    worksAt.assignWorkers("sequencer");
     getReady();
   }
 
@@ -68,7 +68,8 @@ public abstract class Worker {
   }
 
   /**
-   * checks if the worker should do anything other than scanning or gettingReady.
+   * checks if the worker should do anything other than scanning or
+   * gettingReady.
    */
   protected boolean shouldScanOrGetReady() {
     return this.isReady || !toBeScanned.isEmpty();
@@ -92,7 +93,7 @@ public abstract class Worker {
     this.currPickingReq = currPickingReq;
     this.toBeScanned = getScanOrder();
     String msg = this.role + " " + this.name + " should scan in order: ";
-    for (int x: toBeScanned) {
+    for (int x : toBeScanned) {
       msg += " " + Integer.toString(x);
     }
     System.out.println(msg);

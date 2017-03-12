@@ -44,12 +44,12 @@ Picker Alice ready
 Picker Alice pick 17
 Sequencer Sue ready
 Sequencer Sue scans 1
-Sequencer Sue scans 2
 Sequencer Sue scans 3
-Sequencer Sue scans 4
 Sequencer Sue scans 5
-Sequencer Sue scans 6
 Sequencer Sue scans 7
+Sequencer Sue scans 2
+Sequencer Sue scans 4
+Sequencer Sue scans 6
 Sequencer Sue scans 8
 Sequencer Sue sequences
 Picker Alice pick 18
@@ -66,24 +66,24 @@ Picker Alice pick 22
 Picker Bob pick 27
 Sequencer Sue ready
 Sequencer Sue scans 9
-Sequencer Sue scans 10
 Sequencer Sue scans 11
-Sequencer Sue scans 12
 Sequencer Sue scans 13
-Sequencer Sue scans 14
 Sequencer Sue scans 15
+Sequencer Sue scans 10
+Sequencer Sue scans 12
+Sequencer Sue scans 14
 Sequencer Sue scans 16
 Sequencer Sue sequences
 Picker Bob pick 28
 Picker Alice pick 23
 Loader Bill ready
 Loader Bill scans 1
-Loader Bill scans 2
 Loader Bill scans 3
-Loader Bill scans 4
 Loader Bill scans 5
-Loader Bill scans 6
 Loader Bill scans 7
+Loader Bill scans 2
+Loader Bill scans 4
+Loader Bill scans 6
 Loader Bill scans 8
 Loader Bill loads
 Picker Alice pick 24
@@ -93,48 +93,48 @@ Picker Alice to Marshaling
 Picker Bob pick 30
 Sequencer Sue ready
 Sequencer Sue scans 17
-Sequencer Sue scans 18
 Sequencer Sue scans 19
-Sequencer Sue scans 20
 Sequencer Sue scans 21
-Sequencer Sue scans 22
 Sequencer Sue scans 23
+Sequencer Sue scans 18
+Sequencer Sue scans 20
+Sequencer Sue scans 22
 Sequencer Sue scans 24
 Sequencer Sue sequences
 Picker Bob pick 31
 Replenisher Ruby ready
-Replenisher Ruby replenish A 1 1 2
+Replenisher Ruby replenish 19
 Picker Bob pick 32
 Sequencer Sue ready
 Loader Bill ready
 Loader Bill scans 9
-Loader Bill scans 10
 Loader Bill scans 11
-Loader Bill scans 12
 Loader Bill scans 13
-Loader Bill scans 14
 Loader Bill scans 15
+Loader Bill scans 10
+Loader Bill scans 12
+Loader Bill scans 14
 Loader Bill scans 16
 Loader Bill loads
 Picker Bob to Marshaling
 Sequencer Sue sequences
 Loader Bill ready
 Loader Bill scans 17
-Loader Bill scans 18
 Loader Bill scans 19
-Loader Bill scans 20
 Loader Bill scans 21
-Loader Bill scans 22
 Loader Bill scans 23
+Loader Bill scans 18
+Loader Bill scans 20
+Loader Bill scans 22
 Loader Bill scans 24
 Loader Bill loads
 Loader Bill ready
 Loader Bill scans 25
-Loader Bill scans 26
 Loader Bill scans 27
-Loader Bill scans 28
 Loader Bill scans 29
-Loader Bill scans 30
 Loader Bill scans 31
+Loader Bill scans 26
+Loader Bill scans 28
+Loader Bill scans 30
 Loader Bill scans 32
 Loader Bill loads
