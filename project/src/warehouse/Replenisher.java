@@ -26,8 +26,13 @@ public class Replenisher extends Worker {
    * @param sku the SKU number.
    */
   public void replenish(int sku) {
-    super.worksAt.addFacsia(sku);
-    scan(sku);
+    if (worksAt.getInventory().get(sku) <= 5) {
+      super.worksAt.addFacsia(sku);
+      scan(sku);
+    } else {
+      System.out.println("There are too many fascias of SKU number " + String
+          .valueOf(sku));
+    }
   }
 
   /**
@@ -40,7 +45,7 @@ public class Replenisher extends Worker {
     System.out.println("SKU number " + String.valueOf(sku) + " "
         + "has been replenished");
   }
-  
+
   public void start(int sku) {
     isReady = false;
     replenish(sku);
