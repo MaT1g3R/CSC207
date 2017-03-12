@@ -1,5 +1,6 @@
 package warehouse;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,8 +9,15 @@ import java.util.Queue;
 
 public class Warehouse {
 
+  private final int MAX_STOCK;
   private int numPickingRequests = 0;
-  private ArrayList<Order> outstandingOrders;
+
+  private ArrayList<Order> outstandingOrders = new ArrayList<>();
+
+
+
+  //The directory where final.csv and orders.csv will be saved
+  private String outputFileDir;
   private HashMap<Integer, Integer> inventory = new HashMap<>();
   private HashMap<String, Picker> pickers = new HashMap<>();
   private HashMap<String, Loader> loaders = new HashMap<>();
@@ -24,25 +32,44 @@ public class Warehouse {
   // Items are queued in order of pickingRequestID
   private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
-  public Warehouse(String warehouseFilePath) {
-    ArrayList<ArrayList<String>> input = CsvReadWrite
-        .readAsArrays(warehouseFilePath);
+  public Warehouse(String inputFilePath, String outputFileDirPath) {
+    this(inputFilePath, outputFileDirPath, 30);
+  }
+  public Warehouse(String inputFilePath, String outputFileDirPath, int Max) {
+    this.outputFileDir = outputFileDirPath;
+    this.setInventoryFromFile(inputFilePath);
+    this.MAX_STOCK = Max;
+  }
+  /**
+   * This output the final inventory as csv.
+   */
+  public void outPutInventory() {
+    ArrayList<String> result = new ArrayList<>();
+    for (HashMap.Entry<Integer, Integer> entry : inventory.entrySet()) {
+      if (entry.getValue() < MAX_STOCK ) {
+        String location = SkuTranslator.getLocation(entry.getKey());
+        result.add(location + "," + entry.getValue());
+      }
+    }
+    CsvReadWrite.overWrite(result, outputFileDir + File.separator + "final.csv");
+  }
+
+  private void setInventoryFromFile(String inputFilePath) {
+    ArrayList<ArrayList<String>> input = CsvReadWrite.readAsArrays(inputFilePath);
 
     for (int sku : SkuTranslator.getAllSku()) {
       this.inventory.put(sku, 30);
     }
 
+    //getting input inventory if there'ss a file
     if (input != null) {
       for (ArrayList<String> s : input) {
         //{Zone, Aisle, Rack, Rack Level}
-        int sku = SkuTranslator.getSkuFromLocation((String[]) s.subList(0, 3)
-            .toArray());
+        int sku = SkuTranslator.getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
+        this.inventory.put(sku, Integer.parseInt(s.get(4)));
       }
     }
-
-
   }
-
   private void assignNonReplenishers(String type) {
     Queue<PickingRequest> requests = new LinkedList<>();
     Collection<Worker> people = new LinkedList<>();
@@ -129,11 +156,15 @@ public class Warehouse {
     System.out
         .println("Replenish request for sku " + Integer.toString(sku) + ".");
     replenishRequests.add(sku);
+    this.assignWorkers("replenisher");
+
 
   }
 
   public void addSequencingRequest(PickingRequest request) {
     sequenceRequests.add(request);
+    this.assignWorkers("sequencer");
+
   }
 
   /**
@@ -141,6 +172,7 @@ public class Warehouse {
    */
   public void addUnpickedPickingRequest(PickingRequest request) {
     unPickedPickingRequests.add(0, request);
+    this.assignWorkers("picker");
     System.out.println("Added PickingRequest " + request.getId() + "to front.");
   }
 
@@ -152,6 +184,7 @@ public class Warehouse {
     unPickedPickingRequests.add(request);
     numPickingRequests++;
     loadingRequests.add(request);
+    this.assignWorkers("picker");
     System.out
         .println("Added new PickingRequest " + request.getId() + "to end.");
   }
@@ -200,7 +233,9 @@ public class Warehouse {
   public void addSequencer(final Sequencer sequencer) {
     this.sequencers.put(sequencer.getName(), sequencer);
   }
-
+  public String getOutputFileDir() {
+    return outputFileDir;
+  }
   public void addReplenisher(final Replenisher replenisher) {
     this.replenishers.put(replenisher.getName(), replenisher);
   }

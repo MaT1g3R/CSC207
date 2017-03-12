@@ -52,32 +52,19 @@ public class Simulator {
   public Simulator(final String eventFile, final String warehouseFilePath,
       final String translationFilePath, final String traversalFilePath, final String outFilePath) {
     this.eventList = CsvReadWrite.readCsv(eventFile);
-    this.warehouse = new Warehouse(warehouseFilePath);
+    this.warehouse = new Warehouse(warehouseFilePath, outFilePath);
     this.translationPath = translationFilePath;
     this.traversalPath = traversalFilePath;
-    this.outPath = outFilePath;
   }
 
-  /**
-   * This output the simulation result.
-   */
-  private void outPutResult() {
-    ArrayList<String> result = new ArrayList<>();
-    for (HashMap.Entry<Integer, Integer> entry : this.warehouse.getInventory().entrySet()) {
-      if (entry.getValue() < MAX_STOCK) {
-        String location = SkuTranslator.getLocation(entry.getKey());
-        result.add(location + "," + entry.getValue());
-      }
-    }
-    CsvReadWrite.overWrite(result, outPath);
-  }
+
 
   /**
    * The main event loop.
    */
   public void run() {
-    SkuTranslator.setLocations(translationPath);
-    SkuTranslator.setProperties(traversalPath);
+    SkuTranslator.setLocations(traversalPath);
+    SkuTranslator.setProperties(translationPath);
     final int skuIndex = 3;
     for (String s : this.eventList) {
       if (Pattern.matches("Order [A-Z]+ [A-Z][a-z]+", s)) {
@@ -131,7 +118,6 @@ public class Simulator {
         this.warehouse.getReplenisherByName(name).replenish(sku);
       }
     }
-    outPutResult();
   }
 
 }
