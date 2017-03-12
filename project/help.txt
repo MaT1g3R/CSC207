@@ -1,6 +1,6 @@
-This tutorial assumes you have already cloned the repo and changed directory to it. 
+This tutorial assumes you have already cloned the repo and changed directory to repo/project. 
 
-The following 3 commands should be entered into the terminal to compile and execute the program:
+The following commands should be entered into the terminal to compile and execute the program:
 -------------------
 cd src
 javac warehouse/Main.java
