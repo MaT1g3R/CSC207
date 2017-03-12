@@ -35,8 +35,8 @@ public class Warehouse {
     if (input != null) {
       for (ArrayList<String> s : input) {
         //{Zone, Aisle, Rack, Rack Level}
-        int sku = SkuTranslator.getSkuFromLocation((String[]) s.subList(0, 4)
-            .toArray());
+        int sku = SkuTranslator.getSkuFromLocation(s.subList(0, 4)
+            .toArray(new String[4]));
         int amount = Integer.valueOf(s.get(s.size() - 1));
         this.inventory.put(sku, amount);
       }
