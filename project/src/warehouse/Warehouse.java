@@ -16,7 +16,7 @@ public class Warehouse {
   private LinkedList<PickingRequest> unPickedPickingRequests;
   private LinkedList<PickingRequest> sequenceRequests;
 
-  //Items are queued in order of pickingRequestID
+  // Items are queued in order of pickingRequestID
   private Queue<PickingRequest> loadingRequests = new LinkedList<>();
 
   public Warehouse(String loggerPath) {
@@ -65,7 +65,7 @@ public class Warehouse {
   private void assignReplenishers() {
     Queue<Integer> requests = replenishRequests;
     for (Replenisher replenisher : replenishers.values()) {
-      if (replenisher.getIsReady()) {
+      if (replenisher.getIsReady() && !requests.isEmpty()) {
         replenisher.start(requests.remove());
       }
     }
@@ -78,20 +78,18 @@ public class Warehouse {
   }
 
   /**
-   * Removes one quantity of SKU from inventory if there are any. If the
-   * quantity is <= 5 a replenish request is created for that SKU if there isn't
-   * any.
+   * Removes one quantity of SKU from inventory if there are any. If the quantity is <= 5 a
+   * replenish request is created for that SKU if there isn't any.
    *
    * @param sku: the sku being removed
    */
   public void removeFascia(int sku) {
     int amount = inventory.get(sku);
-    //Nothing happens if you try to remove something with 0 quantity
+    // Nothing happens if you try to remove something with 0 quantity
     if (amount > 0) {
-      System.out.println(
-          "Removed one sku " + Integer.toString(sku) + " from inventory.");
+      System.out.println("Removed one sku " + Integer.toString(sku) + " from inventory.");
       this.inventory.put(sku, amount - 1);
-      //If  <= 5, and theres no request to replenish it, it needs to be replenished
+      // If <= 5, and theres no request to replenish it, it needs to be replenished
       if (this.inventory.get(sku) <= 5 && replenishRequests.contains(sku)) {
         addReplenishRequest(sku);
       }
@@ -99,30 +97,44 @@ public class Warehouse {
   }
 
   /**
-   * Adds a replenish request, to the end of the list of pending
-   * replenishRequests. Prints that it has been added.
+   * Adds a replenish request, to the end of the list of pending replenishRequests. Prints that it
+   * has been added.
    *
    * @param sku: the sku for the request
    */
   public void addReplenishRequest(int sku) {
-    System.out
-        .println("Replenish request for sku " + Integer.toString(sku) + ".");
+    System.out.println("Replenish request for sku " + Integer.toString(sku) + ".");
     replenishRequests.add(sku);
 
   }
 
   public void addSequencingRequest(PickingRequest request) {
+    sequenceRequests.add(request);
   }
 
+  /**
+   * Adds picking request to the front of the queue.
+   * 
+   * @param request
+   */
   public void addUnpickedPickingRequest(PickingRequest request) {
+    unPickedPickingRequests.add(0, request);
   }
-
-  //make sure to increment numPickingRequests after creating, add to unpickedPickingRequests, and
-  // to loadRequests
+  
+  /**
+   * Creates a new PickingRequest and adds it to the back of the queue;
+   * 
+   * @param orders
+   */
   public void createPickingRequest(ArrayList<Order> orders) {
+    PickingRequest request = new PickingRequest(orders, numPickingRequests);
+    unPickedPickingRequests.add(request);
+    numPickingRequests++;
+    loadingRequests.add(request);
   }
-
+  
   public void addOrder(Order order) {
+    
   }
 
   public Picker getPickerByName(final String name) {
