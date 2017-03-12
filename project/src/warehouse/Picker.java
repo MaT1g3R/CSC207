@@ -27,18 +27,17 @@ public class Picker extends Worker {
   @Override
   public void scan(int sku) {
     //Items are assumed to be taken when scanned
-    if (isReady) {
+
       super.scan(sku);
       worksAt.removeFascia(sku);
-    }
+
 
 
   }
 
   @Override
   public void wrongScanHandle() {
-    //pickers just get a notification
-    System.out.println(role + " " + name + " scanned wrong sku.");
+    //pickers just get the default notification when scanning the wrong thing
 
   }
 
