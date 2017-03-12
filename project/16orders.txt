@@ -1,119 +1,127 @@
-Order SES Blue
-Order SES Red
-Order SE Grey
-Order SE Grey
+Order White S
+Order White SE
+Order White SES
+Order White SEL
+Order Beige S
+Order Beige SE
+Order Beige SES
+Order Beige SEL
+Order Red S
+Order Red SE
+Order Red SES
+Order Red SEL
+Order Green S
+Order Green SE
+Order Green SES
+Order Green SEL
+Order Blue S
+Order Blue SE
+Order Blue SES
+Order Blue SEL
+Order Black S
+Order Black SE
+Order Black SES
+Order Black SEL
 Picker Alice ready
-Order S Beige
-Order SES Green
-Order SE White
 Picker Alice pick 1
-Order SE Silver
 Picker Alice pick 2
 Picker Alice pick 3
-Order SE Tan
-Order S Green
-Order SES Graphite
-Order S White
 Picker Bob ready
 Picker Alice pick 4
-Picker Bob pick 1
+Picker Bob pick 9
 Picker Alice pick 5
-Picker Bob pick 2
-Order SES Grey
-Picker Bob pick 3
+Picker Bob pick 10
+Picker Bob pick 11
 Picker Alice pick 6
-Picker Bob pick 4
-Picker Bob pick 5
+Picker Bob pick 12
+Picker Bob pick 13
 Picker Alice pick 7
-Order SE Blue
 Picker Alice pick 8
-Order S Gold
 Picker Alice to Marshaling
-Picker Bob pick 6
-Picker Bob pick 7
+Picker Bob pick 14
+Picker Bob pick 15
 Picker Alice ready
-Picker Alice pick 1
+Picker Alice pick 17
 Sequencer Sue ready
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
+Sequencer Sue scans 1
+Sequencer Sue scans 2
+Sequencer Sue scans 3
+Sequencer Sue scans 4
+Sequencer Sue scans 5
+Sequencer Sue scans 6
+Sequencer Sue scans 7
+Sequencer Sue scans 8
 Sequencer Sue sequences
-Picker Alice pick 2
+Picker Alice pick 18
 Loader Bill ready
 Loader Bill loads
-Order S Gold
-Picker Bob pick 8
+Picker Bob pick 16
 Sequencer Sue ready
-Picker Alice pick 3
+Picker Alice pick 19
 Picker Bob to Marshaling
-Picker Alice pick 4
+Picker Alice pick 20
 Picker Bob ready
-Picker Alice pick 5
-Picker Bob pick 1
-Picker Bob pick 2
-Picker Alice pick 6
-Picker Bob pick 3
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
+Picker Alice pick 21
+Picker Bob pick 25
+Picker Bob pick 26
+Picker Alice pick 22
+Picker Bob pick 27
+Sequencer Sue scans 9
+Sequencer Sue scans 10
+Sequencer Sue scans 11
+Sequencer Sue scans 12
+Sequencer Sue scans 13
+Sequencer Sue scans 14
+Sequencer Sue scans 15
+Sequencer Sue scans 16
 Sequencer Sue sequences
-Picker Bob pick 4
-Picker Alice pick 7
+Picker Bob pick 28
+Picker Alice pick 23
 Loader Bill ready
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
+Loader Bill scans 1
+Loader Bill scans 2
+Loader Bill scans 3
+Loader Bill scans 4
+Loader Bill scans 5
+Loader Bill scans 6
+Loader Bill scans 7
+Loader Bill scans 8
 Loader Bill loads
-Picker Alice pick 8
+Picker Alice pick 24
 Sequencer Sue ready
-Picker Bob pick 5
+Picker Bob pick 29
 Picker Alice to Marshaling
-Picker Bob pick 6
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
-Sequencer Sue scans #
+Picker Bob pick 30
+Sequencer Sue scans 17
+Sequencer Sue scans 18
+Sequencer Sue scans 19
+Sequencer Sue scans 20
+Sequencer Sue scans 21
+Sequencer Sue scans 22
+Sequencer Sue scans 23
+Sequencer Sue scans 24
 Sequencer Sue sequences
-Picker Bob pick 7
+Picker Bob pick 31
 Replenisher Ruby replenish A 1 1 2
-Picker Bob pick 8
+Picker Bob pick 32
 Sequencer Sue ready
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
+Loader Bill scans 9
+Loader Bill scans 10
+Loader Bill scans 11
+Loader Bill scans 12
+Loader Bill scans 13
+Loader Bill scans 14
+Loader Bill scans 15
+Loader Bill scans 16
 Loader Bill loads
 Picker Bob to Marshaling
 Sequencer Sue sequences
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
-Loader Bill scans #
+Loader Bill scans 17
+Loader Bill scans 18
+Loader Bill scans 19
+Loader Bill scans 20
+Loader Bill scans 21
+Loader Bill scans 22
+Loader Bill scans 23
+Loader Bill scans 24
 Loader Bill loads
