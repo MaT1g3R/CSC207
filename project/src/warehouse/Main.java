@@ -10,7 +10,7 @@ public class Main {
   /**
    * The main run class.
    *
-   * @param args the list of the file path that is passed in.
+   * @param args meh
    */
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
