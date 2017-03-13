@@ -19,7 +19,7 @@ various tiny mistakes in other classes such as a subclass
 not extending its parent or doing style fixes. We all took
 part in the design decisions for the program. I also handled
 some of the debugging near the end.
-NOTE: In commit history, username is Umi and email is 982341777@qq.com
+NOTE: In commit history, username is Umi and Unknown and email is 982341777@qq.com
 
 ==================Venkata Chaitanya Peesapati===================
 I created, implemented, and documented the Loader, Truck and Order classes.
