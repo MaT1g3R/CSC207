@@ -30,6 +30,10 @@ class Replenisher {
     return name;
   }
 
+  /**
+   * A method for replenish action.
+   * @param sku the sku to be replenished
+   */
   void replenish(int sku) {
     if (worksAt.getToBeReplenished().contains(sku)) {
       System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "
@@ -40,7 +44,5 @@ class Replenisher {
       System.out.println("Unneeded replenish, nothing was added to the "
           + "inventory");
     }
-
   }
-
 }
