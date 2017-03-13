@@ -148,33 +148,57 @@ class Warehouse {
   /**
    * When a picker is ready this hands him a picking request.
    *
-   * @param picker the Picker who's ready
+   * @param picker the Picker who's ready.
+   * @throws NullPointerException when a picker tries to ready when there's no
+   *                              picking requests.
    */
-  void readyPicker(Picker picker) {
-    if (outStandingPickingRequests.isEmpty()) {
-      picker.setCurrPickingReq(generatePickingReq());
-    } else {
-      picker.setCurrPickingReq(outStandingPickingRequests.pop());
+  void readyPicker(Picker picker) throws NullPointerException {
+    try {
+      if (outStandingPickingRequests.isEmpty()) {
+        picker.setCurrPickingReq(generatePickingReq());
+      } else {
+        picker.setCurrPickingReq(outStandingPickingRequests.pop());
+      }
+    } catch (NullPointerException npe) {
+      System.out.println("A picker tried to ready when there's no picking "
+          + "requests.");
+      throw npe;
     }
   }
 
   /**
    * When a sequencer it gets a picking request to sequence.
    *
-   * @param sequencer the sequencer who's ready
+   * @param sequencer the sequencer who's ready.
+   * @throws NullPointerException when a sequencer tries to ready when there's
+   *                              no picking request.
    */
-  void readySequencer(Sequencer sequencer) {
-    sequencer.setCurrPickingReq(marshallingArea.pop());
+  void readySequencer(Sequencer sequencer) throws NullPointerException {
+    try {
+      sequencer.setCurrPickingReq(marshallingArea.pop());
+    } catch (NullPointerException npe) {
+      System.out.println("A sequencer tried to ready when there's no picking "
+          + "requests.");
+      throw npe;
+    }
   }
 
 
   /**
    * When a loader is ready it gets a picking request to laod.
    *
-   * @param loader the loader who's ready
+   * @param loader the loader who's ready.
+   * @throws NullPointerException when a loader tries to ready when there's no
+   *                              picking request.
    */
-  void readyLoader(Loader loader) {
-    loader.setCurrPickingReq(loadingArea.pop());
+  void readyLoader(Loader loader) throws NullPointerException {
+    try {
+      loader.setCurrPickingReq(loadingArea.pop());
+    } catch (NullPointerException npe) {
+      System.out.println("A loader tried to ready when there's no picking "
+          + "requests.");
+      throw npe;
+    }
   }
 
 
