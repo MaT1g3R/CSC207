@@ -48,10 +48,9 @@ abstract class Worker {
    * @param sku the sku scanned.
    * @return true if the scan matched else false.
    */
-  private boolean scanResult(int sku) {
+  boolean scanResult(int sku, int expected) {
     System.out.println(this.getClass().getSimpleName() + " " + name + " "
         + "preformed a scan action!");
-    int expected = toBeScanned.pop();
     if (sku == expected) {
       System.out
           .println("Scan of SKU " + String.valueOf(sku) + " matched with"
@@ -67,12 +66,21 @@ abstract class Worker {
   }
 
   /**
+   * Return the expected scan sku.
+   *
+   * @return the expected scan sku
+   */
+  private int expected() {
+    return toBeScanned.pop();
+  }
+
+  /**
    * The action the worker takes when it scans.
    *
    * @param sku the sku scanned.
    */
   void scan(int sku) {
-    if (!scanResult(sku)) {
+    if (!scanResult(sku, expected())) {
       getWorksAt().sendBackToPicking(getCurrPickingReq());
     } else {
       addScanCount();

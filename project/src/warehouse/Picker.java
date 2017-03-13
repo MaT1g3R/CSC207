@@ -70,35 +70,19 @@ public class Picker extends Worker {
   @Override
   void scan(int sku) {
     getWorksAt().removeFascia(sku);
-    if (scanResult(sku)) {
+    if (scanResult(sku, expected())) {
       addScanCount();
       getToBeScanned().removeFirst();
     }
   }
 
   /**
-   * The result of a scan, note this doesnt pop the element when a worker
-   * fails because it will keep trying to scan for a matching SKU.
+   * Return the expected scan sku.
    *
-   * @param sku the sku scanned.
-   * @return true if the scan matched else false.
+   * @return the expected scan sku
    */
-  private boolean scanResult(int sku) {
-    System.out.println(this.getClass().getSimpleName() + " " + getName() + " "
-        + "preformed a scan action!");
-    int expected = getToBeScanned().getFirst();
-    if (sku == expected) {
-      System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " matched with"
-              + " the expected result");
-      return true;
-    } else {
-      System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " did not match "
-              + "with the expected result of SKU " + String
-              .valueOf(expected));
-      return false;
-    }
+  private int expected() {
+    return getToBeScanned().getFirst();
   }
 
   /**
