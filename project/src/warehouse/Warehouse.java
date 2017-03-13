@@ -27,9 +27,9 @@ class Warehouse {
   /**
    * Initializes inventory values, Hashmap values, and sets max stock value.
    *
-   * @param inputFilePath path to initial inventory file
+   * @param inputFilePath     path to initial inventory file
    * @param outputFileDirPath path to directory for output files
-   * @param max how much items a rack level holds
+   * @param max               how much items a rack level holds
    */
   Warehouse(String inputFilePath, String outputFileDirPath, int max) {
     this.outputFileDir = outputFileDirPath;
@@ -85,7 +85,7 @@ class Warehouse {
   }
 
   /**
-   * Method for adding an order to the system
+   * Method for adding an order to the system.
    *
    * @param order the order as a string to be added
    */
@@ -159,7 +159,7 @@ class Warehouse {
   }
 
   /**
-   * When a sequencer it gets a picking request to sequence
+   * When a sequencer it gets a picking request to sequence.
    *
    * @param sequencer the sequencer who's ready
    */
@@ -198,7 +198,7 @@ class Warehouse {
   }
 
   /**
-   * When a picking request failed it's sent back to picking
+   * When a picking request failed it's sent back to picking.
    *
    * @param request the failed picking request
    */
@@ -207,7 +207,7 @@ class Warehouse {
   }
 
   /**
-   * Get the first truck that's not full in all trucks
+   * Get the first truck that's not full in all trucks.
    *
    * @return the not full truck
    */
@@ -221,7 +221,7 @@ class Warehouse {
   }
 
   /**
-   * A getter for outPutFileDir
+   * A getter for outPutFileDir.
    *
    * @return outPutFileDir
    */
@@ -230,7 +230,7 @@ class Warehouse {
   }
 
   /**
-   * A getter for toBeReplenished
+   * A getter for toBeReplenished.
    *
    * @return toBeReplenished
    */
@@ -266,7 +266,7 @@ class Warehouse {
   }
 
   /**
-   * Add a replenisher to the warehouse
+   * Add a replenisher to the warehouse.
    *
    * @param replenisher the replenisher to be added
    */
@@ -295,7 +295,7 @@ class Warehouse {
   }
 
   /**
-   * Get a sequencer by name
+   * Get a sequencer by name.
    *
    * @param name the name
    * @return the sequencer with that name
@@ -305,7 +305,7 @@ class Warehouse {
   }
 
   /**
-   * Get a replenisher by name
+   * Get a replenisher by name.
    *
    * @param name the name
    * @return the replenisher with that name

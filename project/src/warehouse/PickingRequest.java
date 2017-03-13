@@ -49,7 +49,7 @@ class PickingRequest implements Comparable<PickingRequest> {
   }
 
   /**
-   * A getter for the orders
+   * A getter for the orders.
    *
    * @return orders
    */
@@ -58,16 +58,16 @@ class PickingRequest implements Comparable<PickingRequest> {
   }
 
   /**
-   * Compares this object with the specified object for order.  Returns a
-   * negative integer, zero, or a positive integer as this object is less
-   * than, equal to, or greater than the specified object.
+   * Compares this object with the specified object for order.
+   * Returns a negative integer, zero, or a positive integer as this object
+   * is less than, equal to, or greater than the specified object.
    *
    * @param request the request to be compared.
    * @return a negative integer, zero, or a positive integer as this object is
-   * less than, equal to, or greater than the specified object.
+   *      less than, equal to, or greater than the specified object.
    * @throws NullPointerException if the specified object is null
    * @throws ClassCastException if the specified object's type prevents it from
-   * being compared to this object.
+   *      being compared to this object.
    */
   @Override
   public int compareTo(PickingRequest request) {

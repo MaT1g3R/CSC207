@@ -22,11 +22,11 @@ class Simulator {
   /**
    * This initialize a simulator object.
    *
-   * @param eventFile the event file this will read from.
-   * @param warehouseFilePath the file to the initial state of the warehouse
+   * @param eventFile           the event file this will read from.
+   * @param warehouseFilePath   the file to the initial state of the warehouse
    * @param translationFilePath the file path to the translation table
-   * @param traversalFilePath the file path to the traversal table
-   * @param outFilePath the file path for output
+   * @param traversalFilePath   the file path to the traversal table
+   * @param outFilePath         the file path for output
    */
   Simulator(final String eventFile, final String warehouseFilePath,
       final String translationFilePath, final String traversalFilePath,
@@ -38,7 +38,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for adding an order
+   * Check if the string is for adding an order.
    *
    * @param s the string to be checked
    * @return true if it's adding an order
@@ -48,7 +48,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for ready a picker
+   * Check if the string is for ready a picker.
    *
    * @param s the string to be checked
    * @return true if it's ready a picker
@@ -58,7 +58,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for picker pick
+   * Check if the string is for picker pick.
    *
    * @param s the string to be checked
    * @return true if it's picker pick
@@ -68,7 +68,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for picker to marshall
+   * Check if the string is for picker to marshall.
    *
    * @param s the string to be checked
    * @return true if it's picker to marshall
@@ -78,7 +78,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for ready a sequencer
+   * Check if the string is for ready a sequencer.
    *
    * @param s the string to be checked
    * @return true if it's ready a sequencer
@@ -88,7 +88,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for sequencer scan
+   * Check if the string is for sequencer scan.
    *
    * @param s the string to be checked
    * @return true if it's sequencer scan
@@ -98,7 +98,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for sequencer sequence
+   * Check if the string is for sequencer sequence.
    *
    * @param s the string to be checked
    * @return true if it's sequencer sequence
@@ -108,7 +108,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for ready a loader
+   * Check if the string is for ready a loader.
    *
    * @param s the string to be checked
    * @return true if it's ready a loader
@@ -118,7 +118,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for loader scan
+   * Check if the string is for loader scan.
    *
    * @param s the string to be checked
    * @return true if it's loader scan
@@ -128,7 +128,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for loader load
+   * Check if the string is for loader load.
    *
    * @param s the string to be checked
    * @return true if it's loader load
@@ -138,7 +138,7 @@ class Simulator {
   }
 
   /**
-   * Check if the string is for replenish
+   * Check if the string is for replenish.
    *
    * @param s the string to be checked
    * @return true if it's replenish
@@ -149,7 +149,7 @@ class Simulator {
 
 
   /**
-   * Get the name of the worker from an event string
+   * Get the name of the worker from an event string.
    *
    * @param s the event string
    * @return the name of the worker
@@ -159,7 +159,7 @@ class Simulator {
   }
 
   /**
-   * Get the sku number from an event string
+   * Get the sku number from an event string.
    *
    * @param s the event string
    * @return the sku number

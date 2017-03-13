@@ -33,7 +33,7 @@ public class Loader extends Worker {
   }
 
   /**
-   * Method for loading
+   * Method for loading.
    */
   void load() {
     if (getScanCount() == 8) {

@@ -99,7 +99,7 @@ abstract class Worker {
 
 
   /**
-   * A getter for currPickingReq
+   * A getter for currPickingReq.
    *
    * @return currPickingReq
    */
@@ -108,7 +108,7 @@ abstract class Worker {
   }
 
   /**
-   * A getter for toBeScanned
+   * A getter for toBeScanned.
    *
    * @return toBeScanned
    */
@@ -117,7 +117,7 @@ abstract class Worker {
   }
 
   /**
-   * A setter for toBeScanned
+   * A setter for toBeScanned.
    *
    * @param scanOrder the value to set to
    */
@@ -135,14 +135,14 @@ abstract class Worker {
   }
 
   /**
-   * Add 1 to scan count
+   * Add 1 to scan count.
    */
   void addScanCount() {
     scanCount++;
   }
 
   /**
-   * A getter for scan count
+   * A getter for scan count.
    *
    * @return scanCount
    */
@@ -151,7 +151,7 @@ abstract class Worker {
   }
 
   /**
-   * Resets the scancount to 0
+   * Resets the scancount to 0.
    */
   void resetScanCount() {
     scanCount = 0;

@@ -86,7 +86,7 @@ public class Picker extends Worker {
   }
 
   /**
-   * Method for going to the marshalling area
+   * Method for going to the marshalling area.
    */
   void goToMarshall() {
     if (getScanCount() == 8) {
