@@ -11,7 +11,7 @@ public class Main {
    * @param args meh
    */
   public static void main(String[] args) {
-    String eventFile = "../16orders.txt";
+    String eventFile = "../events.txt";
     String warehouseFile = "../initial.csv ";
     String translationFile = "../translation.csv";
     String traversalFile = "../traversal_table.csv";
