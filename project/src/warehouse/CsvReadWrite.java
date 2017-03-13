@@ -48,7 +48,6 @@ public final class CsvReadWrite {
     }
     return result;
 
-
   }
 
   /**
@@ -79,8 +78,6 @@ public final class CsvReadWrite {
     } catch (IOException | NullPointerException ex) {
       return null;
     }
-
-
   }
 
   /**

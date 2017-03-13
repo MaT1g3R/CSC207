@@ -32,6 +32,7 @@ public class Warehouse {
 
   /**
    * Initializes inventory values, Hashmap values, and sets max stock value.
+   *
    * @param inputFilePath path to initial inventory file
    * @param outputFileDirPath path to directory for output files
    * @param max how much items a rack level holds
@@ -46,8 +47,9 @@ public class Warehouse {
     this.requests.put("loader", new LinkedList<>());
     this.requests.put("sequencer", new LinkedList<>());
     this.outputFileDir = outputFileDirPath;
-    this.setInventoryFromFile(inputFilePath);
     this.maxStock = max;
+
+    this.setInventoryFromFile(inputFilePath);
   }
 
   /**
@@ -67,13 +69,15 @@ public class Warehouse {
 
   /**
    * Sets non max stock levels.
+   *
    * @param inputFilePath path to file with inventory information.
    */
   private void setInventoryFromFile(String inputFilePath) {
     ArrayList<ArrayList<String>> input = CsvReadWrite
         .readAsArrays(inputFilePath);
 
-    for (int sku : SkuTranslator.getAllSku()) { //anything not in file is assumed to be max amount.
+    for (int sku : SkuTranslator
+        .getAllSku()) { //anything not in file is assumed to be max amount.
       this.inventory.put(sku, maxStock);
     }
 
@@ -142,7 +146,8 @@ public class Warehouse {
     }
 
     // If <= 5, and theres no request to replenish it, it needs to be replenished
-    if (this.inventory.get(sku) <= 5 && !requests.get("replenisher").contains(sku)) {
+    if (this.inventory.get(sku) <= 5 && !requests.get("replenisher")
+        .contains(sku)) {
       addReplenishRequest(sku);
     }
   }
@@ -168,6 +173,7 @@ public class Warehouse {
 
   /**
    * Adds a sequencing request to the list of requests to be processed.
+   *
    * @param request the request to be processed.
    */
   public void addSequencingRequest(PickingRequest request) {
@@ -186,8 +192,8 @@ public class Warehouse {
   }
 
   /**
-   * Creates a new PickingRequest and adds it to the end of the list of unPickedPicking request
-   * and loading requests.
+   * Creates a new PickingRequest and adds it to the end of the list of
+   * unPickedPicking request and loading requests.
    *
    * @param orders used to create picking request. Should have four orders.
    */
@@ -202,8 +208,9 @@ public class Warehouse {
   }
 
   /**
-   *  Adds an order to the list of outstanding orders. If there are 4, then a new picking request
-   *  is generated.
+   * Adds an order to the list of outstanding orders. If there are 4, then a new
+   * picking request is generated.
+   *
    * @param order the order to be added.
    */
   public void addOrder(Order order) {
