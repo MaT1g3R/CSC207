@@ -13,7 +13,7 @@ class Replenisher {
   /**
    * Initialize a Replenisher object.
    *
-   * @param name the name of the Replenisher
+   * @param name    the name of the Replenisher
    * @param worksAt where the Replenisher works at
    */
   Replenisher(String name, Warehouse worksAt) {
@@ -40,7 +40,6 @@ class Replenisher {
       System.out.println("Unneeded replenish, nothing was added to the "
           + "inventory");
     }
-
   }
 
 }
