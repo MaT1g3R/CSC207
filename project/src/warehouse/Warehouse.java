@@ -16,7 +16,7 @@ class Warehouse {
   private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
   private LinkedList<PickingRequest> loadingArea = new LinkedList<>();
   private LinkedList<Order> orders = new LinkedList<>();
-  private int pickingReqId = -1;
+  private int pickingReqId = 0;
   private LinkedList<Integer> toBeReplenished = new LinkedList<>();
   private HashMap<String, Picker> pickers = new HashMap<>();
   private HashMap<String, Loader> loaders = new HashMap<>();
@@ -141,8 +141,8 @@ class Warehouse {
     for (int i = 0; i < 4; i++) {
       toBeSent.add(orders.pop());
     }
-    pickingReqId++;
-    return new PickingRequest(toBeSent, pickingReqId);
+    
+    return new PickingRequest(toBeSent, pickingReqId++);
   }
 
   /**
