@@ -36,6 +36,9 @@ class Warehouse {
     this.maxStock = max;
     this.setInventoryFromFile(inputFilePath);
     this.trucks.add(new Truck(0));
+    CsvReadWrite
+        .overWrite(new ArrayList<>(), outputFileDir + File.separator + "orders"
+            + ".csv");
   }
 
   /**
