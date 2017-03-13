@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * SKU.
  */
 
-public class SkuTranslator {
+class SkuTranslator {
 
 
   private SkuTranslator() {
@@ -26,7 +26,7 @@ public class SkuTranslator {
    * @param isFront whether or not the sku is on the front or the back
    * @return : the sku with the three above traits as an int
    */
-  public static int getSku(String colour, String model, boolean isFront) {
+  static int getSku(String colour, String model, boolean isFront) {
     for (ArrayList<String> x : properties) {
       if (String.join(",", x.subList(0, 2)).toLowerCase().equals((model
           + "," + colour).toLowerCase())) {
@@ -46,7 +46,7 @@ public class SkuTranslator {
    * @param sku whether or not the sku is on the front or the back
    * @return : the <sku></sku> with the given location as an int
    */
-  public static String getLocation(int sku) {
+  static String getLocation(int sku) {
     String output = "None";
     for (ArrayList<String> x : locations) {
       if (x.get(x.size() - 1).equals(Integer.toString(sku))) {
@@ -64,7 +64,7 @@ public class SkuTranslator {
    * @param location is in String array format {Zone, Aisle, Rack, Rack Level}
    * @return sku stored in given area according to translation table
    */
-  public static int getSkuFromLocation(String[] location) {
+  static int getSkuFromLocation(String[] location) {
     for (ArrayList<String> x : locations) {
       if (String.join(",", location).toLowerCase().equals(
           String.join(",", x.subList(0, x.size() - 1)).toLowerCase())) {
@@ -79,7 +79,7 @@ public class SkuTranslator {
    *
    * @param path must be a valid path to a csv file
    */
-  public static void setLocations(String path) {
+  static void setLocations(String path) {
     locations = CsvReadWrite.readAsArrays(path);
 
 
@@ -90,7 +90,7 @@ public class SkuTranslator {
    *
    * @param path must be a valid path to a csv file
    */
-  public static void setProperties(String path) {
+  static void setProperties(String path) {
     properties = CsvReadWrite.readAsArrays(path);
   }
 
@@ -99,7 +99,7 @@ public class SkuTranslator {
    *
    * @return a list of all skus from translation table.
    */
-  public static ArrayList<Integer> getAllSku() {
+  static ArrayList<Integer> getAllSku() {
     ArrayList<Integer> res = new ArrayList<>();
     for (ArrayList<String> loc : locations) {
       ArrayList<String> temp = new ArrayList<>(loc.subList(0, loc.size() - 1));

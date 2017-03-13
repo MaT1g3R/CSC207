@@ -1,7 +1,5 @@
 package warehouse;
 
-import java.util.LinkedList;
-
 /**
  * This worker replenish the stock levels when asked to.
  *
@@ -19,45 +17,5 @@ public class Replenisher extends Worker {
     super(name, worksAt);
   }
 
-
-  /**
-   * This method replenishes the warehouse with Fascia of the SKU number.
-   *
-   * @param sku the SKU number.
-   */
-  public void replenish(int sku) {
-    if (worksAt.getInventory().get(sku) <= 5) {
-      super.worksAt.addFacsia(sku);
-      scan(sku);
-    } else {
-      System.out.println("There are too many fascias of SKU number " + String
-          .valueOf(sku));
-    }
-  }
-
-  /**
-   * A barcode scanning action that takes place when Fascia is replenished.
-   *
-   * @param sku the SKU to be scanned.
-   */
-  @Override
-  public void scan(int sku) {
-    System.out.println("SKU number " + String.valueOf(sku) + " "
-        + "has been replenished");
-  }
-
-  public void start(int sku) {
-    isReady = false;
-    replenish(sku);
-  }
-
-  /**
-   * This method should never be used.
-   * Throws UnsupportedOperationException when called.
-   */
-  @Override
-  protected LinkedList<Integer> getScanOrder() {
-    throw new UnsupportedOperationException();
-  }
 
 }

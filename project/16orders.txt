@@ -22,119 +22,143 @@ Order Black S
 Order Black SE
 Order Black SES
 Order Black SEL
-Picker Alice ready
+Picker Alice Ready
 Picker Alice pick 1
 Picker Alice pick 2
 Picker Alice pick 3
-Picker Bob ready
 Picker Alice pick 4
-Picker Bob pick 9
 Picker Alice pick 5
-Picker Bob pick 10
-Picker Bob pick 11
 Picker Alice pick 6
-Picker Bob pick 12
-Picker Bob pick 13
 Picker Alice pick 7
 Picker Alice pick 8
-Picker Alice to Marshaling
+Picker Alice goto marshalling
+Picker Bob Ready
+Picker Bob pick 9
+Picker Bob pick 10
+Picker Bob pick 11
+Picker Bob pick 12
+Picker Bob pick 13
 Picker Bob pick 14
 Picker Bob pick 15
-Picker Alice ready
-Picker Alice pick 17
-Sequencer Sue ready
-Sequencer Sue scans 1
-Sequencer Sue scans 3
-Sequencer Sue scans 5
-Sequencer Sue scans 7
-Sequencer Sue scans 2
-Sequencer Sue scans 4
-Sequencer Sue scans 6
-Sequencer Sue scans 8
-Sequencer Sue sequences
-Picker Alice pick 18
 Picker Bob pick 16
-Sequencer Sue ready
+Picker Bob to marshalling
+Picker Alice Ready
+Picker Alice pick 17
+Picker Alice pick 18
 Picker Alice pick 19
-Picker Bob to Marshaling
+Replenisher Ruby replenish 19
 Picker Alice pick 20
-Picker Bob ready
 Picker Alice pick 21
+Picker Alice pick 22
+Picker Alice pick 23
+Picker Alice pick 24
+Picker Alice to marshalling
+Picker Bob Ready
 Picker Bob pick 25
 Picker Bob pick 26
-Picker Alice pick 22
 Picker Bob pick 27
-Sequencer Sue ready
-Sequencer Sue scans 9
-Sequencer Sue scans 11
-Sequencer Sue scans 13
-Sequencer Sue scans 15
-Sequencer Sue scans 10
-Sequencer Sue scans 12
-Sequencer Sue scans 14
-Sequencer Sue scans 16
-Sequencer Sue sequences
 Picker Bob pick 28
-Picker Alice pick 23
-Loader Bill ready
-Loader Bill scans 1
-Loader Bill scans 3
-Loader Bill scans 5
-Loader Bill scans 7
-Loader Bill scans 2
-Loader Bill scans 4
-Loader Bill scans 6
-Loader Bill scans 8
-Loader Bill loads
-Picker Alice pick 24
-Sequencer Sue ready
 Picker Bob pick 29
-Picker Alice to Marshaling
 Picker Bob pick 30
-Sequencer Sue ready
-Sequencer Sue scans 17
-Sequencer Sue scans 19
-Sequencer Sue scans 21
-Sequencer Sue scans 23
-Sequencer Sue scans 18
-Sequencer Sue scans 20
-Sequencer Sue scans 22
-Sequencer Sue scans 24
-Sequencer Sue sequences
 Picker Bob pick 31
-Replenisher Ruby ready
-Replenisher Ruby replenish 19
 Picker Bob pick 32
+Picker Bob to marshalling
 Sequencer Sue ready
-Loader Bill ready
-Loader Bill scans 9
-Loader Bill scans 11
-Loader Bill scans 13
-Loader Bill scans 15
-Loader Bill scans 10
-Loader Bill scans 12
-Loader Bill scans 14
-Loader Bill scans 16
-Loader Bill loads
-Picker Bob to Marshaling
-Sequencer Sue sequences
-Loader Bill ready
-Loader Bill scans 17
-Loader Bill scans 19
-Loader Bill scans 21
-Loader Bill scans 23
-Loader Bill scans 18
-Loader Bill scans 20
-Loader Bill scans 22
-Loader Bill scans 24
-Loader Bill loads
-Loader Bill ready
-Loader Bill scans 25
-Loader Bill scans 27
-Loader Bill scans 29
-Loader Bill scans 31
-Loader Bill scans 26
-Loader Bill scans 28
-Loader Bill scans 30
-Loader Bill scans 32
-Loader Bill loads
+Sequencer Sue sequence
+Sequencer Sue scan 1
+Sequencer Sue scan 3
+Sequencer Sue scan 5
+Sequencer Sue scan 7
+Sequencer Sue scan 2
+Sequencer Sue scan 4
+Sequencer Sue scan 6
+Sequencer Sue scan 8
+Sequencer Sue finish
+Sequencer Sue ready
+Sequencer Sue sequence
+Sequencer Sue scan 9
+Sequencer Sue scan 11
+Sequencer Sue scan 13
+Sequencer Sue scan 15
+Sequencer Sue scan 10
+Sequencer Sue scan 12
+Sequencer Sue scan 14
+Sequencer Sue scan 16
+Sequencer Sue finish
+Sequencer Sue ready
+Sequencer Sue sequence
+Sequencer Sue scan 17
+Sequencer Sue scan 19
+Sequencer Sue scan 21
+Sequencer Sue scan 23
+Sequencer Sue scan 18
+Sequencer Sue scan 20
+Sequencer Sue scan 22
+Sequencer Sue scan 24
+Sequencer Sue finish
+Sequencer Sue ready
+Sequencer Sue sequence
+Sequencer Sue scan 25
+Sequencer Sue scan 27
+Sequencer Sue scan 29
+Sequencer Sue scan 31
+Sequencer Sue scan 26
+Sequencer Sue scan 28
+Sequencer Sue scan 30
+Sequencer Sue scan 32
+Sequencer Sue finish
+Loader Tom ready
+Loader Tom scan 1
+Loader Tom scan 3
+Loader Tom scan 5
+Loader Tom scan 7
+Loader Tom scan 2
+Loader Tom scan 4
+Loader Tom scan 6
+Loader Tom scan 8
+Loader Tom load
+Loader Tom ready
+Loader Tom scan 9
+Loader Tom scan 11
+Loader Tom scan 13
+Loader Tom scan 15
+Loader Tom scan 10
+Loader Tom scan 12
+Loader Tom scan 14
+Loader Tom scan 16
+Loader Tom load
+Loader Tom ready
+Loader Tom scan 17
+Loader Tom scan 19
+Loader Tom scan 21
+Loader Tom scan 23
+Loader Tom scan 18
+Loader Tom scan 20
+Loader Tom scan 22
+Loader Tom scan 24
+Loader Tom load
+Loader Tom ready
+Loader Tom scan 25
+Loader Tom scan 27
+Loader Tom scan 29
+Loader Tom scan 31
+Loader Tom scan 26
+Loader Tom scan 28
+Loader Tom scan 30
+Loader Tom scan 32
+Loader Tom load
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
