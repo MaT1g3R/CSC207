@@ -22,7 +22,7 @@ Order Black S
 Order Black SE
 Order Black SES
 Order Black SEL
-Picker Alice Ready
+Picker Alice ready
 Picker Alice pick 1
 Picker Alice pick 2
 Picker Alice pick 3
@@ -32,39 +32,7 @@ Picker Alice pick 6
 Picker Alice pick 7
 Picker Alice pick 8
 Picker Alice goto marshalling
-Picker Bob Ready
-Picker Bob pick 9
-Picker Bob pick 10
-Picker Bob pick 11
-Picker Bob pick 12
-Picker Bob pick 13
-Picker Bob pick 14
-Picker Bob pick 15
-Picker Bob pick 16
-Picker Bob to marshalling
-Picker Alice Ready
-Picker Alice pick 17
-Picker Alice pick 18
-Picker Alice pick 19
-Replenisher Ruby replenish 19
-Picker Alice pick 20
-Picker Alice pick 21
-Picker Alice pick 22
-Picker Alice pick 23
-Picker Alice pick 24
-Picker Alice to marshalling
-Picker Bob Ready
-Picker Bob pick 25
-Picker Bob pick 26
-Picker Bob pick 27
-Picker Bob pick 28
-Picker Bob pick 29
-Picker Bob pick 30
-Picker Bob pick 31
-Picker Bob pick 32
-Picker Bob to marshalling
 Sequencer Sue ready
-Sequencer Sue sequence
 Sequencer Sue scan 1
 Sequencer Sue scan 3
 Sequencer Sue scan 5
@@ -73,40 +41,7 @@ Sequencer Sue scan 2
 Sequencer Sue scan 4
 Sequencer Sue scan 6
 Sequencer Sue scan 8
-Sequencer Sue finish
-Sequencer Sue ready
 Sequencer Sue sequence
-Sequencer Sue scan 9
-Sequencer Sue scan 11
-Sequencer Sue scan 13
-Sequencer Sue scan 15
-Sequencer Sue scan 10
-Sequencer Sue scan 12
-Sequencer Sue scan 14
-Sequencer Sue scan 16
-Sequencer Sue finish
-Sequencer Sue ready
-Sequencer Sue sequence
-Sequencer Sue scan 17
-Sequencer Sue scan 19
-Sequencer Sue scan 21
-Sequencer Sue scan 23
-Sequencer Sue scan 18
-Sequencer Sue scan 20
-Sequencer Sue scan 22
-Sequencer Sue scan 24
-Sequencer Sue finish
-Sequencer Sue ready
-Sequencer Sue sequence
-Sequencer Sue scan 25
-Sequencer Sue scan 27
-Sequencer Sue scan 29
-Sequencer Sue scan 31
-Sequencer Sue scan 26
-Sequencer Sue scan 28
-Sequencer Sue scan 30
-Sequencer Sue scan 32
-Sequencer Sue finish
 Loader Tom ready
 Loader Tom scan 1
 Loader Tom scan 3
@@ -117,6 +52,67 @@ Loader Tom scan 4
 Loader Tom scan 6
 Loader Tom scan 8
 Loader Tom load
+Picker Bob ready
+Picker Bob pick 9
+Picker Bob pick 10
+Picker Bob pick 11
+Picker Bob pick 12
+Picker Bob pick 13
+Picker Bob pick 14
+Picker Bob pick 15
+Picker Bob pick 16
+Picker Bob to marshalling
+Picker Alice ready
+Picker Alice pick 17
+Picker Alice pick 18
+Picker Alice pick 19
+Replenisher Ruby replenish 19
+Picker Alice pick 20
+Picker Alice pick 21
+Picker Alice pick 22
+Picker Alice pick 23
+Picker Alice pick 24
+Picker Alice to marshalling
+Picker Bob ready
+Picker Bob pick 25
+Picker Bob pick 26
+Picker Bob pick 27
+Picker Bob pick 28
+Picker Bob pick 29
+Picker Bob pick 30
+Picker Bob pick 31
+Picker Bob pick 32
+Picker Bob to marshalling
+Sequencer Sue ready
+Sequencer Sue scan 9
+Sequencer Sue scan 11
+Sequencer Sue scan 13
+Sequencer Sue scan 15
+Sequencer Sue scan 10
+Sequencer Sue scan 12
+Sequencer Sue scan 14
+Sequencer Sue scan 16
+Sequencer Sue sequence
+Sequencer Sue ready
+Sequencer Sue scan 17
+Sequencer Sue scan 19
+Sequencer Sue scan 21
+Sequencer Sue scan 23
+Sequencer Sue scan 18
+Sequencer Sue scan 20
+Sequencer Sue scan 22
+Sequencer Sue scan 24
+Sequencer Sue sequence
+Sequencer Sue ready
+Sequencer Sue scan 25
+Sequencer Sue scan 27
+Sequencer Sue scan 29
+Sequencer Sue scan 31
+Sequencer Sue scan 26
+Sequencer Sue scan 28
+Sequencer Sue scan 30
+Sequencer Sue scan 32
+Sequencer Sue sequence
 Loader Tom ready
 Loader Tom scan 9
 Loader Tom scan 11

@@ -47,14 +47,14 @@ class SkuTranslator {
    * @return : the <sku></sku> with the given location as an int
    */
   static String getLocation(int sku) {
-    String output = "None";
+    String output;
     for (ArrayList<String> x : locations) {
       if (x.get(x.size() - 1).equals(Integer.toString(sku))) {
         output = String.join(",", x.subList(0, x.size() - 1));
         return output;
       }
     }
-    return output;
+    return null;
   }
 
 
@@ -81,8 +81,6 @@ class SkuTranslator {
    */
   static void setLocations(String path) {
     locations = CsvReadWrite.readAsArrays(path);
-
-
   }
 
   /**

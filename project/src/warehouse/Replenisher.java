@@ -5,7 +5,10 @@ package warehouse;
  *
  * @author Peijun
  */
-public class Replenisher extends Worker {
+class Replenisher {
+
+  private String name;
+  private Warehouse worksAt;
 
   /**
    * Initialize a Replenisher object.
@@ -13,9 +16,22 @@ public class Replenisher extends Worker {
    * @param name the name of the Replenisher
    * @param worksAt where the Replenisher works at
    */
-  public Replenisher(String name, Warehouse worksAt) {
-    super(name, worksAt);
+  Replenisher(String name, Warehouse worksAt) {
+    this.name = name;
+    this.worksAt = worksAt;
   }
 
+  void replenish(int sku) {
+    if (worksAt.getToBeReplenished().contains(sku)) {
+      System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "
+          + "replenished.");
+      worksAt.addFacsia(sku);
+      worksAt.getToBeReplenished().remove(new Integer(sku));
+    } else {
+      System.out.println("Unneeded replenish, nothing was added to the "
+          + "inventory");
+    }
+
+  }
 
 }

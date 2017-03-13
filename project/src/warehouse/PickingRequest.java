@@ -1,17 +1,16 @@
 package warehouse;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Orders are processed in groups of 4. These are picking requests. All picking
  * requests in a system have a unique int id.
  */
-public class PickingRequest {
+class PickingRequest implements Comparable<PickingRequest> {
 
   private ArrayList<Order> orders;
   private int id;
-  private boolean loadReady;
-
 
   /**
    * Constructor, which initializes given parameters.
@@ -19,38 +18,63 @@ public class PickingRequest {
    * @param orders The orders associated with this picking request
    * @param id IDs are ints and never repeat
    */
-  public PickingRequest(ArrayList<Order> orders, int id) {
+  PickingRequest(ArrayList<Order> orders, int id) {
     this.orders = orders;
     this.id = id;
   }
 
-
-  public int getId() {
+  /**
+   * Get the id of this picking request.
+   *
+   * @return the id of this picking request.
+   */
+  int getId() {
     return id;
   }
 
   /**
-   * Returns all the possible SKUs in this pickingRequest. For fascia it takes
-   * the form [F1,B1,F2,B2...,Fn,Bn] where the first char of each element is
-   * whether the SKU is front or back, and the second is the nth order in the
-   * orders ArrayList field.
+   * Return the proper order that the Skus should be in for loading
    *
    * @return : The skus as an IntegerArray list.
    */
-  public ArrayList<Integer> getSkus() {
-
+  LinkedList<Integer> getProperSkus() {
+    LinkedList<Integer> res = new LinkedList<>();
+    for (Order o : orders) {
+      res.add(o.getSkus()[0]);
+    }
+    for (Order o : orders) {
+      res.add(o.getSkus()[1]);
+    }
+    return res;
   }
 
-  public boolean getLoadReady() {
-    return loadReady;
-  }
-
-  public void setLoadReady(boolean bln) {
-    loadReady = bln;
-  }
-
-  public ArrayList<Order> getOrders() {
+  /**
+   * A getter for the orders
+   *
+   * @return orders
+   */
+  ArrayList<Order> getOrders() {
     return orders;
   }
 
+  /**
+   * Compares this object with the specified object for order.  Returns a
+   * negative integer, zero, or a positive integer as this object is less
+   * than, equal to, or greater than the specified object.
+   *
+   * @param request the request to be compared.
+   * @return a negative integer, zero, or a positive integer as this object is
+   * less than, equal to, or greater than the specified object.
+   * @throws NullPointerException if the specified object is null
+   * @throws ClassCastException if the specified object's type prevents it from
+   * being compared to this object.
+   */
+  @Override
+  public int compareTo(PickingRequest request) {
+    if (this.id == request.id) {
+      return 0;
+    } else {
+      return this.id > request.id ? 1 : -1;
+    }
+  }
 }
