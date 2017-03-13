@@ -14,10 +14,8 @@ public class Main {
 
     String eventFile = "../16orders.txt";
     String warehouseFile = "../initial.csv";
-    String translationFile = ".."
-        + "/translation.csv";
-    String traversalFile = ".."
-        + "/traversal_table.csv";
+    String translationFile = "../translation.csv";
+    String traversalFile = "../traversal_table.csv";
     String outFile = "../";
 
     Simulator mySim = new Simulator(eventFile, warehouseFile, translationFile,
