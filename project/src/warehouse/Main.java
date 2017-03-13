@@ -1,6 +1,5 @@
 package warehouse;
 
-
 /**
  * Created by peijun.
  */
@@ -12,18 +11,14 @@ public class Main {
    * @param args meh
    */
   public static void main(String[] args) {
-    // /media/umi/HDD/Java_Projects/group_0376/project
-    String eventFile = "/media/umi/HDD/Java_Projects/group_0376/project/16orders.txt";
-    String warehouseFile = "/media/umi/HDD/Java_Projects/group_0376/project/initial.csv";
-    String translationFile = "/media/umi/HDD/Java_Projects/group_0376/project/translation.csv";
-    String traversalFile = "/media/umi/HDD/Java_Projects/group_0376/project/traversal_table.csv";
-    String outFile = "/media/umi/HDD/Java_Projects/group_0376/project/";
-
+    String eventFile = "../16orders.txt";
+    String warehouseFile = "../initial.csv ";
+    String translationFile = "../translation.csv";
+    String traversalFile = "../traversal_table.csv";
+    String outFile = "../";
     Simulator mySim = new Simulator(eventFile, warehouseFile, translationFile,
         traversalFile, outFile);
     mySim.run();
-
-
   }
 
 }
