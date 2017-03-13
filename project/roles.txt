@@ -19,6 +19,7 @@ various tiny mistakes in other classes such as a subclass
 not extending its parent or doing style fixes. We all took
 part in the design decisions for the program. I also handled
 some of the debugging near the end.
+NOTE: In commit history, username is Umi and email is 982341777@qq.com
 
 ==================Venkata Chaitanya Peesapati===================
 I created, implemented, and documented the Loader, Truck and Order classes.
@@ -28,4 +29,5 @@ important design decisions that were made during our discussions.
 Everyone the group was involved in fixing various tiny mistakes 
 in other files. We all took part in the design decisions for the
 program. I helped contribute to some of the testing done at the end.
+NOTE: In commit history, username is betaman3 and email is chaitanya1998@gmail.com
 
