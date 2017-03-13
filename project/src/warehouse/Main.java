@@ -1,7 +1,9 @@
 package warehouse;
 
 /**
- * Created by peijun.
+ * The main run class.
+ *
+ * @author Peijun
  */
 public class Main {
 
@@ -20,5 +22,4 @@ public class Main {
         traversalFile, outFile);
     mySim.run();
   }
-
 }

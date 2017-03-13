@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created by Tasbir on 2017-03-11.
+ * A class to represent pickers.
+ *
+ * @author Tasbir
  */
-public class Picker extends Worker {
+class Picker extends Worker {
 
   private ArrayList<String> locations;
 
   /**
    * Initialize an instance of a picker.
    *
-   * @param name the name of the picker
+   * @param name    the name of the picker
    * @param worksAt where it works at
    */
   Picker(String name, Warehouse worksAt) {

@@ -3,7 +3,9 @@ package warehouse;
 import java.util.LinkedList;
 
 /**
- * @author Andrew.
+ * A generic worker class.
+ *
+ * @author Andrew
  */
 abstract class Worker {
 
@@ -24,7 +26,7 @@ abstract class Worker {
    *
    * @return The expected order where the worker should scan in.
    */
-  protected LinkedList<Integer> getScanOrder() {
+  LinkedList<Integer> getScanOrder() {
     return new LinkedList<>(currPickingReq.getProperSkus());
   }
 

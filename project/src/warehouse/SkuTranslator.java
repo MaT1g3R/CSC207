@@ -6,6 +6,8 @@ import java.util.ArrayList;
  * This class is responsible for taking in csv files that have data about SKUs
  * and returning information for a particular set of that data, or about an
  * SKU.
+ *
+ * @author Tasbir
  */
 
 class SkuTranslator {
@@ -21,8 +23,8 @@ class SkuTranslator {
   /**
    * Using given translation table, returns SKU unit given the info.
    *
-   * @param colour the colour of this sku
-   * @param model the model of this sku
+   * @param colour  the colour of this sku
+   * @param model   the model of this sku
    * @param isFront whether or not the sku is on the front or the back
    * @return : the sku with the three above traits as an int
    */

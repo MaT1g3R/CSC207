@@ -6,6 +6,8 @@ import java.util.LinkedList;
 /**
  * Orders are processed in groups of 4. These are picking requests. All picking
  * requests in a system have a unique int id.
+ *
+ * @author Tasbir
  */
 class PickingRequest implements Comparable<PickingRequest> {
 
@@ -16,7 +18,7 @@ class PickingRequest implements Comparable<PickingRequest> {
    * Constructor, which initializes given parameters.
    *
    * @param orders The orders associated with this picking request
-   * @param id IDs are ints and never repeat
+   * @param id     IDs are ints and never repeat
    */
   PickingRequest(ArrayList<Order> orders, int id) {
     this.orders = orders;
@@ -64,10 +66,10 @@ class PickingRequest implements Comparable<PickingRequest> {
    *
    * @param request the request to be compared.
    * @return a negative integer, zero, or a positive integer as this object is
-   *      less than, equal to, or greater than the specified object.
+   * less than, equal to, or greater than the specified object.
    * @throws NullPointerException if the specified object is null
-   * @throws ClassCastException if the specified object's type prevents it from
-   *      being compared to this object.
+   * @throws ClassCastException   if the specified object's type prevents it
+   *                              from being compared to this object.
    */
   @Override
   public int compareTo(PickingRequest request) {
