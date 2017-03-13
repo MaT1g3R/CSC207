@@ -12,7 +12,7 @@ public class Main {
    */
   public static void main(String[] args) {
     String eventFile = "../events.txt";
-    String warehouseFile = "../initial.csv ";
+    String warehouseFile = "../initial.csv";
     String translationFile = "../translation.csv";
     String traversalFile = "../traversal_table.csv";
     String outFile = "../";
