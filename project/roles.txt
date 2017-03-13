@@ -10,7 +10,7 @@ part in the design decisions for the program. I also handled
 some of the debugging near the end.
 
 ========================Peijun Ma=========================
-I created, impelemented, and documented the Main,
+I created, implemented, and documented the Main,
 CsvReadWrite, Simulator and Replenisher classes and all associated
 methods. I also implemented getAllSku method in SkuTranslator. I was keeping
 track of the UML diagram in the beginning until Andrew took over.
