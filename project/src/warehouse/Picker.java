@@ -27,6 +27,7 @@ public class Picker extends Worker {
   @Override
   void ready() {
     getWorksAt().readyPicker(this);
+    resetScanCount();
     ArrayList<Integer> toBeOptimized = new ArrayList<>();
     for (Order o : getCurrPickingReq().getOrders()) {
       toBeOptimized.add(o.getSkus()[0]);
@@ -82,8 +83,7 @@ public class Picker extends Worker {
    * @param sku the sku scanned.
    * @return true if the scan matched else false.
    */
-  @Override
-  boolean scanResult(int sku) {
+  private boolean scanResult(int sku) {
     System.out.println(this.getClass().getSimpleName() + " " + getName() + " "
         + "preformed a scan action!");
     int expected = getToBeScanned().getFirst();

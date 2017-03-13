@@ -21,6 +21,15 @@ class Replenisher {
     this.worksAt = worksAt;
   }
 
+  /**
+   * A getter for its name.
+   *
+   * @return its name
+   */
+  public String getName() {
+    return name;
+  }
+
   void replenish(int sku) {
     if (worksAt.getToBeReplenished().contains(sku)) {
       System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "

@@ -56,7 +56,7 @@ class Simulator {
   }
 
   private boolean pickerMarshall(String s) {
-    return Pattern.matches("Picker \\w+ goto marshalling", s);
+    return Pattern.matches("Picker \\w+ to marshalling", s);
   }
 
   private boolean sequencerReady(String s) {
@@ -72,7 +72,7 @@ class Simulator {
   }
 
   private boolean loaderReady(String s) {
-    return Pattern.matches("Loader \\w+ Ready", s);
+    return Pattern.matches("Loader \\w+ ready", s);
   }
 
   private boolean loaderScan(String s) {
@@ -83,7 +83,7 @@ class Simulator {
     return Pattern.matches("Loader \\w+ load", s);
   }
 
-  private boolean replen(String s) {
+  private boolean replenish(String s) {
     return Pattern.matches("Replenisher \\w+ replenish [0-9]+", s);
   }
 
@@ -105,9 +105,50 @@ class Simulator {
         warehouse.addOrder(s);
       }
       if (pickerReady(s)) {
-        if (warehousegetName(s))
+        if (warehouse.getPicker(s) == null) {
+          warehouse.addPicker(new Picker(getName(s), warehouse));
+        }
+        warehouse.getPicker(getName(s)).ready();
+      }
+      if (pickerPick(s)) {
+        warehouse.getPicker(getName(s)).scan(getSku(s));
+      }
+      if (pickerMarshall(s)) {
+        warehouse.getPicker(getName(s)).goToMarshall();
+      }
+      if (sequencerReady(s)) {
+        if (warehouse.getSequencer(getName(s)) == null) {
+          warehouse.addSequencer(new Sequencer(getName(s), warehouse));
+        }
+        warehouse.getSequencer(getName(s)).ready();
+      }
+      if (sequencerScan(s)) {
+        warehouse.getSequencer(getName(s)).scan(getSku(s));
+      }
+      if (sequencerSequence(s)) {
+        warehouse.getSequencer(getName(s)).sequence();
+      }
+      if (loaderReady(s)) {
+        if (warehouse.getLoader(getName(s)) == null) {
+          warehouse.addLoader(new Loader(getName(s), warehouse));
+        }
+        warehouse.getLoader(getName(s)).ready();
+      }
+      if (loaderScan(s)) {
+        warehouse.getLoader(getName(s)).scan(getSku(s));
+      }
+      if (loaderLoad(s)) {
+        warehouse.getLoader(getName(s)).load();
+      }
+      if (replenish(s)) {
+        if (warehouse.getReplenisher(getName(s)) == null) {
+          warehouse.addReplenisher(new Replenisher(getName(s), warehouse));
+        }
+        warehouse.getReplenisher(getName(s)).replenish(getSku(s));
+
       }
     }
+    warehouse.outPutInventory();
   }
 
 }

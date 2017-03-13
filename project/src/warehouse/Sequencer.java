@@ -21,6 +21,7 @@ public class Sequencer extends Worker {
   @Override
   void ready() {
     getWorksAt().readySequencer(this);
+    resetScanCount();
     setToBeScanned(getScanOrder());
     System.out.println("Sequencer " + getName() + " is ready to sequence.");
   }

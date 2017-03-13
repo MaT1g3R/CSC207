@@ -16,11 +16,13 @@ class Warehouse {
   private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
   private LinkedList<PickingRequest> loadingArea = new LinkedList<>();
   private LinkedList<Order> orders = new LinkedList<>();
-  private int pickingReqId = 0;
+  private int pickingReqId = -1;
   private LinkedList<Integer> toBeReplenished = new LinkedList<>();
   private HashMap<String, Picker> pickers = new HashMap<>();
   private HashMap<String, Loader> loaders = new HashMap<>();
   private HashMap<String, Sequencer> sequencers = new HashMap<>();
+  private HashMap<String, Replenisher> replenishers = new HashMap<>();
+
 
   /**
    * Initializes inventory values, Hashmap values, and sets max stock value.
@@ -251,7 +253,61 @@ class Warehouse {
     sequencers.put(sequencer.getName(), sequencer);
   }
 
+  /**
+   * Add a picker to the warehouse.
+   *
+   * @param picker the picker to be added
+   */
   void addPicker(Picker picker) {
     pickers.put(picker.getName(), picker);
+  }
+
+  /**
+   * Add a replenisher to the warehouse
+   *
+   * @param replenisher the replenisher to be added
+   */
+  void addReplenisher(Replenisher replenisher) {
+    replenishers.put(replenisher.getName(), replenisher);
+  }
+
+  /**
+   * Get a loader by name.
+   *
+   * @param name the name
+   * @return the loader with that name
+   */
+  Loader getLoader(String name) {
+    return loaders.get(name);
+  }
+
+  /**
+   * Get a picker by name.
+   *
+   * @param name the name
+   * @return the picker with that name
+   */
+  Picker getPicker(String name) {
+    return pickers.get(name);
+  }
+
+  /**
+   * Get a sequencer by name
+   *
+   * @param name the name
+   * @return the sequencer with that name
+   */
+  Sequencer getSequencer(String name) {
+    return sequencers.get(name);
+  }
+
+  /**
+   * Get a replenisher by name
+   *
+   * @param name the name
+   * @return the replenisher with that name
+   */
+  Replenisher getReplenisher(String name) {
+    return replenishers.get(name);
   }
 }

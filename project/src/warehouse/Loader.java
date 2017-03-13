@@ -26,6 +26,7 @@ public class Loader extends Worker {
    */
   @Override
   void ready() {
+    resetScanCount();
     getWorksAt().readyLoader(this);
     setToBeScanned(getScanOrder());
     System.out.println("Loader " + getName() + " is ready to load.");

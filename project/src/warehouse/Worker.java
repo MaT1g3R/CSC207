@@ -48,7 +48,7 @@ abstract class Worker {
    * @param sku the sku scanned.
    * @return true if the scan matched else false.
    */
-  boolean scanResult(int sku) {
+  private boolean scanResult(int sku) {
     System.out.println(this.getClass().getSimpleName() + " " + name + " "
         + "preformed a scan action!");
     int expected = toBeScanned.pop();
@@ -140,5 +140,12 @@ abstract class Worker {
    */
   int getScanCount() {
     return scanCount;
+  }
+
+  /**
+   * Resets the scancount to 0
+   */
+  void resetScanCount() {
+    scanCount = 0;
   }
 }

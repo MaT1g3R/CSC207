@@ -31,7 +31,7 @@ Picker Alice pick 5
 Picker Alice pick 6
 Picker Alice pick 7
 Picker Alice pick 8
-Picker Alice goto marshalling
+Picker Alice to marshalling
 Sequencer Sue ready
 Sequencer Sue scan 1
 Sequencer Sue scan 3
