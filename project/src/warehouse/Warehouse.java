@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-class Warehouse {
+public class Warehouse {
 
   private final int maxStock;
   private String outputFileDir;
@@ -32,7 +32,7 @@ class Warehouse {
    * @param outputFileDirPath path to directory for output files
    * @param max               how much items a rack level holds
    */
-  Warehouse(String inputFilePath, String outputFileDirPath, int max) {
+  public Warehouse(String inputFilePath, String outputFileDirPath, int max) {
     this.outputFileDir = outputFileDirPath;
     this.maxStock = max;
     this.setInventoryFromFile(inputFilePath);
@@ -45,7 +45,7 @@ class Warehouse {
   /**
    * This output the final inventory as csv to the outputFileDir.
    */
-  void outPutInventory() {
+  public void outPutInventory() {
     ArrayList<String> result = new ArrayList<>();
     for (HashMap.Entry<Integer, Integer> entry : inventory.entrySet()) {
       if (entry.getValue() < maxStock) {
@@ -90,7 +90,7 @@ class Warehouse {
    *
    * @param order the order as a string to be added
    */
-  void addOrder(String order) {
+  public void addOrder(String order) {
     System.out.println(order + "has been added to the warehouse.");
     orders.add(new Order(order));
   }
@@ -100,7 +100,7 @@ class Warehouse {
    *
    * @param sku the sku of the facsia to be added
    */
-  void addFacsia(int sku) {
+  public void addFacsia(int sku) {
     this.inventory.put(sku, this.inventory.get(sku) + 25);
   }
 
@@ -111,7 +111,7 @@ class Warehouse {
    *
    * @param sku the sku being removed
    */
-  void removeFascia(int sku) {
+  public void removeFascia(int sku) {
     if (inventory.get(sku) < 1) {
       System.out.println(
           "An attempt of trying to remove fascia of SKU " + String.valueOf(sku)
@@ -153,7 +153,7 @@ class Warehouse {
    * @throws NullPointerException when a picker tries to ready when there's no
    *                              picking requests.
    */
-  void readyPicker(Picker picker) throws NullPointerException {
+  public void readyPicker(Picker picker) throws NullPointerException {
     try {
       if (outStandingPickingRequests.isEmpty()) {
         picker.setCurrPickingReq(generatePickingReq());
@@ -174,7 +174,7 @@ class Warehouse {
    * @throws NullPointerException when a sequencer tries to ready when there's
    *                              no picking request.
    */
-  void readySequencer(Sequencer sequencer) throws NullPointerException {
+  public void readySequencer(Sequencer sequencer) throws NullPointerException {
     try {
       sequencer.setCurrPickingReq(marshallingArea.pop());
     } catch (NullPointerException npe) {
@@ -192,7 +192,7 @@ class Warehouse {
    * @throws NullPointerException when a loader tries to ready when there's no
    *                              picking request.
    */
-  void readyLoader(Loader loader) throws NullPointerException {
+  public void readyLoader(Loader loader) throws NullPointerException {
     try {
       ArrayList<Object> toBeSent = loadingArea.pop();
       loader.setCurrPickingReq((PickingRequest) toBeSent.get(0));
@@ -210,7 +210,7 @@ class Warehouse {
    *
    * @param request the picking request to be marshalled.
    */
-  void sendToMarshalling(PickingRequest request) {
+  public void sendToMarshalling(PickingRequest request) {
     marshallingArea.add(request);
   }
 
@@ -219,7 +219,7 @@ class Warehouse {
    *
    * @param request the picking request to be loaded.
    */
-  void sendToLoading(PickingRequest request, int[] frontPallet, int[]
+  public void sendToLoading(PickingRequest request, int[] frontPallet, int[]
       backPallet) {
     loadingArea.add(new ArrayList<>(
         Arrays.asList(new Object[]{request, frontPallet, backPallet})));
@@ -233,7 +233,7 @@ class Warehouse {
    *
    * @param request the failed picking request
    */
-  void sendBackToPicking(PickingRequest request) {
+  public void sendBackToPicking(PickingRequest request) {
     outStandingPickingRequests.add(request);
   }
 
@@ -242,7 +242,7 @@ class Warehouse {
    *
    * @return the not full truck
    */
-  Truck getFirstNonFullTruck() {
+  public Truck getFirstNonFullTruck() {
     for (Truck t : trucks) {
       if (!t.isFull()) {
         return t;
@@ -256,7 +256,7 @@ class Warehouse {
    *
    * @return outPutFileDir
    */
-  String getOutputFileDir() {
+  public String getOutputFileDir() {
     return outputFileDir;
   }
 
@@ -265,7 +265,7 @@ class Warehouse {
    *
    * @return toBeReplenished
    */
-  LinkedList<Integer> getToBeReplenished() {
+  public LinkedList<Integer> getToBeReplenished() {
     return toBeReplenished;
   }
 
@@ -274,7 +274,7 @@ class Warehouse {
    *
    * @param loader the loader to be added
    */
-  void addLoader(Loader loader) {
+  public void addLoader(Loader loader) {
     loaders.put(loader.getName(), loader);
   }
 
@@ -283,7 +283,7 @@ class Warehouse {
    *
    * @param sequencer the sequencer to be added
    */
-  void addSequencer(Sequencer sequencer) {
+  public void addSequencer(Sequencer sequencer) {
     sequencers.put(sequencer.getName(), sequencer);
   }
 
@@ -292,7 +292,7 @@ class Warehouse {
    *
    * @param picker the picker to be added
    */
-  void addPicker(Picker picker) {
+  public void addPicker(Picker picker) {
     pickers.put(picker.getName(), picker);
   }
 
@@ -301,7 +301,7 @@ class Warehouse {
    *
    * @param replenisher the replenisher to be added
    */
-  void addReplenisher(Replenisher replenisher) {
+  public void addReplenisher(Replenisher replenisher) {
     replenishers.put(replenisher.getName(), replenisher);
   }
 
@@ -311,7 +311,7 @@ class Warehouse {
    * @param name the name
    * @return the loader with that name
    */
-  Loader getLoader(String name) {
+  public Loader getLoader(String name) {
     return loaders.get(name);
   }
 
@@ -321,7 +321,7 @@ class Warehouse {
    * @param name the name
    * @return the picker with that name
    */
-  Picker getPicker(String name) {
+  public Picker getPicker(String name) {
     return pickers.get(name);
   }
 
@@ -331,7 +331,7 @@ class Warehouse {
    * @param name the name
    * @return the sequencer with that name
    */
-  Sequencer getSequencer(String name) {
+  public Sequencer getSequencer(String name) {
     return sequencers.get(name);
   }
 
@@ -341,7 +341,7 @@ class Warehouse {
    * @param name the name
    * @return the replenisher with that name
    */
-  Replenisher getReplenisher(String name) {
+  public Replenisher getReplenisher(String name) {
     return replenishers.get(name);
   }
 }

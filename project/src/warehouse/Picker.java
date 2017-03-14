@@ -8,7 +8,7 @@ import java.util.LinkedList;
  *
  * @author Tasbir
  */
-class Picker extends Worker {
+public class Picker extends Worker {
 
   private ArrayList<String> locations;
 
@@ -18,7 +18,7 @@ class Picker extends Worker {
    * @param name    the name of the picker
    * @param worksAt where it works at
    */
-  Picker(String name, Warehouse worksAt) {
+  public Picker(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
@@ -27,7 +27,7 @@ class Picker extends Worker {
    * and a scan order.
    */
   @Override
-  void ready() {
+  public void ready() {
     getWorksAt().readyPicker(this);
     resetScanCount();
     ArrayList<Integer> toBeOptimized = new ArrayList<>();
@@ -53,7 +53,7 @@ class Picker extends Worker {
    * @return The expected scan order
    */
   @Override
-  protected LinkedList<Integer> getScanOrder() {
+  LinkedList<Integer> getScanOrder() {
     LinkedList<Integer> res = new LinkedList<>();
     for (String location : locations) {
       String[] toBeTr = location.split(",");
@@ -70,7 +70,7 @@ class Picker extends Worker {
    * @param sku the sku scanned.
    */
   @Override
-  void scan(int sku) {
+  public void scan(int sku) {
     getWorksAt().removeFascia(sku);
     if (scanResult(sku, expected())) {
       addScanCount();
@@ -90,7 +90,7 @@ class Picker extends Worker {
   /**
    * Method for going to the marshalling area.
    */
-  void goToMarshall() {
+  public void goToMarshall() {
     if (getScanCount() == 8) {
       getWorksAt().sendToMarshalling(getCurrPickingReq());
       System.out.println("Picker " + getName() + "has gone to marshalling area"

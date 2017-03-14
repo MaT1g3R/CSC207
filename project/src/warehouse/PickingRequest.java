@@ -9,7 +9,7 @@ import java.util.LinkedList;
  *
  * @author Tasbir
  */
-class PickingRequest implements Comparable<PickingRequest> {
+public class PickingRequest implements Comparable<PickingRequest> {
 
   private ArrayList<Order> orders;
   private int id;
@@ -20,7 +20,7 @@ class PickingRequest implements Comparable<PickingRequest> {
    * @param orders The orders associated with this picking request
    * @param id     IDs are ints and never repeat
    */
-  PickingRequest(ArrayList<Order> orders, int id) {
+  public PickingRequest(ArrayList<Order> orders, int id) {
     this.orders = orders;
     this.id = id;
   }
@@ -30,7 +30,7 @@ class PickingRequest implements Comparable<PickingRequest> {
    *
    * @return the id of this picking request.
    */
-  int getId() {
+  public int getId() {
     return id;
   }
 
@@ -39,7 +39,7 @@ class PickingRequest implements Comparable<PickingRequest> {
    *
    * @return : The skus as an IntegerArray list.
    */
-  LinkedList<Integer> getProperSkus() {
+  public LinkedList<Integer> getProperSkus() {
     LinkedList<Integer> res = new LinkedList<>();
     for (Order o : orders) {
       res.add(o.getSkus()[0]);
@@ -55,7 +55,7 @@ class PickingRequest implements Comparable<PickingRequest> {
    *
    * @return orders
    */
-  ArrayList<Order> getOrders() {
+  public ArrayList<Order> getOrders() {
     return orders;
   }
 

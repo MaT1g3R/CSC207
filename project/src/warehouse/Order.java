@@ -31,7 +31,7 @@ public class Order {
    *
    * @return Array of 2 ints, the SKU number of the front object, then the back.
    */
-  int[] getSkus() {
+  public int[] getSkus() {
     return skus;
   }
 

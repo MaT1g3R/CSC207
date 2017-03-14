@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * @author Peijun
  */
-class Simulator {
+public class Simulator {
 
   /**
    * The warehouse the Simulator is simulating.
@@ -28,7 +28,7 @@ class Simulator {
    * @param traversalFilePath   the file path to the traversal table
    * @param outFilePath         the file path for output
    */
-  Simulator(final String eventFile, final String warehouseFilePath,
+  public Simulator(final String eventFile, final String warehouseFilePath,
       final String translationFilePath, final String traversalFilePath,
       final String outFilePath) {
     this.eventList = CsvReadWrite.readCsv(eventFile);
@@ -172,7 +172,7 @@ class Simulator {
   /**
    * The main event loop.
    */
-  void run() {
+  public void run() {
     for (String s : eventList) {
       if (isOrder(s)) {
         warehouse.addOrder(s);
