@@ -15,7 +15,7 @@ public class Order {
   /**
    * Initializes a new order based on input to the system.
    *
-   * @param orderAsString The Order as it is inputed.
+   * @param orderAsString The Order in the format "Order Colour Model"
    */
   public Order(String orderAsString) {
     String[] orderSplit = orderAsString.split("\\s");
