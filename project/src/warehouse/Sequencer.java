@@ -39,8 +39,8 @@ public class Sequencer extends Worker {
       int[] frontPallet = new int[4];
       int[] backPallet = new int[4];
       for (int i = 0; i < 4; i++) {
-        frontPallet[i] = skus.get(i * 2);
-        backPallet[i] = skus.get(i * 2 + 1);
+        frontPallet[i] = skus.get(i);
+        backPallet[i] = skus.get(i + 4);
       }
       getWorksAt().sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
       System.out.println("The sequencer " + getName() + " has finished "
