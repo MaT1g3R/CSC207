@@ -19,8 +19,8 @@ public class Order {
    */
   public Order(String orderAsString) {
     String[] orderSplit = orderAsString.split("\\s");
-    model = orderSplit[1];
-    colour = orderSplit[2];
+    colour = orderSplit[1];
+    model = orderSplit[2];
     skus[0] = SkuTranslator.getSku(colour, model, true);
     skus[1] = SkuTranslator.getSku(colour, model, false);
   }

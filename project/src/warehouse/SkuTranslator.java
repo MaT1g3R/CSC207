@@ -30,8 +30,8 @@ public class SkuTranslator {
    */
   public static int getSku(String colour, String model, boolean isFront) {
     for (ArrayList<String> x : properties) {
-      if (String.join(",", x.subList(0, 2)).toLowerCase().equals((model
-          + "," + colour).toLowerCase())) {
+      if (String.join(",", x.subList(0, 2)).toLowerCase().equals((colour
+          + "," + model).toLowerCase())) {
         if (isFront) {
           return Integer.parseInt(x.get(2));
         } else {
