@@ -31,3 +31,9 @@ in other files. We all took part in the design decisions for the
 program. I helped contribute to some of the testing done at the end.
 NOTE: In commit history, username is betaman3 and email is chaitanya1998@gmail.com
 
+========================Andrew Olechtchouk=========================
+I created, implemented, and documented the Abstract Worker class,
+the Sequencer class (up until we made some design changes near the end),
+and also the “generic software” that included the optimize method. I wrote
+test cases for these classes and also updated the UML diagram after each
+design change. We all took part in the design decisions for the program.
