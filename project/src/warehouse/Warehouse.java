@@ -2,6 +2,7 @@ package warehouse;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ class Warehouse {
   private LinkedList<PickingRequest> outStandingPickingRequests = new
       LinkedList<>();
   private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
-  private LinkedList<PickingRequest> loadingArea = new LinkedList<>();
+  private LinkedList<ArrayList<Object>> loadingArea = new LinkedList<>();
   private LinkedList<Order> orders = new LinkedList<>();
   private int pickingReqId = 0;
   private LinkedList<Integer> toBeReplenished = new LinkedList<>();
@@ -141,7 +142,7 @@ class Warehouse {
     for (int i = 0; i < 4; i++) {
       toBeSent.add(orders.pop());
     }
-    
+
     return new PickingRequest(toBeSent, pickingReqId++);
   }
 
@@ -193,7 +194,9 @@ class Warehouse {
    */
   void readyLoader(Loader loader) throws NullPointerException {
     try {
-      loader.setCurrPickingReq(loadingArea.pop());
+      ArrayList<Object> toBeSent = loadingArea.pop();
+      loader.setCurrPickingReq((PickingRequest) toBeSent.get(0));
+      loader.setPallets((int[]) toBeSent.get(1), (int[]) toBeSent.get(2));
     } catch (NullPointerException npe) {
       System.out.println("A loader tried to ready when there's no picking "
           + "requests.");
@@ -216,10 +219,14 @@ class Warehouse {
    *
    * @param request the picking request to be loaded.
    */
-  void sendToLoading(PickingRequest request) {
-    loadingArea.add(request);
-    loadingArea.sort(PickingRequest::compareTo);
+  void sendToLoading(PickingRequest request, int[] frontPallet, int[]
+      backPallet) {
+    loadingArea.add(new ArrayList<>(
+        Arrays.asList(new Object[]{request, frontPallet, backPallet})));
+    loadingArea.sort((p1, p2) -> ((PickingRequest) p1.get(0)).compareTo(
+        (PickingRequest) p2.get(0)));
   }
+
 
   /**
    * When a picking request failed it's sent back to picking.

@@ -1,7 +1,6 @@
 package warehouse;
 
 import java.io.File;
-import java.util.LinkedList;
 
 /**
  * A class to represent Loaders.
@@ -11,10 +10,13 @@ import java.util.LinkedList;
 
 public class Loader extends Worker {
 
+  private int[] frontPallet = new int[4];
+  private int[] backPallet = new int[4];
+
   /**
    * Initializes a new Loader.
    *
-   * @param name The Loader's name.
+   * @param name    The Loader's name.
    * @param worksAt The Warehouse object of which this worker works at.
    */
   public Loader(String name, Warehouse worksAt) {
@@ -32,19 +34,17 @@ public class Loader extends Worker {
     System.out.println("Loader " + getName() + " is ready to load.");
   }
 
+  void setPallets(int[] frontPallet, int[] backPallet) {
+    this.frontPallet = frontPallet;
+    this.backPallet = backPallet;
+  }
+
   /**
    * Method for loading.
    */
   void load() {
     if (getScanCount() == 8) {
       Truck truck = getWorksAt().getFirstNonFullTruck();
-      LinkedList<Integer> skus = getCurrPickingReq().getProperSkus();
-      int[] frontPallet = new int[4];
-      int[] backPallet = new int[4];
-      for (int i = 0; i < 4; i++) {
-        frontPallet[i] = skus.get(i * 2);
-        backPallet[i] = skus.get(i * 2 + 1);
-      }
       if (truck.addCargo(frontPallet, backPallet, getCurrPickingReq().getId()
       )) {
         System.out.println("Loader " + getName() + " loaded picking request"
@@ -58,6 +58,8 @@ public class Loader extends Worker {
         System.out.println("Loader " + getName() + " could not load picking "
             + "request " + String.valueOf(getCurrPickingReq().getId()) + "\nThe"
             + " picking request is sent back to loading area.");
+        getWorksAt()
+            .sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
       }
 
     } else {
