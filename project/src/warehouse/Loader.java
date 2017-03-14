@@ -27,14 +27,14 @@ public class Loader extends Worker {
    * The action for a worker being ready.
    */
   @Override
-  void ready() {
+  public void ready() {
     resetScanCount();
     getWorksAt().readyLoader(this);
     setToBeScanned(getScanOrder());
     System.out.println("Loader " + getName() + " is ready to load.");
   }
 
-  void setPallets(int[] frontPallet, int[] backPallet) {
+  public void setPallets(int[] frontPallet, int[] backPallet) {
     this.frontPallet = frontPallet;
     this.backPallet = backPallet;
   }
@@ -42,7 +42,7 @@ public class Loader extends Worker {
   /**
    * Method for loading.
    */
-  void load() {
+  public void load() {
     if (getScanCount() == 8) {
       Truck truck = getWorksAt().getFirstNonFullTruck();
       if (truck.addCargo(frontPallet, backPallet, getCurrPickingReq().getId()

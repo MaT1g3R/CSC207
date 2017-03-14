@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Chaitanya
  */
 
-class Truck {
+public class Truck {
 
   /**
    * A list of 10 levels, with 4 pallets per level. Each pallet has 4 Facsia.
@@ -33,7 +33,7 @@ class Truck {
    *
    * @param startingId the picking request id that the truck starts at
    */
-  Truck(int startingId) {
+  public Truck(int startingId) {
     currReqId = startingId;
   }
 
@@ -41,10 +41,10 @@ class Truck {
    * Adds pallets to an appropriate location on the Truck.
    *
    * @param frontPallet The pallet containing the four front SKU's
-   * @param backPallet The pallet containing the four rear SKU's
+   * @param backPallet  The pallet containing the four rear SKU's
    * @return if the cargo is loaded
    */
-  boolean addCargo(int[] frontPallet, int[] backPallet, int reqId) {
+  public boolean addCargo(int[] frontPallet, int[] backPallet, int reqId) {
     if (reqId == currReqId && !this.isFull()) {
       if (!addToRight) {
         this.cargo.add(currentLevel, new ArrayList<>());
@@ -67,7 +67,7 @@ class Truck {
    * @return Boolean of whether the truck is full.
    */
 
-  boolean isFull() {
+  public boolean isFull() {
     if (cargo.size() < 10) {
       return false;
     } else if (cargo.get(9).size() < 4) {

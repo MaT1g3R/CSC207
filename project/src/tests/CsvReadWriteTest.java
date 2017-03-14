@@ -51,8 +51,8 @@ public class CsvReadWriteTest {
    */
   @After
   public void tearDown() {
-    File f = new File(PATH);
-    f.delete();
+    File file = new File(PATH);
+    file.delete();
   }
 
   /**
@@ -112,8 +112,8 @@ public class CsvReadWriteTest {
     CsvReadWrite.overWrite(defaultData, newName);
     ArrayList<String> result = CsvReadWrite.readCsv(newName);
     Assert.assertEquals(defaultData, result);
-    File f = new File(newName);
-    f.delete();
+    File file = new File(newName);
+    file.delete();
   }
 
   /**

@@ -23,7 +23,7 @@ public class Sequencer extends Worker {
    * The action for a worker being ready.
    */
   @Override
-  void ready() {
+  public void ready() {
     getWorksAt().readySequencer(this);
     resetScanCount();
     setToBeScanned(getScanOrder());
@@ -33,14 +33,14 @@ public class Sequencer extends Worker {
   /**
    * The method for when a sequencer sequence.
    */
-  void sequence() {
+  public void sequence() {
     if (getScanCount() == 8) {
       LinkedList<Integer> skus = getCurrPickingReq().getProperSkus();
       int[] frontPallet = new int[4];
       int[] backPallet = new int[4];
       for (int i = 0; i < 4; i++) {
-        frontPallet[i] = skus.get(i * 2);
-        backPallet[i] = skus.get(i * 2 + 1);
+        frontPallet[i] = skus.get(i);
+        backPallet[i] = skus.get(i + 4);
       }
       getWorksAt().sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
       System.out.println("The sequencer " + getName() + " has finished "
