@@ -45,7 +45,7 @@ class Truck {
    * @return if the cargo is loaded
    */
   boolean addCargo(int[] frontPallet, int[] backPallet, int reqId) {
-    if (reqId == currReqId) {
+    if (reqId == currReqId && !this.isFull()) {
       if (!addToRight) {
         this.cargo.add(currentLevel, new ArrayList<>());
       }
