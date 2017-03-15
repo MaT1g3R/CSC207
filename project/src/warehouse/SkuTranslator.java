@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class SkuTranslator {
 
 
-  private SkuTranslator() {
-  }
-
   private static ArrayList<ArrayList<String>> locations;
   private static ArrayList<ArrayList<String>> properties;
 
