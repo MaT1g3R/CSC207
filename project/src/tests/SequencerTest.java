@@ -20,8 +20,15 @@ public class SequencerTest {
   Warehouse warehouse;
   Loader loader;
   PickingRequest pickreq;
+  PickingRequest pickreq2;
+  PickingRequest pickreq3;
   ArrayList<Order> orders;
+  ArrayList<Order> orders2;
+  ArrayList<Order> orders3;
   Sequencer sequencer;
+
+  int[] frontPal = {1, 3, 5, 7};
+  int[] backPal = {2, 4, 6, 8};
 
   @Before
   public void setUp() throws Exception {
@@ -30,26 +37,59 @@ public class SequencerTest {
     SkuTranslator.setProperties("tests/traversal_table.csv");
     warehouse = new Warehouse("tests/initial.csv", "../", 30);
     orders = new ArrayList<>();
+    orders2 = new ArrayList<>();
+    orders3 = new ArrayList<>();
 
     orders.add(new Order("Order Green S"));
     orders.add(new Order("Order Green SE"));
     orders.add(new Order("Order Green SES"));
     orders.add(new Order("Order Green SEL"));
 
+    orders2.add(new Order("Order White S"));
+    orders2.add(new Order("Order White SE"));
+    orders2.add(new Order("Order White SES"));
+    orders2.add(new Order("Order White SEL"));
+
+    orders3.add(new Order("Order Red S"));
+    orders3.add(new Order("Order Red SE"));
+    orders3.add(new Order("Order Red SES"));
+    orders3.add(new Order("Order Red SEL"));
+
     warehouse.addOrder("Order Green S");
     warehouse.addOrder("Order Green SE");
     warehouse.addOrder("Order Green SES");
     warehouse.addOrder("Order Green SEL");
 
-    pickreq = new PickingRequest(orders, 1);
+    warehouse.addOrder("Order White S");
+    warehouse.addOrder("Order White SE");
+    warehouse.addOrder("Order White SES");
+    warehouse.addOrder("Order White SEL");
+
+    warehouse.addOrder("Order Red S");
+    warehouse.addOrder("Order Red SE");
+    warehouse.addOrder("Order Red SES");
+    warehouse.addOrder("Order Red SEL");
+
+    pickreq = new PickingRequest(orders, 0);
+    pickreq2 = new PickingRequest(orders2, 1);
+    pickreq3 = new PickingRequest(orders3, 2);
+
+    warehouse.sendToLoading(pickreq3, frontPal, backPal);
+
+    loader = new Loader("Phil", warehouse);
     sequencer = new Sequencer("Billy", warehouse);
+
     warehouse.addSequencer(sequencer);
+    warehouse.addLoader(loader);
+
     warehouse.sendToMarshalling(pickreq);
+    warehouse.sendToMarshalling(pickreq2);
 
     warehouse.readySequencer(sequencer);
-//    sequencer.ready();
+    warehouse.readyLoader(loader);
 
-//    sequencer.ready();
+    warehouse.sendToMarshalling(pickreq3);
+    warehouse.sendToLoading(pickreq3, frontPal, backPal);
 
   }
 
@@ -59,13 +99,12 @@ public class SequencerTest {
     orders = null;
     pickreq = null;
     sequencer = null;
+    loader = null;
   }
 
   @Test
   public void testReady() {
-
-//    sequencer.ready();
-
+    sequencer.ready();
     boolean actual = false;
     if (sequencer.getScanCount() == 0
         && sequencer.getCurrPickingReq().equals(pickreq)
@@ -90,7 +129,21 @@ public class SequencerTest {
 
   @Test
   public void testSequence() {
-    fail("Not yet implemented"); // TODO
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+    sequencer.addScanCount();
+
+    PickingRequest actual = sequencer.getCurrPickingReq();
+    sequencer.sequence();
+
+    PickingRequest expected = loader.getCurrPickingReq();
+
+    Assert.assertEquals(expected, actual);
   }
 
   @Test
@@ -153,22 +206,31 @@ public class SequencerTest {
 
   @Test
   public void testGetName() {
-    fail("Not yet implemented"); // TODO
+    String name = "Billy";
+    Assert.assertEquals(name, sequencer.getName());
   }
 
   @Test
   public void testAddScanCount() {
-    fail("Not yet implemented"); // TODO
+    sequencer.addScanCount();
+    int scanAmount = sequencer.getScanCount();
+
+    Assert.assertEquals(1, scanAmount);
   }
 
   @Test
   public void testGetScanCount() {
-    fail("Not yet implemented"); // TODO
+    int scanAmount = sequencer.getScanCount();
+
+    Assert.assertEquals(0, scanAmount);
   }
 
   @Test
   public void testResetScanCount() {
-    fail("Not yet implemented"); // TODO
+    sequencer.resetScanCount();
+    int scanAmount = sequencer.getScanCount();
+
+    Assert.assertEquals(0, scanAmount);
   }
 
 }
