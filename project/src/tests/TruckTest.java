@@ -39,16 +39,34 @@ public class TruckTest {
   }
 
   @Test
-  public void testIsFull() {
+  public void testNotIsFull() {
     Assert.assertEquals(false, truck.isFull());
-
+  }
+  
+  @Test
+  public void testNotIsFull1() {
     int[] cargo = {2, 3, 2, 3};
     for (int i = 0; i < 19; i++) {
       truck.addCargo(cargo, cargo, i + 3);
     }
     Assert.assertEquals(false, truck.isFull());
-    truck.addCargo(cargo, cargo, 19 + 3);
+  }
+  
+  @Test
+  public void testIsFull() {
+    int[] cargo = {2, 3, 2, 3};
+    for (int i = 0; i < 20; i++) {
+      truck.addCargo(cargo, cargo, i + 3);
+    }
     Assert.assertEquals(true, truck.isFull());
+  }
+  
+  @Test
+  public void testFullAdd() {
+    int[] cargo = {2, 3, 2, 3};
+    for (int i = 0; i < 20; i++) {
+      truck.addCargo(cargo, cargo, i + 3);
+    }
     Assert.assertEquals(false, truck.addCargo(cargo, cargo, 19 + 4));
   }
 
