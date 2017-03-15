@@ -91,7 +91,7 @@ abstract class Worker {
 
 
   /**
-   * A getter fot worksAt.
+   * A getter for worksAt.
    *
    * @return where this worker works at
    */
