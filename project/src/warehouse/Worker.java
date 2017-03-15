@@ -82,10 +82,15 @@ abstract class Worker {
    * @param sku the sku scanned.
    */
   public void scan(int sku) {
-    if (!scanResult(sku, expected())) {
-      getWorksAt().sendBackToPicking(getCurrPickingReq());
+    if (getCurrPickingReq() != null) {
+      if (!scanResult(sku, expected())) {
+        getWorksAt().sendBackToPicking(getCurrPickingReq());
+      } else {
+        addScanCount();
+      }
     } else {
-      addScanCount();
+      System.out.println(getClass().getSimpleName() + " " + getName() + " "
+          + "tried to scan with no picking request. Scan action aborted.");
     }
   }
 
@@ -158,4 +163,6 @@ abstract class Worker {
   public void resetScanCount() {
     scanCount = 0;
   }
+
+
 }

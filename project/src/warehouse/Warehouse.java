@@ -132,12 +132,9 @@ public class Warehouse {
    * This method should never be called if there's less than 4 orders in
    * outstanding Orders.
    *
-   * @return A picking request if there're enough orders else null
+   * @return A picking request from 4 orders.
    */
   private PickingRequest generatePickingReq() {
-    if (this.orders.size() < 4) {
-      return null;
-    }
     ArrayList<Order> toBeSent = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
       toBeSent.add(orders.pop());
@@ -150,20 +147,12 @@ public class Warehouse {
    * When a picker is ready this hands him a picking request.
    *
    * @param picker the Picker who's ready.
-   * @throws NullPointerException when a picker tries to ready when there's no
-   *                              picking requests.
    */
-  public void readyPicker(Picker picker) throws NullPointerException {
-    try {
-      if (outStandingPickingRequests.isEmpty()) {
-        picker.setCurrPickingReq(generatePickingReq());
-      } else {
-        picker.setCurrPickingReq(outStandingPickingRequests.pop());
-      }
-    } catch (NullPointerException npe) {
-      System.out.println("A picker tried to ready when there's no picking "
-          + "requests.");
-      throw npe;
+  public void readyPicker(Picker picker) {
+    if (outStandingPickingRequests.isEmpty() && orders.size() >= 4) {
+      picker.setCurrPickingReq(generatePickingReq());
+    } else if (!outStandingPickingRequests.isEmpty()) {
+      picker.setCurrPickingReq(outStandingPickingRequests.pop());
     }
   }
 
@@ -171,16 +160,10 @@ public class Warehouse {
    * When a sequencer it gets a picking request to sequence.
    *
    * @param sequencer the sequencer who's ready.
-   * @throws NullPointerException when a sequencer tries to ready when there's
-   *                              no picking request.
    */
-  public void readySequencer(Sequencer sequencer) throws NullPointerException {
-    try {
+  public void readySequencer(Sequencer sequencer) {
+    if (!marshallingArea.isEmpty()) {
       sequencer.setCurrPickingReq(marshallingArea.pop());
-    } catch (NullPointerException npe) {
-      System.out.println("A sequencer tried to ready when there's no picking "
-          + "requests.");
-      throw npe;
     }
   }
 
@@ -189,18 +172,12 @@ public class Warehouse {
    * When a loader is ready it gets a picking request to laod.
    *
    * @param loader the loader who's ready.
-   * @throws NullPointerException when a loader tries to ready when there's no
-   *                              picking request.
    */
-  public void readyLoader(Loader loader) throws NullPointerException {
-    try {
+  public void readyLoader(Loader loader) {
+    if (!loadingArea.isEmpty()) {
       ArrayList<Object> toBeSent = loadingArea.pop();
       loader.setCurrPickingReq((PickingRequest) toBeSent.get(0));
       loader.setPallets((int[]) toBeSent.get(1), (int[]) toBeSent.get(2));
-    } catch (NullPointerException npe) {
-      System.out.println("A loader tried to ready when there's no picking "
-          + "requests.");
-      throw npe;
     }
   }
 
@@ -217,7 +194,9 @@ public class Warehouse {
   /**
    * When a sequencer is finished it sends the picking request to loading
    *
-   * @param request the picking request to be loaded.
+   * @param request     the picking request to be loaded.
+   * @param frontPallet the front pallet to be loaded.
+   * @param backPallet  the back pallet to be loaded.
    */
   public void sendToLoading(PickingRequest request, int[] frontPallet, int[]
       backPallet) {

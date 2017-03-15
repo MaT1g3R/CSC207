@@ -29,21 +29,26 @@ public class Picker extends Worker {
   @Override
   public void ready() {
     getWorksAt().readyPicker(this);
-    resetScanCount();
-    ArrayList<Integer> toBeOptimized = new ArrayList<>();
-    for (Order o : getCurrPickingReq().getOrders()) {
-      toBeOptimized.add(o.getSkus()[0]);
-      toBeOptimized.add(o.getSkus()[1]);
+    if (getCurrPickingReq() != null) {
+      resetScanCount();
+      ArrayList<Integer> toBeOptimized = new ArrayList<>();
+      for (Order o : getCurrPickingReq().getOrders()) {
+        toBeOptimized.add(o.getSkus()[0]);
+        toBeOptimized.add(o.getSkus()[1]);
+      }
+      locations = WarehousePicking.optimize(toBeOptimized);
+      setToBeScanned(getScanOrder());
+      // For printing
+      String displayString = "Picker " + getName() + " is ready, it will go to "
+          + "locations:\n";
+      for (String loc : locations) {
+        displayString += loc + "\n";
+      }
+      System.out.println(displayString);
+    } else {
+      System.out.println("Picker " + getName() + " tried to ready with no "
+          + "picking request. Ready action aborted.");
     }
-    locations = WarehousePicking.optimize(toBeOptimized);
-    setToBeScanned(getScanOrder());
-    // For printing
-    String displayString = "Picker " + getName() + " is ready, it will go to "
-        + "locations:\n";
-    for (String loc : locations) {
-      displayString += loc + "\n";
-    }
-    System.out.println(displayString);
   }
 
   /**
@@ -71,10 +76,15 @@ public class Picker extends Worker {
    */
   @Override
   public void scan(int sku) {
-    getWorksAt().removeFascia(sku);
-    if (scanResult(sku, expected())) {
-      addScanCount();
-      getToBeScanned().removeFirst();
+    if (getCurrPickingReq() != null) {
+      getWorksAt().removeFascia(sku);
+      if (scanResult(sku, expected())) {
+        addScanCount();
+        getToBeScanned().removeFirst();
+      }
+    } else {
+      System.out.println("Picker " + getName() + " tried to scan with no "
+          + "picking order assigned. Scan action aborted.");
     }
   }
 
@@ -91,15 +101,19 @@ public class Picker extends Worker {
    * Method for going to the marshalling area.
    */
   public void goToMarshall() {
-    if (getScanCount() == 8) {
+    if (getScanCount() == 8 && getCurrPickingReq() != null) {
       getWorksAt().sendToMarshalling(getCurrPickingReq());
       System.out.println("Picker " + getName() + " has gone to marshalling area"
           + ".");
-    } else {
+    } else if (getCurrPickingReq() != null) {
       getWorksAt().sendBackToPicking(getCurrPickingReq());
       System.out.println("Picker " + getName() + " tried to go to marshalling "
           + "area with less than 8 fascias picked, the picking request has "
           + "been sent back to be picked again.");
+    } else {
+      System.out.println("Picker " + getName() + "tried to go to marshall "
+          + "with no picking request assigned. Go to marshall action aborted.");
     }
+    setCurrPickingReq(null);
   }
 }

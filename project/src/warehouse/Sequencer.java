@@ -25,16 +25,21 @@ public class Sequencer extends Worker {
   @Override
   public void ready() {
     getWorksAt().readySequencer(this);
-    resetScanCount();
-    setToBeScanned(getScanOrder());
-    System.out.println("Sequencer " + getName() + " is ready to sequence.");
+    if (getCurrPickingReq() != null) {
+      resetScanCount();
+      setToBeScanned(getScanOrder());
+      System.out.println("Sequencer " + getName() + " is ready to sequence.");
+    } else {
+      System.out.println("Sequencer " + getName() + " tried to ready with no "
+          + "picking request. Ready action aborted.");
+    }
   }
 
   /**
    * The method for when a sequencer sequence.
    */
   public void sequence() {
-    if (getScanCount() == 8) {
+    if (getScanCount() == 8 && getCurrPickingReq() != null) {
       LinkedList<Integer> skus = getCurrPickingReq().getProperSkus();
       int[] frontPallet = new int[4];
       int[] backPallet = new int[4];
@@ -45,11 +50,15 @@ public class Sequencer extends Worker {
       getWorksAt().sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
       System.out.println("The sequencer " + getName() + " has finished "
           + "sequencing and sent the picking request for loading.");
-    } else {
+    } else if (getCurrPickingReq() != null) {
       getWorksAt().sendBackToPicking(getCurrPickingReq());
       System.out.println("The sequencer tried to send an incomplete picking "
           + "request for loading, the picking request was sent to be re "
           + "picked instead.");
+    } else {
+      System.out.println("Sequencer " + getName() + " tried to sequence with "
+          + "no picking request. Sequence action aborted.");
     }
+    setCurrPickingReq(null);
   }
 }

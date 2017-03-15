@@ -1,15 +1,13 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import warehouse.Loader;
 import warehouse.Order;
 import warehouse.PickingRequest;
@@ -18,7 +16,7 @@ import warehouse.SkuTranslator;
 import warehouse.Warehouse;
 
 public class SequencerTest {
-  
+
   Warehouse warehouse;
   Loader loader;
   PickingRequest pickreq;
@@ -27,36 +25,34 @@ public class SequencerTest {
 
   @Before
   public void setUp() throws Exception {
-    
-    SkuTranslator.setLocations("translation.csv");
-    SkuTranslator.setProperties("traversal_table.csv");
-    warehouse = new Warehouse("initial.csv", "../", 30);
+
+    SkuTranslator.setLocations("tests/translation.csv");
+    SkuTranslator.setProperties("tests/traversal_table.csv");
+    warehouse = new Warehouse("tests/initial.csv", "../", 30);
     orders = new ArrayList<>();
-    
+
     orders.add(new Order("Order Green S"));
     orders.add(new Order("Order Green SE"));
     orders.add(new Order("Order Green SES"));
     orders.add(new Order("Order Green SEL"));
-    
+
     warehouse.addOrder("Order Green S");
     warehouse.addOrder("Order Green SE");
     warehouse.addOrder("Order Green SES");
     warehouse.addOrder("Order Green SEL");
-    
 
-    
     pickreq = new PickingRequest(orders, 1);
     sequencer = new Sequencer("Billy", warehouse);
     warehouse.addSequencer(sequencer);
     warehouse.sendToMarshalling(pickreq);
-    
+
     warehouse.readySequencer(sequencer);
 //    sequencer.ready();
-  
+
 //    sequencer.ready();
-    
 
   }
+
   @After
   public void tearDown() throws Exception {
     warehouse = null;
@@ -67,16 +63,17 @@ public class SequencerTest {
 
   @Test
   public void testReady() {
-    
+
 //    sequencer.ready();
 
     boolean actual = false;
-    if (sequencer.getScanCount() == 0 
+    if (sequencer.getScanCount() == 0
         && sequencer.getCurrPickingReq().equals(pickreq)
-        && warehouse.getSequencer("Billy").getScanOrder().equals(sequencer.getScanOrder())){
+        && warehouse.getSequencer("Billy").getScanOrder()
+        .equals(sequencer.getScanOrder())) {
       actual = true;
     }
-    
+
     Assert.assertEquals(true, actual);
   }
 
@@ -84,10 +81,10 @@ public class SequencerTest {
   public void testSequencer() {
     boolean actual = false;
     if (sequencer.getName().equals("Billy")
-        && sequencer.getWorksAt().equals(warehouse)){
+        && sequencer.getWorksAt().equals(warehouse)) {
       actual = true;
     }
-    
+
     Assert.assertEquals(true, actual);
   }
 
@@ -100,27 +97,27 @@ public class SequencerTest {
   public void testWorker() {
     boolean actual = false;
     if (sequencer.getName().equals("Billy")
-        && sequencer.getWorksAt().equals(warehouse)){
+        && sequencer.getWorksAt().equals(warehouse)) {
       actual = true;
     }
-    
+
     Assert.assertEquals(true, actual);
   }
 
   @Test
   public void testGetScanOrder() {
-    LinkedList<Integer> expected = new 
+    LinkedList<Integer> expected = new
         LinkedList<>(sequencer.getCurrPickingReq().getProperSkus());
-    
+
     Assert.assertEquals(expected, sequencer.getScanOrder());
   }
 
   @Test
   public void testSetCurrPickingReq() {
     sequencer.setCurrPickingReq(pickreq);
-    
+
     PickingRequest expected = pickreq;
-    
+
     Assert.assertEquals(expected, sequencer.getCurrPickingReq());
   }
 
