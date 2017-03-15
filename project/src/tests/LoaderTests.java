@@ -1,9 +1,6 @@
 package tests;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,9 +22,9 @@ public class LoaderTests {
 
   @Before
   public void setUp() throws Exception {
-    SkuTranslator.setLocations("translation.csv");
-    SkuTranslator.setProperties("traversal_table.csv");
-    warehouse = new Warehouse("initial.csv", "../", 30);
+    SkuTranslator.setLocations("tests/translation.csv");
+    SkuTranslator.setProperties("tests/traversal_table.csv");
+    warehouse = new Warehouse("tests/initial.csv", "../", 30);
     orders = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
       orders.add(new Order("Order Green SE"));
@@ -41,7 +38,8 @@ public class LoaderTests {
   }
 
   @After
-  public void tearDown() throws Exception {}
+  public void tearDown() throws Exception {
+  }
 
   @Test
   public void testReady() {
@@ -68,7 +66,7 @@ public class LoaderTests {
     }
     loader.load();
   }
-  
+
   @Test
   public void testGoodLoad1() {
     pick = new PickingRequest(orders, 0);
