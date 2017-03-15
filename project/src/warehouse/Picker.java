@@ -53,7 +53,7 @@ public class Picker extends Worker {
    * @return The expected scan order
    */
   @Override
-  LinkedList<Integer> getScanOrder() {
+  public LinkedList<Integer> getScanOrder() {
     LinkedList<Integer> res = new LinkedList<>();
     for (String location : locations) {
       String[] toBeTr = location.split(",");

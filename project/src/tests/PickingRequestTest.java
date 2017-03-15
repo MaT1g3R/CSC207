@@ -20,7 +20,6 @@ public class PickingRequestTest {
   private ArrayList<Order> orders;
   @Before
   public  void setUp() throws  Exception{
-    System.out.println(System.getProperty("user.dir"));
     SkuTranslator.setLocations("tests/traversal_table.csv");
     SkuTranslator.setProperties("tests/translation.csv");
     orders = new ArrayList<Order>();

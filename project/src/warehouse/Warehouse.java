@@ -91,7 +91,7 @@ public class Warehouse {
    * @param order the order as a string to be added
    */
   public void addOrder(String order) {
-    System.out.println(order + "has been added to the warehouse.");
+    System.out.println(order + " has been added to the warehouse.");
     orders.add(new Order(order));
   }
 
