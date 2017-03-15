@@ -1,63 +1,45 @@
 package warehouse;
 
-import java.util.LinkedList;
-
 /**
  * This worker replenish the stock levels when asked to.
  *
  * @author Peijun
  */
-public class Replenisher extends Worker {
+public class Replenisher {
+
+  private String name;
+  private Warehouse worksAt;
 
   /**
    * Initialize a Replenisher object.
    *
-   * @param name the name of the Replenisher
+   * @param name    the name of the Replenisher
    * @param worksAt where the Replenisher works at
    */
   public Replenisher(String name, Warehouse worksAt) {
-    super(name, worksAt);
+    this.name = name;
+    this.worksAt = worksAt;
   }
 
-
   /**
-   * This method replenishes the warehouse with Fascia of the SKU number.
+   * A getter for its name.
    *
-   * @param sku the SKU number.
+   * @return its name
    */
+  public String getName() {
+    return name;
+  }
+
   public void replenish(int sku) {
-    if (worksAt.getInventory().get(sku) <= 5) {
-      super.worksAt.addFacsia(sku);
-      scan(sku);
+    if (worksAt.getToBeReplenished().contains(sku)) {
+      System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "
+          + "replenished.");
+      worksAt.addFacsia(sku);
+      worksAt.getToBeReplenished().remove(new Integer(sku));
     } else {
-      System.out.println("There are too many fascias of SKU number " + String
-          .valueOf(sku));
+      System.out.println("Unneeded replenish, nothing was added to the "
+          + "inventory");
     }
-  }
-
-  /**
-   * A barcode scanning action that takes place when Fascia is replenished.
-   *
-   * @param sku the SKU to be scanned.
-   */
-  @Override
-  public void scan(int sku) {
-    System.out.println("SKU number " + String.valueOf(sku) + " "
-        + "has been replenished");
-  }
-
-  public void start(int sku) {
-    isReady = false;
-    replenish(sku);
-  }
-
-  /**
-   * This method should never be used.
-   * Throws UnsupportedOperationException when called.
-   */
-  @Override
-  protected LinkedList<Integer> getScanOrder() {
-    throw new UnsupportedOperationException();
   }
 
 }

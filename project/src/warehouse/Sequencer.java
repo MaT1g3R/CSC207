@@ -1,55 +1,64 @@
-/**
- *
- */
-
 package warehouse;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * @author Andrew.
+ * A class to represent sequencers.
+ *
+ * @author Andrew
  */
 public class Sequencer extends Worker {
 
-
+  /**
+   * The initializer for Sequencer.
+   *
+   * @param name    the name
+   * @param worksAt where it works at
+   */
   public Sequencer(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
-
+  /**
+   * The action for a worker being ready.
+   */
   @Override
-  public LinkedList<Integer> getScanOrder() {
-    LinkedList<Integer> scanOrderSkus = new LinkedList<>();
-    ArrayList<Integer> skus = currPickingReq.getSkus();
-
-    ArrayList<Integer> frontSkus = new ArrayList<Integer>();
-    ArrayList<Integer> backSkus = new ArrayList<Integer>();
-
-    for (int i = 0; i < skus.size(); i += 2) {
-      frontSkus.add(skus.get(i));
-      backSkus.add(skus.get(i + 1));
+  public void ready() {
+    getWorksAt().readySequencer(this);
+    if (getCurrPickingReq() != null) {
+      resetScanCount();
+      setToBeScanned(getScanOrder());
+      System.out.println("Sequencer " + getName() + " is ready to sequence.");
+    } else {
+      System.out.println("Sequencer " + getName() + " tried to ready with no "
+          + "picking request. Ready action aborted.");
     }
-
-    scanOrderSkus.addAll(frontSkus);
-    scanOrderSkus.addAll(backSkus);
-
-    return scanOrderSkus;
   }
 
   /**
-   * The button a worker presses to begin sequencing. Takes proper action.
-   **/
+   * The method for when a sequencer sequence.
+   */
   public void sequence() {
-    System.out.println("Sequence attempt " + role + " " + this.name);
-    if (this.shouldScanOrGetReady()) {
-      System.out.println("You have more left to do " + role + " " + this.name);
+    if (getScanCount() == 8 && getCurrPickingReq() != null) {
+      LinkedList<Integer> skus = getCurrPickingReq().getProperSkus();
+      int[] frontPallet = new int[4];
+      int[] backPallet = new int[4];
+      for (int i = 0; i < 4; i++) {
+        frontPallet[i] = skus.get(i);
+        backPallet[i] = skus.get(i + 4);
+      }
+      getWorksAt().sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
+      System.out.println("The sequencer " + getName() + " has finished "
+          + "sequencing and sent the picking request for loading.");
+    } else if (getCurrPickingReq() != null) {
+      getWorksAt().sendBackToPicking(getCurrPickingReq());
+      System.out.println("The sequencer tried to send an incomplete picking "
+          + "request for loading, the picking request was sent to be re "
+          + "picked instead.");
     } else {
-      System.out.println(
-          role + " " + this.name + " sequenced pickingRequest ID " + currPickingReq.getId());
-      currPickingReq.setLoadReady(true);
-      worksAt.assignWorkers("loader");
+      System.out.println("Sequencer " + getName() + " tried to sequence with "
+          + "no picking request. Sequence action aborted.");
     }
+    setCurrPickingReq(null);
   }
-
 }

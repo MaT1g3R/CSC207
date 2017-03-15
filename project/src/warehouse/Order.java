@@ -2,7 +2,7 @@ package warehouse;
 
 /**
  * A class to represent Orders.
- * 
+ *
  * @author Chaitanya
  */
 
@@ -14,38 +14,21 @@ public class Order {
 
   /**
    * Initializes a new order based on input to the system.
-   * 
-   * @param orderAsString The Order as it is inputed.
+   *
+   * @param orderAsString The Order in the format "Order Colour Model"
    */
   public Order(String orderAsString) {
     String[] orderSplit = orderAsString.split("\\s");
-    model = orderSplit[1];
-    colour = orderSplit[2];
+    colour = orderSplit[1];
+    model = orderSplit[2];
     skus[0] = SkuTranslator.getSku(colour, model, true);
     skus[1] = SkuTranslator.getSku(colour, model, false);
   }
 
-  /**
-   * Returns the colour of the Order.
-   * 
-   * @return colour as a String.
-   */
-  public String getColour() {
-    return colour;
-  }
-
-  /**
-   * Returns the model of the Order.
-   * 
-   * @return model as a String.
-   */
-  public String getModel() {
-    return model;
-  }
 
   /**
    * Returns the SKU numbers of the order.
-   * 
+   *
    * @return Array of 2 ints, the SKU number of the front object, then the back.
    */
   public int[] getSkus() {
@@ -54,7 +37,7 @@ public class Order {
 
   /**
    * Returns the Order as a String.
-   * 
+   *
    * @return String of the Order in the form "model, colour".
    */
   public String toString() {

@@ -2,54 +2,44 @@ package warehouse;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Warehouse {
 
   private final int maxStock;
-  private int numPickingRequests = 0;
-
-  //orders that haven't been made into a picking request yet
-  private ArrayList<Order> outstandingOrders = new ArrayList<>();
-
-
-  //The directory where final.csv and orders.csv will be saved
   private String outputFileDir;
-  //maps sku:quantity
   private HashMap<Integer, Integer> inventory = new HashMap<>();
-  //The field maps (job title as lower case string):(worker name, proper case String):(instance)
-  private HashMap<String, HashMap<String, Worker>> workers = new HashMap<>();
-
-  // job title of request as string: instance of request as linkedList
-  private HashMap<String, LinkedList<Object>> requests = new HashMap<>();
   private ArrayList<Truck> trucks = new ArrayList<>();
+  private LinkedList<PickingRequest> outStandingPickingRequests = new
+      LinkedList<>();
+  private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
+  private LinkedList<ArrayList<Object>> loadingArea = new LinkedList<>();
+  private LinkedList<Order> orders = new LinkedList<>();
+  private int pickingReqId = 0;
+  private LinkedList<Integer> toBeReplenished = new LinkedList<>();
+  private HashMap<String, Picker> pickers = new HashMap<>();
+  private HashMap<String, Loader> loaders = new HashMap<>();
+  private HashMap<String, Sequencer> sequencers = new HashMap<>();
+  private HashMap<String, Replenisher> replenishers = new HashMap<>();
 
-  public Warehouse(String inputFilePath, String outputFileDirPath) {
-    this(inputFilePath, outputFileDirPath, 30);
-  }
 
   /**
    * Initializes inventory values, Hashmap values, and sets max stock value.
    *
-   * @param inputFilePath path to initial inventory file
+   * @param inputFilePath     path to initial inventory file
    * @param outputFileDirPath path to directory for output files
-   * @param max how much items a rack level holds
+   * @param max               how much items a rack level holds
    */
   public Warehouse(String inputFilePath, String outputFileDirPath, int max) {
-    this.workers.put("picker", new HashMap<>());
-    this.workers.put("replenisher", new HashMap<>());
-    this.workers.put("loader", new HashMap<>());
-    this.workers.put("sequencer", new HashMap<>());
-    this.requests.put("picker", new LinkedList<>());
-    this.requests.put("replenisher", new LinkedList<>());
-    this.requests.put("loader", new LinkedList<>());
-    this.requests.put("sequencer", new LinkedList<>());
     this.outputFileDir = outputFileDirPath;
     this.maxStock = max;
-
     this.setInventoryFromFile(inputFilePath);
+    this.trucks.add(new Truck(0));
+    CsvReadWrite
+        .overWrite(new ArrayList<>(), outputFileDir + File.separator + "orders"
+            + ".csv");
   }
 
   /**
@@ -88,43 +78,28 @@ public class Warehouse {
         int sku = SkuTranslator
             .getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
         this.inventory.put(sku, Integer.parseInt(s.get(4)));
-      }
-    }
-  }
-
-
-  /**
-   * Looks through requests for <type></type> and assigns any ready worker or
-   * <type></type> to it.
-   *
-   * @param type can be replenisher, picker, loader, or sequencer.
-   */
-  public void assignWorkers(String type) {
-    LinkedList requests;
-    Collection<Worker> people;
-    people = workers.get(type.toLowerCase()).values();
-    requests = this.requests.get(type.toLowerCase());
-    for (Worker worker : people) {
-      if (worker.isReady() && !requests.isEmpty()) {
-        //Replenishers start method take int instead of PickingRequest
-        if (worker instanceof Replenisher) {
-          ((Replenisher) worker).start((int) requests.remove());
-        } else {
-          PickingRequest request = (PickingRequest) requests.peek();
-          //loaders can only get assigned requests in order of pickingRequest ID and
-          //pickingRequest has to be load ready
-          if (request != null && (!(worker instanceof Loader) || request
-              .getLoadReady())) {
-            worker.start(request);
-            requests.remove();
-          }
+        if (Integer.parseInt(s.get(4)) <= 5) {
+          toBeReplenished.add(sku);
         }
       }
     }
-
   }
 
+  /**
+   * Method for adding an order to the system.
+   *
+   * @param order the order as a string to be added
+   */
+  public void addOrder(String order) {
+    System.out.println(order + " has been added to the warehouse.");
+    orders.add(new Order(order));
+  }
 
+  /**
+   * Add 25 facsia to the inventory.
+   *
+   * @param sku the sku of the facsia to be added
+   */
   public void addFacsia(int sku) {
     this.inventory.put(sku, this.inventory.get(sku) + 25);
   }
@@ -137,105 +112,215 @@ public class Warehouse {
    * @param sku the sku being removed
    */
   public void removeFascia(int sku) {
-    int amount = inventory.get(sku);
-    // Nothing happens if you try to remove something with 0 quantity
-    if (amount > 0) {
+    if (inventory.get(sku) < 1) {
       System.out.println(
-          "Removed one sku " + Integer.toString(sku) + " from inventory.");
-      this.inventory.put(sku, amount - 1);
+          "An attempt of trying to remove fascia of SKU " + String.valueOf(sku)
+              + " from an empty rack was made");
+    } else {
+      inventory.put(sku, inventory.get(sku) - 1);
+      System.out.println("A fascia of SKU " + String.valueOf(sku) + " was "
+          + "taken.");
     }
-
-    // If <= 5, and theres no request to replenish it, it needs to be replenished
-    if (this.inventory.get(sku) <= 5 && !requests.get("replenisher")
-        .contains(sku)) {
-      addReplenishRequest(sku);
-    }
-  }
-
-  public Worker getWorker(String name, String title) {
-    return workers.get(title).get(name);
-  }
-
-  /**
-   * Adds a replenish request, to the end of the list of pending
-   * replenishRequests. Prints that it has been added.
-   *
-   * @param sku the sku for the request
-   */
-  public void addReplenishRequest(Integer sku) {
-    System.out
-        .println("Replenish request for sku " + Integer.toString(sku) + ".");
-    requests.get("replenisher").add(new Integer(sku));
-    this.assignWorkers("replenisher");
-
-
-  }
-
-  /**
-   * Adds a sequencing request to the list of requests to be processed.
-   *
-   * @param request the request to be processed.
-   */
-  public void addSequencingRequest(PickingRequest request) {
-    requests.get("sequencer").add(request);
-    this.assignWorkers("sequencer");
-
-  }
-
-  /**
-   * Adds picking request to the front of the queue.
-   */
-  public void addUnpickedPickingRequest(PickingRequest request) {
-    requests.get("picker").add(0, request);
-    this.assignWorkers("picker");
-    System.out.println("Added high-priority PickingRequest " + request.getId());
-  }
-
-  /**
-   * Creates a new PickingRequest and adds it to the end of the list of
-   * unPickedPicking request and loading requests.
-   *
-   * @param orders used to create picking request. Should have four orders.
-   */
-  public void createPickingRequest(ArrayList<Order> orders) {
-    PickingRequest request = new PickingRequest(orders, numPickingRequests);
-    requests.get("picker").add(request);
-    numPickingRequests++;
-    requests.get("loader").add(request);
-    this.assignWorkers("picker");
-    System.out
-        .println("Added new PickingRequest " + request.getId());
-  }
-
-  /**
-   * Adds an order to the list of outstanding orders. If there are 4, then a new
-   * picking request is generated.
-   *
-   * @param order the order to be added.
-   */
-  public void addOrder(Order order) {
-    outstandingOrders.add(order);
-    System.out.println("Added order " + order.toString());
-    if (outstandingOrders.size() == 4) {
-      createPickingRequest(outstandingOrders);
-      outstandingOrders = new ArrayList<Order>();
+    if (inventory.get(sku) <= 5 && !toBeReplenished.contains(sku)) {
+      // put a replenish request in the system when the amout is <= 5
+      toBeReplenished.add(sku);
     }
   }
 
-  public HashMap<Integer, Integer> getInventory() {
-    return inventory;
+  /**
+   * This method generate a new picking request.
+   * This method should never be called if there's less than 4 orders in
+   * outstanding Orders.
+   *
+   * @return A picking request from 4 orders.
+   */
+  private PickingRequest generatePickingReq() {
+    ArrayList<Order> toBeSent = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+      toBeSent.add(orders.pop());
+    }
+
+    return new PickingRequest(toBeSent, pickingReqId++);
   }
 
-  public ArrayList<Truck> getTrucks() {
-    return trucks;
+  /**
+   * When a picker is ready this hands him a picking request.
+   *
+   * @param picker the Picker who's ready.
+   */
+  public void readyPicker(Picker picker) {
+    if (outStandingPickingRequests.isEmpty() && orders.size() >= 4) {
+      picker.setCurrPickingReq(generatePickingReq());
+    } else if (!outStandingPickingRequests.isEmpty()) {
+      picker.setCurrPickingReq(outStandingPickingRequests.pop());
+    }
   }
 
-  public void addWorker(final Worker person, String type) {
-    this.workers.get(type).put(person.getName(), person);
+  /**
+   * When a sequencer it gets a picking request to sequence.
+   *
+   * @param sequencer the sequencer who's ready.
+   */
+  public void readySequencer(Sequencer sequencer) {
+    if (!marshallingArea.isEmpty()) {
+      sequencer.setCurrPickingReq(marshallingArea.pop());
+    }
   }
 
+
+  /**
+   * When a loader is ready it gets a picking request to laod.
+   *
+   * @param loader the loader who's ready.
+   */
+  public void readyLoader(Loader loader) {
+    if (!loadingArea.isEmpty()) {
+      ArrayList<Object> toBeSent = loadingArea.pop();
+      loader.setCurrPickingReq((PickingRequest) toBeSent.get(0));
+      loader.setPallets((int[]) toBeSent.get(1), (int[]) toBeSent.get(2));
+    }
+  }
+
+
+  /**
+   * When a picker goes to marshalling area he dumps his picking request
+   *
+   * @param request the picking request to be marshalled.
+   */
+  public void sendToMarshalling(PickingRequest request) {
+    marshallingArea.add(request);
+  }
+
+  /**
+   * When a sequencer is finished it sends the picking request to loading
+   *
+   * @param request     the picking request to be loaded.
+   * @param frontPallet the front pallet to be loaded.
+   * @param backPallet  the back pallet to be loaded.
+   */
+  public void sendToLoading(PickingRequest request, int[] frontPallet, int[]
+      backPallet) {
+    loadingArea.add(new ArrayList<>(
+        Arrays.asList(new Object[]{request, frontPallet, backPallet})));
+    loadingArea.sort((p1, p2) -> ((PickingRequest) p1.get(0)).compareTo(
+        (PickingRequest) p2.get(0)));
+  }
+
+
+  /**
+   * When a picking request failed it's sent back to picking.
+   *
+   * @param request the failed picking request
+   */
+  public void sendBackToPicking(PickingRequest request) {
+    outStandingPickingRequests.add(request);
+  }
+
+  /**
+   * Get the first truck that's not full in all trucks.
+   *
+   * @return the not full truck
+   */
+  public Truck getFirstNonFullTruck() {
+    for (Truck t : trucks) {
+      if (!t.isFull()) {
+        return t;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * A getter for outPutFileDir.
+   *
+   * @return outPutFileDir
+   */
   public String getOutputFileDir() {
     return outputFileDir;
   }
 
+  /**
+   * A getter for toBeReplenished.
+   *
+   * @return toBeReplenished
+   */
+  public LinkedList<Integer> getToBeReplenished() {
+    return toBeReplenished;
+  }
+
+  /**
+   * Add a loader to the warehouse.
+   *
+   * @param loader the loader to be added
+   */
+  public void addLoader(Loader loader) {
+    loaders.put(loader.getName(), loader);
+  }
+
+  /**
+   * Add a sequencer to the warehouse.
+   *
+   * @param sequencer the sequencer to be added
+   */
+  public void addSequencer(Sequencer sequencer) {
+    sequencers.put(sequencer.getName(), sequencer);
+  }
+
+  /**
+   * Add a picker to the warehouse.
+   *
+   * @param picker the picker to be added
+   */
+  public void addPicker(Picker picker) {
+    pickers.put(picker.getName(), picker);
+  }
+
+  /**
+   * Add a replenisher to the warehouse.
+   *
+   * @param replenisher the replenisher to be added
+   */
+  public void addReplenisher(Replenisher replenisher) {
+    replenishers.put(replenisher.getName(), replenisher);
+  }
+
+  /**
+   * Get a loader by name.
+   *
+   * @param name the name
+   * @return the loader with that name
+   */
+  public Loader getLoader(String name) {
+    return loaders.get(name);
+  }
+
+  /**
+   * Get a picker by name.
+   *
+   * @param name the name
+   * @return the picker with that name
+   */
+  public Picker getPicker(String name) {
+    return pickers.get(name);
+  }
+
+  /**
+   * Get a sequencer by name.
+   *
+   * @param name the name
+   * @return the sequencer with that name
+   */
+  public Sequencer getSequencer(String name) {
+    return sequencers.get(name);
+  }
+
+  /**
+   * Get a replenisher by name.
+   *
+   * @param name the name
+   * @return the replenisher with that name
+   */
+  public Replenisher getReplenisher(String name) {
+    return replenishers.get(name);
+  }
 }

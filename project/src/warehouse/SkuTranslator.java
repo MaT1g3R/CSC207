@@ -6,13 +6,12 @@ import java.util.ArrayList;
  * This class is responsible for taking in csv files that have data about SKUs
  * and returning information for a particular set of that data, or about an
  * SKU.
+ *
+ * @author Tasbir
  */
 
 public class SkuTranslator {
 
-
-  private SkuTranslator() {
-  }
 
   private static ArrayList<ArrayList<String>> locations;
   private static ArrayList<ArrayList<String>> properties;
@@ -21,15 +20,15 @@ public class SkuTranslator {
   /**
    * Using given translation table, returns SKU unit given the info.
    *
-   * @param colour the colour of this sku
-   * @param model the model of this sku
+   * @param colour  the colour of this sku
+   * @param model   the model of this sku
    * @param isFront whether or not the sku is on the front or the back
    * @return : the sku with the three above traits as an int
    */
   public static int getSku(String colour, String model, boolean isFront) {
     for (ArrayList<String> x : properties) {
-      if (String.join(",", x.subList(0, 2)).toLowerCase().equals((model
-          + "," + colour).toLowerCase())) {
+      if (String.join(",", x.subList(0, 2)).toLowerCase().equals((colour
+          + "," + model).toLowerCase())) {
         if (isFront) {
           return Integer.parseInt(x.get(2));
         } else {
@@ -47,14 +46,14 @@ public class SkuTranslator {
    * @return : the <sku></sku> with the given location as an int
    */
   public static String getLocation(int sku) {
-    String output = "None";
+    String output;
     for (ArrayList<String> x : locations) {
       if (x.get(x.size() - 1).equals(Integer.toString(sku))) {
         output = String.join(",", x.subList(0, x.size() - 1));
         return output;
       }
     }
-    return output;
+    return null;
   }
 
 
@@ -81,8 +80,6 @@ public class SkuTranslator {
    */
   public static void setLocations(String path) {
     locations = CsvReadWrite.readAsArrays(path);
-
-
   }
 
   /**

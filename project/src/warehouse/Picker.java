@@ -4,62 +4,116 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created by Tasbir on 2017-03-11.
+ * A class to represent pickers.
+ *
+ * @author Tasbir
  */
 public class Picker extends Worker {
 
+  private ArrayList<String> locations;
+
+  /**
+   * Initialize an instance of a picker.
+   *
+   * @param name    the name of the picker
+   * @param worksAt where it works at
+   */
   public Picker(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
+  /**
+   * When a picker is ready, give it a picking request, a list of locations,
+   * and a scan order.
+   */
   @Override
-  public LinkedList<Integer> getScanOrder() {
-    ArrayList<String> loc = WarehousePicking.optimize(currPickingReq.getSkus());
-
-    String msg = this.role + " " + this.name + " should go to ";
-    LinkedList<Integer> output = new LinkedList<>();
-    for (String x : loc) {
-      msg += x + "   ";
-      output.add(SkuTranslator.getSkuFromLocation(x.split(",")));
-    }
-    msg += "in that order.";
-    System.out.println(msg);
-    return output;
-
-  }
-
-  @Override
-  public void scan(int sku) {
-    //Items are assumed to be taken when scanned
-    super.scan(sku);
-    if (worksAt.getInventory().get(sku) <= 0) {
-      System.out.println("No more of " + Integer.toString(sku) + " left. Pick next item");
-      toBeScanned.add(sku);
+  public void ready() {
+    getWorksAt().readyPicker(this);
+    if (getCurrPickingReq() != null) {
+      resetScanCount();
+      ArrayList<Integer> toBeOptimized = new ArrayList<>();
+      for (Order o : getCurrPickingReq().getOrders()) {
+        toBeOptimized.add(o.getSkus()[0]);
+        toBeOptimized.add(o.getSkus()[1]);
+      }
+      locations = WarehousePicking.optimize(toBeOptimized);
+      setToBeScanned(getScanOrder());
+      // For printing
+      String displayString = "Picker " + getName() + " is ready, it will go to "
+          + "locations:\n";
+      for (String loc : locations) {
+        displayString += loc + "\n";
+      }
+      System.out.println(displayString);
     } else {
-      worksAt.removeFascia(sku);
+      System.out.println("Picker " + getName() + " tried to ready with no "
+          + "picking request. Ready action aborted.");
     }
-
-
-  }
-
-  @Override
-  public void wrongScanHandle() {
-    //pickers just get the default notification when scanning the wrong thing
-
   }
 
   /**
-   * When the worker notifies the system they've gone to the marshalling area.
+   * The expected scan order for the worker is of course the order of the
+   * locations.
+   *
+   * @return The expected scan order
    */
-  public void goToMarshaling() {
-    System.out.println(role + " " + name + " has gone to marshalling");
-    if (this.isReady() || !this.toBeScanned.isEmpty()) {
-      System.out.println(role + " " + name + " should not be in marshalling");
+  @Override
+  public LinkedList<Integer> getScanOrder() {
+    LinkedList<Integer> res = new LinkedList<>();
+    for (String location : locations) {
+      String[] toBeTr = location.split(",");
+      res.add(SkuTranslator.getSkuFromLocation(toBeTr));
+    }
+    return res;
+  }
+
+  /**
+   * When a picker scans it's assumed it took the fascia off the rack.
+   * It will add the fascia to the picking request if it matched the scan,
+   * And will throw it out if it didn't.
+   *
+   * @param sku the sku scanned.
+   */
+  @Override
+  public void scan(int sku) {
+    if (getCurrPickingReq() != null) {
+      getWorksAt().removeFascia(sku);
+      if (scanResult(sku, expected())) {
+        addScanCount();
+        getToBeScanned().removeFirst();
+      }
     } else {
-      System.out.println(this.role + "" + this.name + " has went to marshalling for PickingRequest "
-          + currPickingReq.getId());
-      worksAt.addSequencingRequest(currPickingReq);
+      System.out.println("Picker " + getName() + " tried to scan with no "
+          + "picking order assigned. Scan action aborted.");
     }
   }
 
+  /**
+   * Return the expected scan sku.
+   *
+   * @return the expected scan sku
+   */
+  private int expected() {
+    return getToBeScanned().getFirst();
+  }
+
+  /**
+   * Method for going to the marshalling area.
+   */
+  public void goToMarshall() {
+    if (getScanCount() == 8 && getCurrPickingReq() != null) {
+      getWorksAt().sendToMarshalling(getCurrPickingReq());
+      System.out.println("Picker " + getName() + " has gone to marshalling area"
+          + ".");
+    } else if (getCurrPickingReq() != null) {
+      getWorksAt().sendBackToPicking(getCurrPickingReq());
+      System.out.println("Picker " + getName() + " tried to go to marshalling "
+          + "area with less than 8 fascias picked, the picking request has "
+          + "been sent back to be picked again.");
+    } else {
+      System.out.println("Picker " + getName() + "tried to go to marshall "
+          + "with no picking request assigned. Go to marshall action aborted.");
+    }
+    setCurrPickingReq(null);
+  }
 }

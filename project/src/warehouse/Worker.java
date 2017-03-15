@@ -1,102 +1,168 @@
-
 package warehouse;
 
 import java.util.LinkedList;
 
 /**
- * @author Andrew.
+ * A generic worker class.
+ *
+ * @author Andrew
  */
-public abstract class Worker {
+abstract class Worker {
 
-  protected String name;
-  protected LinkedList<Integer> toBeScanned = new LinkedList<>();
-  protected Warehouse worksAt;
-  protected boolean isReady = true;
-  protected PickingRequest currPickingReq;
-  protected String role;
+  private String name;
+  private LinkedList<Integer> toBeScanned = new LinkedList<>();
+  private Warehouse worksAt;
+  private PickingRequest currPickingReq;
+  private int scanCount = 0;
 
-  protected Worker(String name, Warehouse worksAt) {
+  Worker(String name, Warehouse worksAt) {
     this.name = name;
     this.worksAt = worksAt;
-    this.role = this.getClass().getSimpleName();
   }
 
-  protected abstract LinkedList<Integer> getScanOrder();
+  /**
+   * The expected order where the worker should scan in.
+   * The picker class overwrites this method
+   *
+   * @return The expected order where the worker should scan in.
+   */
+  public LinkedList<Integer> getScanOrder() {
+    return new LinkedList<>(currPickingReq.getProperSkus());
+  }
+
+  /**
+   * The action for a worker being ready.
+   */
+  abstract void ready();
+
+  /**
+   * Sets the current picking request for this worker.
+   *
+   * @param req the picking request the worker is handling.
+   */
+  public void setCurrPickingReq(PickingRequest req) {
+    currPickingReq = req;
+  }
+
+  /**
+   * The result of a scan from a worker.
+   *
+   * @param sku the sku scanned.
+   * @return true if the scan matched else false.
+   */
+  public boolean scanResult(int sku, int expected) {
+    System.out.println(this.getClass().getSimpleName() + " " + name + " "
+        + "preformed a scan action!");
+    if (sku == expected) {
+      System.out
+          .println("Scan of SKU " + String.valueOf(sku) + " matched with"
+              + " the expected result");
+      return true;
+    } else {
+      System.out
+          .println("Scan of SKU " + String.valueOf(sku) + " did not match "
+              + "with the expected result of SKU " + String
+              .valueOf(expected));
+      return false;
+    }
+  }
+
+  /**
+   * Return the expected scan sku.
+   *
+   * @return the expected scan sku
+   */
+  private int expected() {
+    return toBeScanned.pop();
+  }
+
+  /**
+   * The action the worker takes when it scans.
+   *
+   * @param sku the sku scanned.
+   */
+  public void scan(int sku) {
+    if (getCurrPickingReq() != null) {
+      if (!scanResult(sku, expected())) {
+        getWorksAt().sendBackToPicking(getCurrPickingReq());
+      } else {
+        addScanCount();
+      }
+    } else {
+      System.out.println(getClass().getSimpleName() + " " + getName() + " "
+          + "tried to scan with no picking request. Scan action aborted.");
+    }
+  }
 
 
+  /**
+   * A getter for worksAt.
+   *
+   * @return where this worker works at
+   */
+  public Warehouse getWorksAt() {
+    return worksAt;
+  }
+
+
+  /**
+   * A getter for currPickingReq.
+   *
+   * @return currPickingReq
+   */
+  public PickingRequest getCurrPickingReq() {
+    return currPickingReq;
+  }
+
+  /**
+   * A getter for toBeScanned.
+   *
+   * @return toBeScanned
+   */
+  public LinkedList<Integer> getToBeScanned() {
+    return toBeScanned;
+  }
+
+  /**
+   * A setter for toBeScanned.
+   *
+   * @param scanOrder the value to set to
+   */
+  public void setToBeScanned(LinkedList<Integer> scanOrder) {
+    toBeScanned = scanOrder;
+  }
+
+  /**
+   * A getter for the name.
+   *
+   * @return name
+   */
   public String getName() {
     return name;
   }
 
   /**
-   * @param sku the SKU to be scanned.
+   * Add 1 to scan count.
    */
-  public void scan(int sku) {
-    System.out.println(role + " " + name + " Scanned " + sku);
-    if (!toBeScanned.isEmpty() && !isReady()) {
-      if (sku != toBeScanned.pop()) {
-        System.out.println(role + " " + name + " Wrong Scan");
-        wrongScanHandle();
-      } else {
-        System.out.println(role + " " + name + " Correct Scan");
-      }
-    } else {
-      System.out.println(role + " " + name + " Unneeded Scan!");
-    }
+  public void addScanCount() {
+    scanCount++;
   }
 
   /**
-   * Handles the worker in the event of a wrong scan.
+   * A getter for scan count.
+   *
+   * @return scanCount
    */
-  public void wrongScanHandle() {
-    System.out.println("Aborting action of " + role + " " + name);
-    worksAt.addUnpickedPickingRequest(currPickingReq);
-    worksAt.assignWorkers("sequencer");
-    getReady();
-  }
-
-
-  /**
-   * Sets the worker to be ready for the next task, if any.
-   */
-  public void getReady() {
-    System.out
-        .println(role + " " + name + " is now ready.");
-    toBeScanned = new LinkedList<>();
-    this.isReady = true;
-    worksAt.assignWorkers(this.getClass().getSimpleName().toLowerCase());
+  public int getScanCount() {
+    return scanCount;
   }
 
   /**
-   * checks if the worker should do anything other than scanning or
-   * gettingReady.
+   * Resets the scancount to 0.
    */
-  protected boolean shouldScanOrGetReady() {
-    return this.isReady || !toBeScanned.isEmpty();
-
+  public void resetScanCount() {
+    scanCount = 0;
   }
 
-
-  /**
-   * @return true or false if a worker is ready or not, respectively.
-   */
-  public boolean isReady() {
-    return isReady;
-  }
-
-
-  /**
-   * @param currPickingReq the start button that a worker clicks.
-   */
-  public void start(PickingRequest currPickingReq) {
-    this.isReady = false;
-    this.currPickingReq = currPickingReq;
-    this.toBeScanned = getScanOrder();
-    String msg = this.role + " " + this.name + " should scan in order: ";
-    for (int x : toBeScanned) {
-      msg += " " + Integer.toString(x);
-    }
-    System.out.println(msg);
-  }
 
 }
