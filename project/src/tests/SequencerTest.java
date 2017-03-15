@@ -71,10 +71,10 @@ public class SequencerTest {
     warehouse.addOrder("Order Red SEL");
 
     pickreq = new PickingRequest(orders, 0);
-    pickreq2 = new PickingRequest(orders2, 1);
-    pickreq3 = new PickingRequest(orders3, 2);
+//    pickreq2 = new PickingRequest(orders2, 1);
+//    pickreq3 = new PickingRequest(orders3, 2);
 
-    warehouse.sendToLoading(pickreq3, frontPal, backPal);
+//    warehouse.sendToLoading(pickreq3, frontPal, backPal);
 
     loader = new Loader("Phil", warehouse);
     sequencer = new Sequencer("Billy", warehouse);
@@ -84,12 +84,14 @@ public class SequencerTest {
 
     warehouse.sendToMarshalling(pickreq);
     warehouse.sendToMarshalling(pickreq2);
+    
+    sequencer.ready();
 
-    warehouse.readySequencer(sequencer);
-    warehouse.readyLoader(loader);
+//    warehouse.readySequencer(sequencer);
+//    warehouse.readyLoader(loader);
 
-    warehouse.sendToMarshalling(pickreq3);
-    warehouse.sendToLoading(pickreq3, frontPal, backPal);
+//    warehouse.sendToMarshalling(pickreq3);
+//    warehouse.sendToLoading(pickreq3, frontPal, backPal);
 
   }
 
@@ -104,7 +106,6 @@ public class SequencerTest {
 
   @Test
   public void testReady() {
-    sequencer.ready();
     boolean actual = false;
     if (sequencer.getScanCount() == 0
         && sequencer.getCurrPickingReq().equals(pickreq)
@@ -129,6 +130,11 @@ public class SequencerTest {
 
   @Test
   public void testSequence() {
+    
+    PickingRequest newPick = new PickingRequest(orders2, 1);
+    
+    warehouse.sendToMarshalling(newPick);
+    
     sequencer.addScanCount();
     sequencer.addScanCount();
     sequencer.addScanCount();
@@ -138,12 +144,13 @@ public class SequencerTest {
     sequencer.addScanCount();
     sequencer.addScanCount();
 
-    PickingRequest actual = sequencer.getCurrPickingReq();
+    sequencer.setCurrPickingReq(newPick);
     sequencer.sequence();
-
+      
+    loader.ready();
     PickingRequest expected = loader.getCurrPickingReq();
 
-    Assert.assertEquals(expected, actual);
+    Assert.assertEquals(newPick, expected);
   }
 
   @Test
