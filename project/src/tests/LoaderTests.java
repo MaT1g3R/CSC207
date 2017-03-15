@@ -10,6 +10,11 @@ import warehouse.PickingRequest;
 import warehouse.SkuTranslator;
 import warehouse.Warehouse;
 
+/**
+ * The unit tests for the Loader class.
+ *
+ * @author Chaitanya
+ */
 public class LoaderTests {
 
 
@@ -38,8 +43,7 @@ public class LoaderTests {
   }
 
   @After
-  public void tearDown() throws Exception {
-  }
+  public void tearDown() throws Exception {}
 
   @Test
   public void testReady() {

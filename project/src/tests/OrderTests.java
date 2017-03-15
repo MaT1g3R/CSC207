@@ -8,6 +8,12 @@ import org.junit.Test;
 import warehouse.Order;
 import warehouse.SkuTranslator;
 
+
+/**
+ * The unit tests for the Order class.
+ *
+ * @author Chaitanya
+ */
 public class OrderTests {
 
   private Order order;
@@ -20,8 +26,7 @@ public class OrderTests {
   }
 
   @After
-  public void tearDown() throws Exception {
-  }
+  public void tearDown() throws Exception {}
 
   @Test
   public void testGetSkuFront() {
