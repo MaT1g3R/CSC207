@@ -93,11 +93,11 @@ public class Picker extends Worker {
   public void goToMarshall() {
     if (getScanCount() == 8) {
       getWorksAt().sendToMarshalling(getCurrPickingReq());
-      System.out.println("Picker " + getName() + "has gone to marshalling area"
+      System.out.println("Picker " + getName() + " has gone to marshalling area"
           + ".");
     } else {
       getWorksAt().sendBackToPicking(getCurrPickingReq());
-      System.out.println("Picker " + getName() + "tried to go to marshalling "
+      System.out.println("Picker " + getName() + " tried to go to marshalling "
           + "area with less than 8 fascias picked, the picking request has "
           + "been sent back to be picked again.");
     }
