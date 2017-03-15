@@ -1,14 +1,16 @@
 package tests;
-import  warehouse.SkuTranslator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
-import warehouse.SkuTranslator;
+import  warehouse.SkuTranslator;
 
-import static org.junit.Assert.*;
+
 
 /**
- * Created by Atiq on 2017-03-14.
+ * Created by Tasbir on 2017-03-14.
  */
 public class SkuTranslatorTest {
   @Before

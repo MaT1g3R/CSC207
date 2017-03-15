@@ -1,17 +1,19 @@
 package tests;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-import warehouse.Picker;
-import warehouse.SkuTranslator;
-import warehouse.Warehouse;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import warehouse.Picker;
+import warehouse.SkuTranslator;
+import warehouse.Warehouse;
+
 
 /**
  * Created by Tasbir on 2017-03-14.
@@ -20,12 +22,16 @@ public class PickerTest {
   Picker theDonald;
   ByteArrayOutputStream printStr;
 
+
+  /**
+   * Sets up everything needed for testing this class.
+   */
   @Before
   public void setUp() throws Exception {
     SkuTranslator.setLocations("tests/traversal_table.csv");
     SkuTranslator.setProperties("tests/translation.csv");
-    Warehouse worksAt = new Warehouse("","tests",30);
-    theDonald = new Picker("Donald Trump",worksAt);
+    Warehouse worksAt = new Warehouse("", "tests", 30);
+    theDonald = new Picker("Donald Trump", worksAt);
     worksAt.addOrder("Order White S");
     worksAt.addOrder("Order White SE");
     worksAt.addOrder("Order White SES");
@@ -37,19 +43,19 @@ public class PickerTest {
 
   @Test
   public void ready() throws Exception {
-  resetPrint();
-  String displayString = "Picker Donald Trump is ready, it will go to "
-        + "locations:\nA,0,0,0\nA,0,0,1\nA,0,0,2\nA,0,0,3\nA,0,1,0\nA,0,1,1\nA,0,1,2\nA,0,1,3" +
-        "\n\r\n";
-  theDonald.ready();
-  assertEquals(displayString,printStr.toString());
+    resetPrint();
+    String displayString = "Picker Donald Trump is ready, it will go to "
+        + "locations:\nA,0,0,0\nA,0,0,1\nA,0,0,2\nA,0,0,3\nA,0,1,0\nA,0,1,1\nA,0,1,2\nA,0,1,3"
+        + "\n\r\n";
+    theDonald.ready();
+    assertEquals(displayString, printStr.toString());
   }
 
   @Test
   public void getScanOrder() throws Exception {
     theDonald.ready();
-    assertEquals(theDonald.getScanOrder(), new LinkedList<Integer>(Arrays.asList(1,2,3
-    ,4,5,6,7,8)));
+    assertEquals(theDonald.getScanOrder(), new LinkedList<Integer>(Arrays.asList(1, 2, 3,
+        4, 5, 6, 7, 8)));
 
   }
 
@@ -58,10 +64,10 @@ public class PickerTest {
     theDonald.ready();
     resetPrint();
     theDonald.scan(4);
-    String displayString = "A fascia of SKU 4 was taken.\r\n" +
-        "Picker Donald Trump performed a scan action!\r\nScan of SKU 4 did not" +
-        " match with the expected result of SKU 1\r\n";
-    assertEquals(displayString,printStr.toString());
+    String displayString = "A fascia of SKU 4 was taken.\r\n"
+        +  "Picker Donald Trump performed a scan action!\r\nScan of SKU 4 did not"
+        + " match with the expected result of SKU 1\r\n";
+    assertEquals(displayString, printStr.toString());
   }
 
   @Test
@@ -69,24 +75,24 @@ public class PickerTest {
     theDonald.ready();
     resetPrint();
     theDonald.scan(1);
-    String displayString = "A fascia of SKU 1 was taken.\r\n" +
-        "Picker Donald Trump performed a scan action!\r\nScan of SKU 1" +
-        " matched with the expected result\r\n";
-    assertEquals(displayString,printStr.toString());
-    assertEquals(theDonald.getScanCount(),1);
+    String displayString = "A fascia of SKU 1 was taken.\r\n"
+        + "Picker Donald Trump performed a scan action!\r\nScan of SKU 1"
+        + " matched with the expected result\r\n";
+    assertEquals(displayString, printStr.toString());
+    assertEquals(theDonald.getScanCount(), 1);
 
   }
 
   @Test
-  public void goToMarshallIncorrect() throws Exception {//If they go when they shouldn't
+  public void goToMarshallIncorrect() throws Exception { //If they go when they shouldn't
     theDonald.ready();
     resetPrint();
     theDonald.goToMarshall();
 
-    String displayStr = "Picker Donald Trump " +"tried to go to marshalling "
+    String displayStr = "Picker Donald Trump " + "tried to go to marshalling "
         + "area with less than 8 fascias picked, the picking request has "
         + "been sent back to be picked again.\r\n";
-    assertEquals(displayStr,printStr.toString());
+    assertEquals(displayStr, printStr.toString());
   }
 
   @Test
@@ -103,11 +109,11 @@ public class PickerTest {
     resetPrint();
     theDonald.goToMarshall();
     String displayStr = "Picker Donald Trump has gone to marshalling area.\r\n";
-    assertEquals(displayStr,printStr.toString());
+    assertEquals(displayStr, printStr.toString());
   }
 
   //resets the print stream.
-  public void resetPrint(){
+  private void resetPrint() {
     printStr = new ByteArrayOutputStream();
     System.setOut(new PrintStream(printStr));
   }

@@ -1,25 +1,34 @@
 package tests;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-import warehouse.PickingRequest;
-import warehouse.SkuTranslator;
-import warehouse.Order;
+import static org.junit.Assert.assertEquals;
+import  static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import warehouse.Order;
+import warehouse.PickingRequest;
+import warehouse.SkuTranslator;
+
+
+
 /**
- * Created by Atiq on 2017-03-14.
+ * Created by Tasbir on 2017-03-14.
  */
 public class PickingRequestTest {
   private PickingRequest testPick;
   private ArrayList<Order> orders;
+
+  /**
+   * Sets up the required variables for testing.
+   * @throws Exception if paths aren't valid.
+   */
   @Before
-  public  void setUp() throws  Exception{
+  public  void setUp() throws  Exception {
     SkuTranslator.setLocations("tests/traversal_table.csv");
     SkuTranslator.setProperties("tests/translation.csv");
     orders = new ArrayList<Order>();
@@ -29,6 +38,7 @@ public class PickingRequestTest {
     orders.add(new Order("Order Blue SEL"));
     testPick = new PickingRequest(orders, 0);
   }
+
   @Test
   public void getId() throws Exception {
     assertEquals(testPick.getId(),0);
