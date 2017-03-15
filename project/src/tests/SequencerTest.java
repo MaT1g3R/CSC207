@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -15,6 +16,11 @@ import warehouse.Sequencer;
 import warehouse.SkuTranslator;
 import warehouse.Warehouse;
 
+/**
+ * The unit tests for the Sequencer class.
+ *
+ * @author Andrew
+ */
 public class SequencerTest {
 
   Warehouse warehouse;
@@ -26,10 +32,16 @@ public class SequencerTest {
   ArrayList<Order> orders2;
   ArrayList<Order> orders3;
   Sequencer sequencer;
+  LinkedList<Integer> scanOrder;
 
   int[] frontPal = {1, 3, 5, 7};
   int[] backPal = {2, 4, 6, 8};
 
+  /**
+   * Instantiates all the above variables to allow tests for Sequencer.
+   *
+   * @throws IOException File not found, probably
+   */
   @Before
   public void setUp() throws Exception {
 
@@ -39,6 +51,12 @@ public class SequencerTest {
     orders = new ArrayList<>();
     orders2 = new ArrayList<>();
     orders3 = new ArrayList<>();
+    scanOrder = new LinkedList<>();
+    
+    scanOrder.add(1);
+    scanOrder.add(2);
+    scanOrder.add(3);
+    scanOrder.add(4);
 
     orders.add(new Order("Order Green S"));
     orders.add(new Order("Order Green SE"));
@@ -71,10 +89,8 @@ public class SequencerTest {
     warehouse.addOrder("Order Red SEL");
 
     pickreq = new PickingRequest(orders, 0);
-//    pickreq2 = new PickingRequest(orders2, 1);
-//    pickreq3 = new PickingRequest(orders3, 2);
+    pickreq2 = new PickingRequest(orders2, 1);
 
-//    warehouse.sendToLoading(pickreq3, frontPal, backPal);
 
     loader = new Loader("Phil", warehouse);
     sequencer = new Sequencer("Billy", warehouse);
@@ -86,15 +102,14 @@ public class SequencerTest {
     warehouse.sendToMarshalling(pickreq2);
     
     sequencer.ready();
-
-//    warehouse.readySequencer(sequencer);
-//    warehouse.readyLoader(loader);
-
-//    warehouse.sendToMarshalling(pickreq3);
-//    warehouse.sendToLoading(pickreq3, frontPal, backPal);
-
+    sequencer.setToBeScanned(scanOrder);
   }
-
+  
+  /**
+   * Destroys these variables for a fresh unit test for Sequencer.
+   *
+   * @throws IOException File not found, probably
+   */
   @After
   public void tearDown() throws Exception {
     warehouse = null;
@@ -109,8 +124,7 @@ public class SequencerTest {
     boolean actual = false;
     if (sequencer.getScanCount() == 0
         && sequencer.getCurrPickingReq().equals(pickreq)
-        && warehouse.getSequencer("Billy").getScanOrder()
-        .equals(sequencer.getScanOrder())) {
+        && sequencer.getToBeScanned().equals(scanOrder)) {
       actual = true;
     }
 
@@ -183,32 +197,56 @@ public class SequencerTest {
 
   @Test
   public void testScanResult() {
-    fail("Not yet implemented"); // TODO
+  
+    boolean actual = false;
+    if (sequencer.scanResult(1, sequencer.getToBeScanned().pop())) {
+      actual = true;
+    }
+    
+    Assert.assertEquals(true, actual);
   }
 
   @Test
   public void testScan() {
-    fail("Not yet implemented"); // TODO
+       
+    int actual = sequencer.getScanCount() + 1;
+    sequencer.scan(1);
+    sequencer.scan(9999999);
+    
+    int expected = sequencer.getScanCount();
+
+    Assert.assertEquals(expected, actual);
   }
 
   @Test
   public void testGetWorksAt() {
-    fail("Not yet implemented"); // TODO
+    Warehouse actual = sequencer.getWorksAt();
+    Warehouse expected = warehouse;
+    Assert.assertEquals(expected, actual);
   }
 
   @Test
   public void testGetCurrPickingReq() {
-    fail("Not yet implemented"); // TODO
+    sequencer.setCurrPickingReq(pickreq2);
+    PickingRequest expected = pickreq2;
+    PickingRequest actual = sequencer.getCurrPickingReq();
+    Assert.assertEquals(expected, actual);
   }
 
   @Test
   public void testGetToBeScanned() {
-    fail("Not yet implemented"); // TODO
+    LinkedList<Integer> expected = new LinkedList<>();
+    sequencer.setToBeScanned(expected);
+    LinkedList<Integer> actual = sequencer.getToBeScanned();
+    Assert.assertEquals(expected, actual);
   }
 
   @Test
   public void testSetToBeScanned() {
-    fail("Not yet implemented"); // TODO
+    LinkedList<Integer> expected = new LinkedList<>();
+    sequencer.setToBeScanned(expected);
+    LinkedList<Integer> actual = sequencer.getToBeScanned();
+    Assert.assertEquals(expected, actual);
   }
 
   @Test

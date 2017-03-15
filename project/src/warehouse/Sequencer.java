@@ -36,7 +36,7 @@ public class Sequencer extends Worker {
   }
 
   /**
-   * The method for when a sequencer sequence.
+   * The method for when a sequencer sequences.
    */
   public void sequence() {
     if (getScanCount() == 8 && getCurrPickingReq() != null) {
