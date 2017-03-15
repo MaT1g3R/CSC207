@@ -26,7 +26,7 @@ abstract class Worker {
    *
    * @return The expected order where the worker should scan in.
    */
-  LinkedList<Integer> getScanOrder() {
+  public LinkedList<Integer> getScanOrder() {
     return new LinkedList<>(currPickingReq.getProperSkus());
   }
 
@@ -40,7 +40,7 @@ abstract class Worker {
    *
    * @param req the picking request the worker is handling.
    */
-  void setCurrPickingReq(PickingRequest req) {
+  public void setCurrPickingReq(PickingRequest req) {
     currPickingReq = req;
   }
 
@@ -50,7 +50,7 @@ abstract class Worker {
    * @param sku the sku scanned.
    * @return true if the scan matched else false.
    */
-  boolean scanResult(int sku, int expected) {
+  public boolean scanResult(int sku, int expected) {
     System.out.println(this.getClass().getSimpleName() + " " + name + " "
         + "preformed a scan action!");
     if (sku == expected) {
@@ -81,7 +81,7 @@ abstract class Worker {
    *
    * @param sku the sku scanned.
    */
-  void scan(int sku) {
+  public void scan(int sku) {
     if (!scanResult(sku, expected())) {
       getWorksAt().sendBackToPicking(getCurrPickingReq());
     } else {
@@ -95,7 +95,7 @@ abstract class Worker {
    *
    * @return where this worker works at
    */
-  Warehouse getWorksAt() {
+  public Warehouse getWorksAt() {
     return worksAt;
   }
 
@@ -105,7 +105,7 @@ abstract class Worker {
    *
    * @return currPickingReq
    */
-  PickingRequest getCurrPickingReq() {
+  public PickingRequest getCurrPickingReq() {
     return currPickingReq;
   }
 
@@ -114,7 +114,7 @@ abstract class Worker {
    *
    * @return toBeScanned
    */
-  LinkedList<Integer> getToBeScanned() {
+  public LinkedList<Integer> getToBeScanned() {
     return toBeScanned;
   }
 
@@ -123,7 +123,7 @@ abstract class Worker {
    *
    * @param scanOrder the value to set to
    */
-  void setToBeScanned(LinkedList<Integer> scanOrder) {
+  public void setToBeScanned(LinkedList<Integer> scanOrder) {
     toBeScanned = scanOrder;
   }
 
@@ -132,14 +132,14 @@ abstract class Worker {
    *
    * @return name
    */
-  String getName() {
+  public String getName() {
     return name;
   }
 
   /**
    * Add 1 to scan count.
    */
-  void addScanCount() {
+  public void addScanCount() {
     scanCount++;
   }
 
@@ -148,14 +148,14 @@ abstract class Worker {
    *
    * @return scanCount
    */
-  int getScanCount() {
+  public int getScanCount() {
     return scanCount;
   }
 
   /**
    * Resets the scancount to 0.
    */
-  void resetScanCount() {
+  public void resetScanCount() {
     scanCount = 0;
   }
 }
