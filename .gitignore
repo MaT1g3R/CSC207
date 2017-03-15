@@ -18,3 +18,5 @@ project/final\.csv
 project/orders\.csv
 
 lib/
+
+project/src/tests/orders\.csv

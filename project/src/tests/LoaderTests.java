@@ -1,9 +1,10 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +78,8 @@ public class LoaderTests {
     resetOutput();
     loader.load();
     assertEquals("The loader tried to load an incomplete picking request, "
-        + "the picking request was sent to be re picked instead.\r\n", outContent.toString());
+            + "the picking request was sent to be re picked instead.\r\n",
+        outContent.toString());
   }
 
   @Test
@@ -89,7 +91,8 @@ public class LoaderTests {
     }
     loader.load();
     assertEquals("Loader Joe could not load picking request 1\n"
-        + "The picking request is sent back to loading area.\r\n", outContent.toString());
+            + "The picking request is sent back to loading area.\r\n",
+        outContent.toString());
   }
 
   @Test
@@ -102,7 +105,8 @@ public class LoaderTests {
       loader.addScanCount();
     }
     loader.load();
-    assertEquals("Loader Joe is ready to load.\r\n" + "Loader Joe loaded picking request 0\r\n",
+    assertEquals("Loader Joe is ready to load.\n"
+            + "Loader Joe loaded picking request 0\n",
         outContent.toString());
   }
 
