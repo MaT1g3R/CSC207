@@ -28,7 +28,7 @@ public class Sequencer extends Worker {
     if (getCurrPickingReq() != null) {
       resetScanCount();
       setToBeScanned(getScanOrder());
-      System.out.println("Sequencer " + getName() + " is ready to sequence.");
+      System.out.println("Sequencer " + getName() + " is ready to marshall.");
     } else {
       System.out.println("Sequencer " + getName() + " tried to ready with no "
           + "picking request. Ready action aborted.");
@@ -56,7 +56,7 @@ public class Sequencer extends Worker {
           + "request for loading, the picking request was sent to be re "
           + "picked instead.");
     } else {
-      System.out.println("Sequencer " + getName() + " tried to sequence with "
+      System.out.println("Sequencer " + getName() + " tried to marshall with "
           + "no picking request. Sequence action aborted.");
     }
     setCurrPickingReq(null);
