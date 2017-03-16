@@ -23,11 +23,10 @@ public class PickingRequestManager implements Observer {
   private Warehouse warehouse;
 
   /**
-   * Initialize a PickingRequestManager
-   *
-   * @param warehouse the warehouse this belongs to.
+   * A setter for this.warehouse.
+   * @param warehouse the warehouse to set to
    */
-  public PickingRequestManager(Warehouse warehouse) {
+  public void setWarehouse(Warehouse warehouse){
     this.warehouse = warehouse;
   }
 

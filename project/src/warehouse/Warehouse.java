@@ -20,56 +20,33 @@ public class Warehouse {
   private String outFile;
 
   /**
-   * Initialize a new warehouse object.
-   *
-   * @param warehouseFile   the path for initial.csv
-   * @param translationFile the path for translation.csv
-   * @param traversalFile   the path for traversal_table.csv
-   * @param outFile         the output dir
-   * @param max             the max stock level for the racks
+   * Initialize a new warehouse.
+   * @param fileSystem the file system it uses
+   * @param skuTranslator the skuTranslator it uses
+   * @param pickingRequestManager the pickingRequestManager it uses.
+   * @param workerManager the workerManager it uses.
+   * @param warehouseFile the file path to read inventory from.
+   * @param outFile the output file dir.
+   * @param max the max stock level.
    */
   public Warehouse(
+      FileSystem fileSystem,
+      SkuTranslator skuTranslator,
+      PickingRequestManager pickingRequestManager,
+      WorkerManager workerManager,
       String warehouseFile,
-      String translationFile,
-      String traversalFile,
       String outFile,
       int max
   ) {
     this.maxStock = max;
-    this.trucks.add(new Truck(0));
     this.warehouseFile = warehouseFile;
     this.outFile = outFile;
-    this.fileSystem = new FileSystem(
-        new String[]{
-            this.warehouseFile,
-            translationFile,
-            traversalFile
-        },
-        new String[]{
-            this.outFile + File.separator + "final.csv",
-            this.outFile + File.separator + "orders.csv"
-        });
-    this.skuTranslator = new SkuTranslator(
-        this.fileSystem.getFileContent(traversalFile),
-        this.fileSystem.getFileContent(translationFile)
-    );
+    this.fileSystem = fileSystem;
+    this.skuTranslator = skuTranslator;
+    this.workerManager = workerManager;
+    this.pickingRequestManager = pickingRequestManager;
     this.fileSystem.writeAll();
     this.setInventory();
-  }
-
-  /**
-   * A setter for pickingRequestManager.
-   */
-  public void setPickingRequestManager(
-      PickingRequestManager pickingRequestManager) {
-    this.pickingRequestManager = pickingRequestManager;
-  }
-
-  /**
-   * A setter for workerManager.
-   */
-  public void setWorkerManager(WorkerManager workerManager) {
-    this.workerManager = workerManager;
   }
 
   /**
@@ -121,6 +98,13 @@ public class Warehouse {
     }
   }
 
+  /**
+   * Add a truck to the warehouse.
+   * @param truck the truck to be added.
+   */
+  public void addTruck(Truck truck){
+    trucks.add(truck);
+  }
 
   /**
    * Get the first truck that's not full in all trucks.

@@ -13,6 +13,15 @@ public class WorkerManager {
   private HashMap<String, Loader> loaders = new HashMap<>();
   private HashMap<String, Sequencer> sequencers = new HashMap<>();
   private HashMap<String, Replenisher> replenishers = new HashMap<>();
+  private Warehouse warehouse;
+
+  /**
+   * A setter for this.warehouse.
+   * @param warehouse the warehouse
+   */
+  public void setWarehouse(Warehouse warehouse){
+    this.warehouse = warehouse;
+  }
 
   /**
    * Add a loader to the warehouse.

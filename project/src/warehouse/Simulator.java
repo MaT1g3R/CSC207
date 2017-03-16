@@ -19,6 +19,7 @@ public class Simulator {
    */
   private ArrayList<String> eventList;
 
+
   /**
    * This initialize a simulator object.
    *
@@ -28,15 +29,26 @@ public class Simulator {
    * @param traversalFilePath   the file path to the traversal table
    * @param outFilePath         the file path for output
    */
-  public Simulator(final String eventFile, final String warehouseFilePath,
-      final String translationFilePath, final String traversalFilePath,
-      final String outFilePath) {
-    this.eventList = CsvReadWrite.readCsv(eventFile);
-    this.warehouse = new Warehouse(warehouseFilePath, translationFilePath,
-        traversalFilePath, outFilePath, 30);
-    this.warehouse
-        .setPickingRequestManager(new PickingRequestManager(this.warehouse));
-    this.warehouse.setWorkerManager(new WorkerManager());
+  public Simulator(String eventFile, String warehouseFilePath,
+                   String translationFilePath, String traversalFilePath, String outFilePath) {
+    eventList = CsvReadWrite.readCsv(eventFile);
+
+    FileSystem fileSystem = new FileSystem(
+            new String[]{warehouseFilePath, translationFilePath, traversalFilePath}, new String[]{outFilePath});
+
+    SkuTranslator skuTranslator = new SkuTranslator(
+            fileSystem.getFileContent(traversalFilePath), fileSystem.getFileContent(translationFilePath));
+
+    WorkerManager workerManager = new WorkerManager();
+
+    PickingRequestManager pickingRequestManager = new PickingRequestManager();
+
+    warehouse = new Warehouse(
+            fileSystem,skuTranslator,pickingRequestManager,workerManager,warehouseFilePath,outFilePath,30);
+
+    workerManager.setWarehouse(warehouse);
+    pickingRequestManager.setWarehouse(warehouse);
+    warehouse.addTruck(new Truck(0));
   }
 
   /**
