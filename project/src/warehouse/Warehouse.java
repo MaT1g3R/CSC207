@@ -2,93 +2,91 @@ package warehouse;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-class Warehouse {
+public class Warehouse {
 
   private final int maxStock;
-  private String outputFileDir;
   private HashMap<Integer, Integer> inventory = new HashMap<>();
   private ArrayList<Truck> trucks = new ArrayList<>();
-  private LinkedList<PickingRequest> outStandingPickingRequests = new
-      LinkedList<>();
-  private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
-  private LinkedList<PickingRequest> loadingArea = new LinkedList<>();
-  private LinkedList<Order> orders = new LinkedList<>();
-  private int pickingReqId = -1;
   private LinkedList<Integer> toBeReplenished = new LinkedList<>();
-  private HashMap<String, Picker> pickers = new HashMap<>();
-  private HashMap<String, Loader> loaders = new HashMap<>();
-  private HashMap<String, Sequencer> sequencers = new HashMap<>();
-  private HashMap<String, Replenisher> replenishers = new HashMap<>();
-
+  private PickingRequestManager pickingRequestManager;
+  private WorkerManager workerManager;
+  private FileSystem fileSystem;
+  private SkuTranslator skuTranslator;
+  private String warehouseFile;
+  private String outFile;
 
   /**
-   * Initializes inventory values, Hashmap values, and sets max stock value.
+   * Initialize a new warehouse object.
    *
-   * @param inputFilePath path to initial inventory file
-   * @param outputFileDirPath path to directory for output files
-   * @param max how much items a rack level holds
+   * @param warehouseFile   the path for initial.csv
+   * @param translationFile the path for translation.csv
+   * @param traversalFile   the path for traversal_table.csv
+   * @param outFile         the output dir
+   * @param max             the max stock level for the racks
    */
-  Warehouse(String inputFilePath, String outputFileDirPath, int max) {
-    this.outputFileDir = outputFileDirPath;
+  public Warehouse(
+      String warehouseFile,
+      String translationFile,
+      String traversalFile,
+      String outFile,
+      int max
+  ) {
     this.maxStock = max;
-    this.setInventoryFromFile(inputFilePath);
     this.trucks.add(new Truck(0));
+    this.warehouseFile = warehouseFile;
+    this.outFile = outFile;
+    this.fileSystem = new FileSystem(
+        new String[]{
+            this.warehouseFile,
+            translationFile,
+            traversalFile
+        },
+        new String[]{
+            this.outFile + File.separator + "final.csv",
+            this.outFile + File.separator + "orders.csv"
+        });
+    this.skuTranslator = new SkuTranslator(
+        this.fileSystem.getFileContent(traversalFile),
+        this.fileSystem.getFileContent(translationFile)
+    );
+    this.fileSystem.writeAll();
+    this.setInventory();
   }
 
   /**
-   * This output the final inventory as csv to the outputFileDir.
+   * A setter for pickingRequestManager.
    */
-  void outPutInventory() {
-    ArrayList<String> result = new ArrayList<>();
-    for (HashMap.Entry<Integer, Integer> entry : inventory.entrySet()) {
-      if (entry.getValue() < maxStock) {
-        String location = SkuTranslator.getLocation(entry.getKey());
-        result.add(location + "," + entry.getValue());
+  public void setPickingRequestManager(
+      PickingRequestManager pickingRequestManager) {
+    this.pickingRequestManager = pickingRequestManager;
+  }
+
+  /**
+   * A setter for workerManager.
+   */
+  public void setWorkerManager(WorkerManager workerManager) {
+    this.workerManager = workerManager;
+  }
+
+  /**
+   * Set the stock levels from the initial file.
+   */
+  private void setInventory() {
+    for (int sku : skuTranslator.getAllSku()) {
+      inventory.put(sku, maxStock);
+    }
+    if (!fileSystem.getFileContent(warehouseFile).isEmpty()) {
+      for (String s : fileSystem.getFileContent(warehouseFile)) {
+        ArrayList<String> line = new ArrayList<>(Arrays.asList(s.split(",")));
+        String[] location = line.subList(0, 4).toArray(new String[4]);
+        int amount = Integer.valueOf(line.get(4));
+        this.inventory.put(skuTranslator.getSkuFromLocation(location), amount);
       }
     }
-    CsvReadWrite
-        .overWrite(result, outputFileDir + File.separator + "final.csv");
-  }
-
-  /**
-   * Sets non max stock levels.
-   *
-   * @param inputFilePath path to file with inventory information.
-   */
-  private void setInventoryFromFile(String inputFilePath) {
-    ArrayList<ArrayList<String>> input = CsvReadWrite
-        .readAsArrays(inputFilePath);
-
-    for (int sku : SkuTranslator
-        .getAllSku()) { //anything not in file is assumed to be max amount.
-      this.inventory.put(sku, maxStock);
-    }
-
-    //getting input inventory if there's a file
-    if (input != null) {
-      for (ArrayList<String> s : input) {
-        //{Zone, Aisle, Rack, Rack Level}
-        int sku = SkuTranslator
-            .getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
-        this.inventory.put(sku, Integer.parseInt(s.get(4)));
-        if (Integer.parseInt(s.get(4)) <= 5) {
-          toBeReplenished.add(sku);
-        }
-      }
-    }
-  }
-
-  /**
-   * Method for adding an order to the system
-   *
-   * @param order the order as a string to be added
-   */
-  void addOrder(String order) {
-    System.out.println(order + "has been added to the warehouse.");
-    orders.add(new Order(order));
   }
 
   /**
@@ -96,7 +94,7 @@ class Warehouse {
    *
    * @param sku the sku of the facsia to be added
    */
-  void addFacsia(int sku) {
+  public void addFacsia(int sku) {
     this.inventory.put(sku, this.inventory.get(sku) + 25);
   }
 
@@ -107,7 +105,7 @@ class Warehouse {
    *
    * @param sku the sku being removed
    */
-  void removeFascia(int sku) {
+  public void removeFascia(int sku) {
     if (inventory.get(sku) < 1) {
       System.out.println(
           "An attempt of trying to remove fascia of SKU " + String.valueOf(sku)
@@ -123,92 +121,13 @@ class Warehouse {
     }
   }
 
-  /**
-   * This method generate a new picking request.
-   * This method should never be called if there's less than 4 orders in
-   * outstanding Orders.
-   *
-   * @return A picking request if there're enough orders else null
-   */
-  private PickingRequest generatePickingReq() {
-    if (this.orders.size() < 4) {
-      return null;
-    }
-    ArrayList<Order> toBeSent = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
-      toBeSent.add(orders.pop());
-    }
-    pickingReqId++;
-    return new PickingRequest(toBeSent, pickingReqId);
-  }
 
   /**
-   * When a picker is ready this hands him a picking request.
-   *
-   * @param picker the Picker who's ready
-   */
-  void readyPicker(Picker picker) {
-    if (outStandingPickingRequests.isEmpty()) {
-      picker.setCurrPickingReq(generatePickingReq());
-    } else {
-      picker.setCurrPickingReq(outStandingPickingRequests.pop());
-    }
-  }
-
-  /**
-   * When a sequencer it gets a picking request to sequence
-   *
-   * @param sequencer the sequencer who's ready
-   */
-  void readySequencer(Sequencer sequencer) {
-    sequencer.setCurrPickingReq(marshallingArea.pop());
-  }
-
-
-  /**
-   * When a loader is ready it gets a picking request to laod.
-   *
-   * @param loader the loader who's ready
-   */
-  void readyLoader(Loader loader) {
-    loader.setCurrPickingReq(loadingArea.pop());
-  }
-
-
-  /**
-   * When a picker goes to marshalling area he dumps his picking request
-   *
-   * @param request the picking request to be marshalled.
-   */
-  void sendToMarshalling(PickingRequest request) {
-    marshallingArea.add(request);
-  }
-
-  /**
-   * When a sequencer is finished it sends the picking request to loading
-   *
-   * @param request the picking request to be loaded.
-   */
-  void sendToLoading(PickingRequest request) {
-    loadingArea.add(request);
-    loadingArea.sort(PickingRequest::compareTo);
-  }
-
-  /**
-   * When a picking request failed it's sent back to picking
-   *
-   * @param request the failed picking request
-   */
-  void sendBackToPicking(PickingRequest request) {
-    outStandingPickingRequests.add(request);
-  }
-
-  /**
-   * Get the first truck that's not full in all trucks
+   * Get the first truck that's not full in all trucks.
    *
    * @return the not full truck
    */
-  Truck getFirstNonFullTruck() {
+  public Truck getFirstNonFullTruck() {
     for (Truck t : trucks) {
       if (!t.isFull()) {
         return t;
@@ -218,96 +137,64 @@ class Warehouse {
   }
 
   /**
-   * A getter for outPutFileDir
-   *
-   * @return outPutFileDir
-   */
-  String getOutputFileDir() {
-    return outputFileDir;
-  }
-
-  /**
-   * A getter for toBeReplenished
+   * A getter for toBeReplenished.
    *
    * @return toBeReplenished
    */
-  LinkedList<Integer> getToBeReplenished() {
+  public LinkedList<Integer> getToBeReplenished() {
     return toBeReplenished;
   }
 
   /**
-   * Add a loader to the warehouse.
+   * A getter for PickingRequestManager.
    *
-   * @param loader the loader to be added
+   * @return PickingRequestManager
    */
-  void addLoader(Loader loader) {
-    loaders.put(loader.getName(), loader);
+  public PickingRequestManager getPickingRequestManager() {
+    return pickingRequestManager;
   }
 
   /**
-   * Add a sequencer to the warehouse.
+   * A getter for skuTranslater.
    *
-   * @param sequencer the sequencer to be added
+   * @return skuTranslater.
    */
-  void addSequencer(Sequencer sequencer) {
-    sequencers.put(sequencer.getName(), sequencer);
+  public SkuTranslator getSkuTranslator() {
+    return skuTranslator;
   }
 
   /**
-   * Add a picker to the warehouse.
-   *
-   * @param picker the picker to be added
+   * Output the warehouse simulation results.
    */
-  void addPicker(Picker picker) {
-    pickers.put(picker.getName(), picker);
+  public void outPutResult() {
+    ArrayList<String> finalCsv = new ArrayList<>();
+    for (int sku : this.inventory.keySet()) {
+      if (inventory.get(sku) < 30) {
+        finalCsv.add(skuTranslator.getLocation(sku) + "," + String
+            .valueOf(inventory.get(sku)));
+      }
+    }
+    this.fileSystem.setWritingFile(this.outFile + File.separator + "final"
+        + ".csv", finalCsv);
+    this.fileSystem.writeAll();
   }
 
   /**
-   * Add a replenisher to the warehouse
+   * A getter fot workerManager.
    *
-   * @param replenisher the replenisher to be added
+   * @return workerManager
    */
-  void addReplenisher(Replenisher replenisher) {
-    replenishers.put(replenisher.getName(), replenisher);
+  public WorkerManager getWorkerManager() {
+    return workerManager;
   }
 
   /**
-   * Get a loader by name.
+   * A method to log loaded orders.
    *
-   * @param name the name
-   * @return the loader with that name
+   * @param order the order to be logged
    */
-  Loader getLoader(String name) {
-    return loaders.get(name);
-  }
-
-  /**
-   * Get a picker by name.
-   *
-   * @param name the name
-   * @return the picker with that name
-   */
-  Picker getPicker(String name) {
-    return pickers.get(name);
-  }
-
-  /**
-   * Get a sequencer by name
-   *
-   * @param name the name
-   * @return the sequencer with that name
-   */
-  Sequencer getSequencer(String name) {
-    return sequencers.get(name);
-  }
-
-  /**
-   * Get a replenisher by name
-   *
-   * @param name the name
-   * @return the replenisher with that name
-   */
-  Replenisher getReplenisher(String name) {
-    return replenishers.get(name);
+  public void logLoading(String order) {
+    fileSystem.getWritingFileForEdit(outFile + File.separator + "orders"
+        + ".csv").add(order);
   }
 }

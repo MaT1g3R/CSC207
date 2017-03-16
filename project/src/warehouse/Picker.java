@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created by Tasbir on 2017-03-11.
+ * A class to represent pickers.
+ *
+ * @author Tasbir
  */
 public class Picker extends Worker {
 
@@ -13,10 +15,10 @@ public class Picker extends Worker {
   /**
    * Initialize an instance of a picker.
    *
-   * @param name the name of the picker
+   * @param name    the name of the picker
    * @param worksAt where it works at
    */
-  Picker(String name, Warehouse worksAt) {
+  public Picker(String name, Warehouse worksAt) {
     super(name, worksAt);
   }
 
@@ -25,23 +27,29 @@ public class Picker extends Worker {
    * and a scan order.
    */
   @Override
-  void ready() {
-    getWorksAt().readyPicker(this);
-    resetScanCount();
-    ArrayList<Integer> toBeOptimized = new ArrayList<>();
-    for (Order o : getCurrPickingReq().getOrders()) {
-      toBeOptimized.add(o.getSkus()[0]);
-      toBeOptimized.add(o.getSkus()[1]);
+  public void ready() {
+    setCurrPickingReq(getPickingRequestManager().getForPicking());
+    if (getCurrPickingReq() != null) {
+      resetScanCount();
+      ArrayList<Integer> toBeOptimized = new ArrayList<>();
+      for (Order o : getCurrPickingReq().getOrders()) {
+        toBeOptimized.add(o.getSkus()[0]);
+        toBeOptimized.add(o.getSkus()[1]);
+      }
+      locations = WarehousePicking
+          .optimize(toBeOptimized, getWorksAt().getSkuTranslator());
+      setToBeScanned(getScanOrder());
+      // For printing
+      String displayString = "Picker " + getName() + " is ready, it will go to "
+          + "locations:\n";
+      for (String loc : locations) {
+        displayString += loc + "\n";
+      }
+      System.out.println(displayString);
+    } else {
+      System.out.println("Picker " + getName() + " tried to ready with no "
+          + "picking request. Ready action aborted.");
     }
-    locations = WarehousePicking.optimize(toBeOptimized);
-    setToBeScanned(getScanOrder());
-    // For printing
-    String displayString = "Picker " + getName() + " is ready, it will go to "
-        + "locations:\n";
-    for (String loc : locations) {
-      displayString += loc + "\n";
-    }
-    System.out.println(displayString);
   }
 
   /**
@@ -51,11 +59,11 @@ public class Picker extends Worker {
    * @return The expected scan order
    */
   @Override
-  protected LinkedList<Integer> getScanOrder() {
+  public LinkedList<Integer> getScanOrder() {
     LinkedList<Integer> res = new LinkedList<>();
     for (String location : locations) {
       String[] toBeTr = location.split(",");
-      res.add(SkuTranslator.getSkuFromLocation(toBeTr));
+      res.add(getWorksAt().getSkuTranslator().getSkuFromLocation(toBeTr));
     }
     return res;
   }
@@ -68,52 +76,46 @@ public class Picker extends Worker {
    * @param sku the sku scanned.
    */
   @Override
-  void scan(int sku) {
-    getWorksAt().removeFascia(sku);
-    if (scanResult(sku)) {
-      addScanCount();
-      getToBeScanned().removeFirst();
+  public void scan(int sku) {
+    if (getCurrPickingReq() != null) {
+      getWorksAt().removeFascia(sku);
+      if (scanResult(sku, expected())) {
+        addScanCount();
+        getToBeScanned().removeFirst();
+      }
+    } else {
+      System.out.println("Picker " + getName() + " tried to scan with no "
+          + "picking order assigned. Scan action aborted.");
     }
   }
 
   /**
-   * The result of a scan, note this doesnt pop the element when a worker
-   * fails because it will keep trying to scan for a matching SKU.
+   * Return the expected scan sku.
    *
-   * @param sku the sku scanned.
-   * @return true if the scan matched else false.
+   * @return the expected scan sku
    */
-  private boolean scanResult(int sku) {
-    System.out.println(this.getClass().getSimpleName() + " " + getName() + " "
-        + "preformed a scan action!");
-    int expected = getToBeScanned().getFirst();
-    if (sku == expected) {
-      System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " matched with"
-              + " the expected result");
-      return true;
-    } else {
-      System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " did not match "
-              + "with the expected result of SKU " + String
-              .valueOf(expected));
-      return false;
-    }
+  private int expected() {
+    return getToBeScanned().getFirst();
   }
 
   /**
-   * Method for going to the marshalling area
+   * Method for going to the marshalling area.
    */
-  void goToMarshall() {
-    if (getScanCount() == 8) {
-      getWorksAt().sendToMarshalling(getCurrPickingReq());
-      System.out.println("Picker " + getName() + "has gone to marshalling area"
+  public void goToMarshall() {
+    if (getScanCount() == 8 && getCurrPickingReq() != null) {
+      getCurrPickingReq().updateLocation(Location.marshall);
+      System.out.println("Picker " + getName() + " has gone to marshalling area"
           + ".");
-    } else {
-      getWorksAt().sendBackToPicking(getCurrPickingReq());
-      System.out.println("Picker " + getName() + "tried to go to marshalling "
+    } else if (getCurrPickingReq() != null) {
+      getCurrPickingReq().updateLocation(Location.pick);
+      System.out.println("Picker " + getName() + " tried to go to marshalling "
           + "area with less than 8 fascias picked, the picking request has "
           + "been sent back to be picked again.");
+    } else {
+      System.out.println("Picker " + getName() + "tried to go to marshall "
+          + "with no picking request assigned. Go to marshall action aborted.");
     }
+    setCurrPickingReq(null);
+    resetScanCount();
   }
 }

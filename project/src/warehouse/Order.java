@@ -15,14 +15,15 @@ public class Order {
   /**
    * Initializes a new order based on input to the system.
    *
-   * @param orderAsString The Order as it is inputed.
+   * @param orderAsString The Order in the format "Order Colour Model"
+   * @param skuTranslator the skuTranslator
    */
-  public Order(String orderAsString) {
+  public Order(String orderAsString, SkuTranslator skuTranslator) {
     String[] orderSplit = orderAsString.split("\\s");
-    model = orderSplit[1];
-    colour = orderSplit[2];
-    skus[0] = SkuTranslator.getSku(colour, model, true);
-    skus[1] = SkuTranslator.getSku(colour, model, false);
+    colour = orderSplit[1];
+    model = orderSplit[2];
+    skus[0] = skuTranslator.getSku(colour, model, true);
+    skus[1] = skuTranslator.getSku(colour, model, false);
   }
 
 
@@ -31,7 +32,7 @@ public class Order {
    *
    * @return Array of 2 ints, the SKU number of the front object, then the back.
    */
-  int[] getSkus() {
+  public int[] getSkus() {
     return skus;
   }
 

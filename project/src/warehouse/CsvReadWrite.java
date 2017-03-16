@@ -83,7 +83,7 @@ public final class CsvReadWrite {
   /**
    * This appends a line to the file.
    *
-   * @param content The string to be appended
+   * @param content  The string to be appended
    * @param fileName The name of the file
    */
   public static void addLine(String content, final String fileName) {
@@ -99,7 +99,7 @@ public final class CsvReadWrite {
   /**
    * This overrides the file.
    *
-   * @param content An ArrayList, each item is a new line
+   * @param content  An ArrayList, each item is a new line
    * @param fileName The name of the file
    */
   public static void overWrite(final ArrayList<String> content,
@@ -118,5 +118,4 @@ public final class CsvReadWrite {
       System.out.println("Cannot read the file");
     }
   }
-
 }

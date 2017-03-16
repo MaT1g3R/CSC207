@@ -5,7 +5,7 @@ package warehouse;
  *
  * @author Peijun
  */
-class Replenisher {
+public class Replenisher {
 
   private String name;
   private Warehouse worksAt;
@@ -13,10 +13,10 @@ class Replenisher {
   /**
    * Initialize a Replenisher object.
    *
-   * @param name the name of the Replenisher
+   * @param name    the name of the Replenisher
    * @param worksAt where the Replenisher works at
    */
-  Replenisher(String name, Warehouse worksAt) {
+  public Replenisher(String name, Warehouse worksAt) {
     this.name = name;
     this.worksAt = worksAt;
   }
@@ -31,10 +31,11 @@ class Replenisher {
   }
 
   /**
-   * A method for replenish action.
+   * Replenish the warehouse when the stock level <= 5.
+   *
    * @param sku the sku to be replenished
    */
-  void replenish(int sku) {
+  public void replenish(int sku) {
     if (worksAt.getToBeReplenished().contains(sku)) {
       System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "
           + "replenished.");
