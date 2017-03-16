@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import warehouse.PickingRequest.Location;
 
 /**
  * A class to keep track of all PickingRequests.

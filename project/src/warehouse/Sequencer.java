@@ -1,7 +1,6 @@
 package warehouse;
 
 import java.util.LinkedList;
-import warehouse.PickingRequest.Location;
 
 /**
  * A class to represent sequencers.

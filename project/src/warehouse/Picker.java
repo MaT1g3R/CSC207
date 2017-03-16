@@ -2,7 +2,6 @@ package warehouse;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import warehouse.PickingRequest.Location;
 
 /**
  * A class to represent pickers.

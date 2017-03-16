@@ -1,7 +1,6 @@
 package warehouse;
 
 import java.util.LinkedList;
-import warehouse.PickingRequest.Location;
 
 /**
  * A generic worker class.
@@ -177,5 +176,5 @@ abstract class Worker {
   public PickingRequestManager getPickingRequestManager() {
     return pickingRequestManager;
   }
-  
+
 }

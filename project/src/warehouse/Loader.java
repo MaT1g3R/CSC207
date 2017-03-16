@@ -1,7 +1,5 @@
 package warehouse;
 
-import warehouse.PickingRequest.Location;
-
 /**
  * A class to represent Loaders.
  *

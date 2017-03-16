@@ -17,14 +17,6 @@ public class PickingRequest extends Observable implements
   private int id;
   private Location location;
 
-  /**
-   * All the locations that the PickingRequest can be in.
-   */
-  public enum Location {
-    pick,
-    marshall,
-    load,
-  }
 
   /**
    * Constructor, which initializes given parameters.
