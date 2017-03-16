@@ -1,6 +1,7 @@
 package warehouse;
 
 import java.util.LinkedList;
+import warehouse.PickingRequest.Location;
 
 /**
  * A generic worker class.
@@ -14,10 +15,12 @@ abstract class Worker {
   private Warehouse worksAt;
   private PickingRequest currPickingReq;
   private int scanCount = 0;
+  private PickingRequestManager pickingRequestManager;
 
   Worker(String name, Warehouse worksAt) {
     this.name = name;
     this.worksAt = worksAt;
+    this.pickingRequestManager = this.worksAt.getPickingRequestManager();
   }
 
   /**
@@ -47,7 +50,7 @@ abstract class Worker {
   /**
    * The result of a scan from a worker.
    *
-   * @param sku the sku being scanned.
+   * @param sku      the sku being scanned.
    * @param expected the expected sku to match up with the sku being scanned.
    * @return true if the scan matches, else returns false.
    */
@@ -85,7 +88,8 @@ abstract class Worker {
   public void scan(int sku) {
     if (getCurrPickingReq() != null) {
       if (!scanResult(sku, expected())) {
-        getWorksAt().sendBackToPicking(getCurrPickingReq());
+        getWorksAt().getPickingRequestManager()
+            .update(getCurrPickingReq(), Location.load);
       } else {
         addScanCount();
       }
@@ -165,5 +169,13 @@ abstract class Worker {
     scanCount = 0;
   }
 
-
+  /**
+   * A getter for PickingRequestManager.
+   *
+   * @return PickingRequestManager
+   */
+  public PickingRequestManager getPickingRequestManager() {
+    return pickingRequestManager;
+  }
+  
 }

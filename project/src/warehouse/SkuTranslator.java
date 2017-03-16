@@ -1,6 +1,8 @@
 package warehouse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class is responsible for taking in csv files that have data about SKUs
@@ -13,9 +15,14 @@ import java.util.ArrayList;
 public class SkuTranslator {
 
 
-  private static ArrayList<ArrayList<String>> locations;
-  private static ArrayList<ArrayList<String>> properties;
+  private ArrayList<String> locations;
+  private ArrayList<String> properties;
 
+  public SkuTranslator(ArrayList<String> locations,
+      ArrayList<String> properties) {
+    this.locations = locations;
+    this.properties = properties;
+  }
 
   /**
    * Using given translation table, returns SKU unit given the info.
@@ -25,15 +32,11 @@ public class SkuTranslator {
    * @param isFront whether or not the sku is on the front or the back
    * @return : the sku with the three above traits as an int
    */
-  public static int getSku(String colour, String model, boolean isFront) {
-    for (ArrayList<String> x : properties) {
-      if (String.join(",", x.subList(0, 2)).toLowerCase().equals((colour
-          + "," + model).toLowerCase())) {
-        if (isFront) {
-          return Integer.parseInt(x.get(2));
-        } else {
-          return Integer.parseInt(x.get(3));
-        }
+  public int getSku(String colour, String model, boolean isFront) {
+    for (String s : properties) {
+      String[] line = s.split(",");
+      if (colour.equals(line[0]) && model.equals(line[1])) {
+        return isFront ? Integer.valueOf(line[2]) : Integer.valueOf(line[3]);
       }
     }
     return -1;
@@ -45,12 +48,12 @@ public class SkuTranslator {
    * @param sku whether or not the sku is on the front or the back
    * @return : the <sku></sku> with the given location as an int
    */
-  public static String getLocation(int sku) {
-    String output;
-    for (ArrayList<String> x : locations) {
-      if (x.get(x.size() - 1).equals(Integer.toString(sku))) {
-        output = String.join(",", x.subList(0, x.size() - 1));
-        return output;
+  public String getLocation(int sku) {
+    for (String s : locations) {
+      String[] line = s.split(",");
+      if (sku == Integer.valueOf(line[4])) {
+        List<String> result = Arrays.asList(line);
+        return String.join(",", result.subList(0, 4));
       }
     }
     return null;
@@ -63,32 +66,15 @@ public class SkuTranslator {
    * @param location is in String array format {Zone, Aisle, Rack, Rack Level}
    * @return sku stored in given area according to translation table
    */
-  public static int getSkuFromLocation(String[] location) {
-    for (ArrayList<String> x : locations) {
-      if (String.join(",", location).toLowerCase().equals(
-          String.join(",", x.subList(0, x.size() - 1)).toLowerCase())) {
-        return Integer.parseInt(x.get(x.size() - 1));
+  public int getSkuFromLocation(String[] location) {
+    for (String s : locations) {
+      List<String> line = Arrays.asList(s.split(","));
+      String[] locationArray = line.subList(0, 4).toArray(new String[4]);
+      if (Arrays.equals(location, locationArray)) {
+        return Integer.valueOf(line.get(4));
       }
     }
     return -1;
-  }
-
-  /**
-   * Sets the traversal table to the csv file located in <path></path>.
-   *
-   * @param path must be a valid path to a csv file
-   */
-  public static void setLocations(String path) {
-    locations = CsvReadWrite.readAsArrays(path);
-  }
-
-  /**
-   * Sets the translation table to the csv file located in <path></path>.
-   *
-   * @param path must be a valid path to a csv file
-   */
-  public static void setProperties(String path) {
-    properties = CsvReadWrite.readAsArrays(path);
   }
 
   /**
@@ -96,12 +82,12 @@ public class SkuTranslator {
    *
    * @return a list of all skus from translation table.
    */
-  public static ArrayList<Integer> getAllSku() {
-    ArrayList<Integer> res = new ArrayList<>();
-    for (ArrayList<String> loc : locations) {
-      ArrayList<String> temp = new ArrayList<>(loc.subList(0, loc.size() - 1));
-      res.add(getSkuFromLocation(temp.toArray(new String[temp.size()])));
+  public ArrayList<Integer> getAllSku() {
+    ArrayList<Integer> result = new ArrayList<>();
+    for (String s : locations) {
+      List<String> line = Arrays.asList(s.split(","));
+      result.add(Integer.valueOf(line.get(4)));
     }
-    return res;
+    return result;
   }
 }

@@ -32,9 +32,11 @@ public class Simulator {
       final String translationFilePath, final String traversalFilePath,
       final String outFilePath) {
     this.eventList = CsvReadWrite.readCsv(eventFile);
-    SkuTranslator.setLocations(traversalFilePath);
-    SkuTranslator.setProperties(translationFilePath);
-    this.warehouse = new Warehouse(warehouseFilePath, outFilePath, 30);
+    this.warehouse = new Warehouse(warehouseFilePath, translationFilePath,
+        traversalFilePath, outFilePath, 30);
+    this.warehouse
+        .setPickingRequestManager(new PickingRequestManager(this.warehouse));
+    this.warehouse.setWorkerManager(new WorkerManager());
   }
 
   /**
@@ -175,53 +177,56 @@ public class Simulator {
   public void run() {
     for (String s : eventList) {
       if (isOrder(s)) {
-        warehouse.addOrder(s);
+        warehouse.getPickingRequestManager().addOrder(s);
       }
       if (pickerReady(s)) {
-        if (warehouse.getPicker(s) == null) {
-          warehouse.addPicker(new Picker(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getPicker(s) == null) {
+          warehouse.getWorkerManager().addPicker(new Picker(getName(s),
+              warehouse));
         }
-        warehouse.getPicker(getName(s)).ready();
+        warehouse.getWorkerManager().getPicker(getName(s)).ready();
       }
       if (pickerPick(s)) {
-        warehouse.getPicker(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getPicker(getName(s)).scan(getSku(s));
       }
       if (pickerMarshall(s)) {
-        warehouse.getPicker(getName(s)).goToMarshall();
+        warehouse.getWorkerManager().getPicker(getName(s)).goToMarshall();
       }
       if (sequencerReady(s)) {
-        if (warehouse.getSequencer(getName(s)) == null) {
-          warehouse.addSequencer(new Sequencer(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getSequencer(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addSequencer(new Sequencer(getName(s), warehouse));
         }
-        warehouse.getSequencer(getName(s)).ready();
+        warehouse.getWorkerManager().getSequencer(getName(s)).ready();
       }
       if (sequencerScan(s)) {
-        warehouse.getSequencer(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getSequencer(getName(s)).scan(getSku(s));
       }
       if (sequencerSequence(s)) {
-        warehouse.getSequencer(getName(s)).sequence();
+        warehouse.getWorkerManager().getSequencer(getName(s)).sequence();
       }
       if (loaderReady(s)) {
-        if (warehouse.getLoader(getName(s)) == null) {
-          warehouse.addLoader(new Loader(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getLoader(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addLoader(new Loader(getName(s), warehouse));
         }
-        warehouse.getLoader(getName(s)).ready();
+        warehouse.getWorkerManager().getLoader(getName(s)).ready();
       }
       if (loaderScan(s)) {
-        warehouse.getLoader(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getLoader(getName(s)).scan(getSku(s));
       }
       if (loaderLoad(s)) {
-        warehouse.getLoader(getName(s)).load();
+        warehouse.getWorkerManager().getLoader(getName(s)).load();
       }
       if (replenish(s)) {
-        if (warehouse.getReplenisher(getName(s)) == null) {
-          warehouse.addReplenisher(new Replenisher(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getReplenisher(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addReplenisher(new Replenisher(getName(s), warehouse));
         }
-        warehouse.getReplenisher(getName(s)).replenish(getSku(s));
-
+        warehouse.getWorkerManager().getReplenisher(getName(s))
+            .replenish(getSku(s));
       }
     }
-    warehouse.outPutInventory();
+    warehouse.outPutResult();
   }
-
 }

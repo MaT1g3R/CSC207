@@ -1,6 +1,7 @@
 package warehouse;
 
 import java.util.LinkedList;
+import warehouse.PickingRequest.Location;
 
 /**
  * A class to represent sequencers.
@@ -24,7 +25,8 @@ public class Sequencer extends Worker {
    */
   @Override
   public void ready() {
-    getWorksAt().readySequencer(this);
+    setCurrPickingReq(
+        getPickingRequestManager().popRequest(Location.marshall));
     if (getCurrPickingReq() != null) {
       resetScanCount();
       setToBeScanned(getScanOrder());
@@ -47,11 +49,13 @@ public class Sequencer extends Worker {
         frontPallet[i] = skus.get(i);
         backPallet[i] = skus.get(i + 4);
       }
-      getWorksAt().sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
+      getCurrPickingReq().updateLocation(Location.load);
+      getPickingRequestManager().putPalletes(new int[][]{frontPallet,
+          backPallet}, getCurrPickingReq().getId());
       System.out.println("The sequencer " + getName() + " has finished "
           + "sequencing and sent the picking request for loading.");
     } else if (getCurrPickingReq() != null) {
-      getWorksAt().sendBackToPicking(getCurrPickingReq());
+      getCurrPickingReq().updateLocation(Location.pick);
       System.out.println("The sequencer tried to send an incomplete picking "
           + "request for loading, the picking request was sent to be re "
           + "picked instead.");

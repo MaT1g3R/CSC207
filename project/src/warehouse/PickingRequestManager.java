@@ -21,8 +21,15 @@ public class PickingRequestManager implements Observer {
   private HashMap<Integer, int[][]> pallets = new HashMap<>();
   private LinkedList<Order> orders = new LinkedList<>();
   private int pickingReqId = 0;
+  private Warehouse warehouse;
 
-  public PickingRequestManager() {
+  /**
+   * Initialize a PickingRequestManager
+   *
+   * @param warehouse the warehouse this belongs to.
+   */
+  public PickingRequestManager(Warehouse warehouse) {
+    this.warehouse = warehouse;
   }
 
   /**
@@ -33,12 +40,13 @@ public class PickingRequestManager implements Observer {
    */
   @Override
   public void update(Observable request, Object arg) {
-    if (arg == Location.load) {
+    if (arg == Location.pick) {
       outStandingPickingRequests.add((PickingRequest) request);
     } else if (arg == Location.marshall) {
       marshallingArea.add((PickingRequest) request);
     } else {
       loadingArea.add((PickingRequest) request);
+      loadingArea.sort(PickingRequest::compareTo);
     }
   }
 
@@ -97,7 +105,31 @@ public class PickingRequestManager implements Observer {
    */
   public void addOrder(String order) {
     System.out.println(order + " has been added to the warehouse.");
-    orders.add(new Order(order));
+    orders.add(new Order(order, warehouse.getSkuTranslator()));
   }
 
+  /**
+   * Add front and back pallets based on their picking request id.
+   *
+   * @param pallet the front and back pallets.
+   * @param id     the picking request id.
+   */
+  public void putPalletes(int[][] pallet, int id) {
+    this.pallets.put(id, pallet);
+  }
+
+  /**
+   * Remove and return pallets by picking request id.
+   *
+   * @param id the picking request id.
+   */
+  public int[][] popPallets(int id) {
+    if (pallets.containsKey(id)) {
+      int[][] result = pallets.get(id);
+      pallets.remove(id);
+      return result;
+    } else {
+      return null;
+    }
+  }
 }

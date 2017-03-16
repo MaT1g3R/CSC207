@@ -1,6 +1,6 @@
 package warehouse;
 
-import java.io.File;
+import warehouse.PickingRequest.Location;
 
 /**
  * A class to represent Loaders.
@@ -29,8 +29,11 @@ public class Loader extends Worker {
   @Override
   public void ready() {
     resetScanCount();
-    getWorksAt().readyLoader(this);
+    setCurrPickingReq(getPickingRequestManager().popRequest(Location.load));
     if (getCurrPickingReq() != null) {
+      int[][] pallets = getPickingRequestManager()
+          .popPallets(getCurrPickingReq().getId());
+      setPallets(pallets[0], pallets[1]);
       setToBeScanned(getScanOrder());
       System.out.println("Loader " + getName() + " is ready to load.");
     } else {
@@ -56,21 +59,21 @@ public class Loader extends Worker {
           System.out.println("Loader " + getName() + " loaded picking request"
               + " " + String.valueOf(getCurrPickingReq().getId()));
           for (Order o : getCurrPickingReq().getOrders()) {
-            CsvReadWrite.addLine(o.toString(), getWorksAt().getOutputFileDir()
-                + File.separator + "orders.csv");
+            getWorksAt().logLoading(o.toString());
           }
 
         } else {
           System.out.println("Loader " + getName() + " could not load picking "
               + "request " + String.valueOf(getCurrPickingReq().getId())
-              + "\nThe"
-              + " picking request is sent back to loading area.");
-          getWorksAt()
-              .sendToLoading(getCurrPickingReq(), frontPallet, backPallet);
+              + "\nThe picking request is sent back to loading area.");
+          getCurrPickingReq().updateLocation(Location.load);
+          getPickingRequestManager()
+              .putPalletes(new int[][]{frontPallet, backPallet},
+                  getCurrPickingReq().getId());
         }
 
       } else {
-        getWorksAt().sendBackToPicking(getCurrPickingReq());
+        getCurrPickingReq().updateLocation(Location.pick);
         System.out.println("The loader tried to load an incomplete picking "
             + "request, the picking request was sent to be re "
             + "picked instead.");
