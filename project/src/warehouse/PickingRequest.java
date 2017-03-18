@@ -2,6 +2,7 @@ package warehouse;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
 
 /**
  * Orders are processed in groups of 4. These are picking requests. All picking
@@ -9,10 +10,13 @@ import java.util.LinkedList;
  *
  * @author Tasbir
  */
-public class PickingRequest implements Comparable<PickingRequest> {
+public class PickingRequest extends Observable implements
+    Comparable<PickingRequest> {
 
   private ArrayList<Order> orders;
   private int id;
+  private Location location;
+
 
   /**
    * Constructor, which initializes given parameters.
@@ -20,9 +24,12 @@ public class PickingRequest implements Comparable<PickingRequest> {
    * @param orders The orders associated with this picking request
    * @param id     IDs are ints and never repeat
    */
-  public PickingRequest(ArrayList<Order> orders, int id) {
+  public PickingRequest(ArrayList<Order> orders, int id,
+      PickingRequestManager manager) {
     this.orders = orders;
     this.id = id;
+    this.location = Location.pick;
+    addObserver(manager);
   }
 
   /**
@@ -59,24 +66,30 @@ public class PickingRequest implements Comparable<PickingRequest> {
     return orders;
   }
 
+
   /**
    * Compares this object with the specified object for order.
    * Returns a negative integer, zero, or a positive integer as this object
    * is less than, equal to, or greater than the specified object.
    *
    * @param request the request to be compared.
-   * @return a negative integer, zero, or a positive integer as this object is than, equal to, or
-   *     greater than the specified object.
-   * @throws NullPointerException if the specified object is null
-   * @throws ClassCastException   if the specified object's type prevents it
-   *                              from being compared to this object.
+   * @return a negative integer, zero, or a positive integer as this object is
+   * less than, equal to, or greater than the specified object.
    */
   @Override
   public int compareTo(PickingRequest request) {
-    if (this.id == request.id) {
-      return 0;
-    } else {
-      return this.id > request.id ? 1 : -1;
-    }
+    return this.id - request.id;
   }
+
+  /**
+   * Update the picking request's location
+   *
+   * @param location the location to set to.
+   */
+  public void updateLocation(Location location) {
+    this.location = location;
+    setChanged();
+    notifyObservers(this.location);
+  }
+
 }

@@ -39,7 +39,7 @@ public class Truck {
 
   /**
    * Adds pallets to an appropriate location on the Truck.
-   *
+   * @param reqId the id for the picking request
    * @param frontPallet The pallet containing the four front SKU's
    * @param backPallet  The pallet containing the four rear SKU's
    * @return if the cargo is loaded

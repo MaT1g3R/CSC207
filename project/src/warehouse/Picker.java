@@ -28,7 +28,7 @@ public class Picker extends Worker {
    */
   @Override
   public void ready() {
-    getWorksAt().readyPicker(this);
+    setCurrPickingReq(getPickingRequestManager().getForPicking());
     if (getCurrPickingReq() != null) {
       resetScanCount();
       ArrayList<Integer> toBeOptimized = new ArrayList<>();
@@ -36,7 +36,8 @@ public class Picker extends Worker {
         toBeOptimized.add(o.getSkus()[0]);
         toBeOptimized.add(o.getSkus()[1]);
       }
-      locations = WarehousePicking.optimize(toBeOptimized);
+      locations = WarehousePicking
+          .optimize(toBeOptimized, getWorksAt().getSkuTranslator());
       setToBeScanned(getScanOrder());
       // For printing
       String displayString = "Picker " + getName() + " is ready, it will go to "
@@ -62,7 +63,7 @@ public class Picker extends Worker {
     LinkedList<Integer> res = new LinkedList<>();
     for (String location : locations) {
       String[] toBeTr = location.split(",");
-      res.add(SkuTranslator.getSkuFromLocation(toBeTr));
+      res.add(getWorksAt().getSkuTranslator().getSkuFromLocation(toBeTr));
     }
     return res;
   }
@@ -102,11 +103,11 @@ public class Picker extends Worker {
    */
   public void goToMarshall() {
     if (getScanCount() == 8 && getCurrPickingReq() != null) {
-      getWorksAt().sendToMarshalling(getCurrPickingReq());
+      getCurrPickingReq().updateLocation(Location.marshall);
       System.out.println("Picker " + getName() + " has gone to marshalling area"
           + ".");
     } else if (getCurrPickingReq() != null) {
-      getWorksAt().sendBackToPicking(getCurrPickingReq());
+      getCurrPickingReq().updateLocation(Location.pick);
       System.out.println("Picker " + getName() + " tried to go to marshalling "
           + "area with less than 8 fascias picked, the picking request has "
           + "been sent back to be picked again.");
@@ -115,5 +116,6 @@ public class Picker extends Worker {
           + "with no picking request assigned. Go to marshall action aborted.");
     }
     setCurrPickingReq(null);
+    resetScanCount();
   }
 }

@@ -9,90 +9,61 @@ import java.util.LinkedList;
 public class Warehouse {
 
   private final int maxStock;
-  private String outputFileDir;
   private HashMap<Integer, Integer> inventory = new HashMap<>();
   private ArrayList<Truck> trucks = new ArrayList<>();
-  private LinkedList<PickingRequest> outStandingPickingRequests = new
-      LinkedList<>();
-  private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
-  private LinkedList<ArrayList<Object>> loadingArea = new LinkedList<>();
-  private LinkedList<Order> orders = new LinkedList<>();
-  private int pickingReqId = 0;
   private LinkedList<Integer> toBeReplenished = new LinkedList<>();
-  private HashMap<String, Picker> pickers = new HashMap<>();
-  private HashMap<String, Loader> loaders = new HashMap<>();
-  private HashMap<String, Sequencer> sequencers = new HashMap<>();
-  private HashMap<String, Replenisher> replenishers = new HashMap<>();
-
+  private PickingRequestManager pickingRequestManager;
+  private WorkerManager workerManager;
+  private FileSystem fileSystem;
+  private SkuTranslator skuTranslator;
+  private String warehouseFile;
+  private String outFile;
 
   /**
-   * Initializes inventory values, Hashmap values, and sets max stock value.
-   *
-   * @param inputFilePath     path to initial inventory file
-   * @param outputFileDirPath path to directory for output files
-   * @param max               how much items a rack level holds
+   * Initialize a new warehouse.
+   * @param fileSystem the file system it uses
+   * @param skuTranslator the skuTranslator it uses
+   * @param pickingRequestManager the pickingRequestManager it uses.
+   * @param workerManager the workerManager it uses.
+   * @param warehouseFile the file path to read inventory from.
+   * @param outFile the output file dir.
+   * @param max the max stock level.
    */
-  public Warehouse(String inputFilePath, String outputFileDirPath, int max) {
-    this.outputFileDir = outputFileDirPath;
+  public Warehouse(
+      FileSystem fileSystem,
+      SkuTranslator skuTranslator,
+      PickingRequestManager pickingRequestManager,
+      WorkerManager workerManager,
+      String warehouseFile,
+      String outFile,
+      int max
+  ) {
     this.maxStock = max;
-    this.setInventoryFromFile(inputFilePath);
-    this.trucks.add(new Truck(0));
-    CsvReadWrite
-        .overWrite(new ArrayList<>(), outputFileDir + File.separator + "orders"
-            + ".csv");
+    this.warehouseFile = warehouseFile;
+    this.outFile = outFile;
+    this.fileSystem = fileSystem;
+    this.skuTranslator = skuTranslator;
+    this.workerManager = workerManager;
+    this.pickingRequestManager = pickingRequestManager;
+    this.fileSystem.writeAll();
+    this.setInventory();
   }
 
   /**
-   * This output the final inventory as csv to the outputFileDir.
+   * Set the stock levels from the initial file.
    */
-  public void outPutInventory() {
-    ArrayList<String> result = new ArrayList<>();
-    for (HashMap.Entry<Integer, Integer> entry : inventory.entrySet()) {
-      if (entry.getValue() < maxStock) {
-        String location = SkuTranslator.getLocation(entry.getKey());
-        result.add(location + "," + entry.getValue());
+  private void setInventory() {
+    for (int sku : skuTranslator.getAllSku()) {
+      inventory.put(sku, maxStock);
+    }
+    if (!fileSystem.getFileContent(warehouseFile).isEmpty()) {
+      for (String s : fileSystem.getFileContent(warehouseFile)) {
+        ArrayList<String> line = new ArrayList<>(Arrays.asList(s.split(",")));
+        String[] location = line.subList(0, 4).toArray(new String[4]);
+        int amount = Integer.valueOf(line.get(4));
+        this.inventory.put(skuTranslator.getSkuFromLocation(location), amount);
       }
     }
-    CsvReadWrite
-        .overWrite(result, outputFileDir + File.separator + "final.csv");
-  }
-
-  /**
-   * Sets non max stock levels.
-   *
-   * @param inputFilePath path to file with inventory information.
-   */
-  private void setInventoryFromFile(String inputFilePath) {
-    ArrayList<ArrayList<String>> input = CsvReadWrite
-        .readAsArrays(inputFilePath);
-
-    for (int sku : SkuTranslator
-        .getAllSku()) { //anything not in file is assumed to be max amount.
-      this.inventory.put(sku, maxStock);
-    }
-
-    //getting input inventory if there's a file
-    if (input != null) {
-      for (ArrayList<String> s : input) {
-        //{Zone, Aisle, Rack, Rack Level}
-        int sku = SkuTranslator
-            .getSkuFromLocation(s.subList(0, 4).toArray(new String[4]));
-        this.inventory.put(sku, Integer.parseInt(s.get(4)));
-        if (Integer.parseInt(s.get(4)) <= 5) {
-          toBeReplenished.add(sku);
-        }
-      }
-    }
-  }
-
-  /**
-   * Method for adding an order to the system.
-   *
-   * @param order the order as a string to be added
-   */
-  public void addOrder(String order) {
-    System.out.println(order + " has been added to the warehouse.");
-    orders.add(new Order(order));
   }
 
   /**
@@ -128,92 +99,11 @@ public class Warehouse {
   }
 
   /**
-   * This method generate a new picking request.
-   * This method should never be called if there's less than 4 orders in
-   * outstanding Orders.
-   *
-   * @return A picking request from 4 orders.
+   * Add a truck to the warehouse.
+   * @param truck the truck to be added.
    */
-  private PickingRequest generatePickingReq() {
-    ArrayList<Order> toBeSent = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
-      toBeSent.add(orders.pop());
-    }
-
-    return new PickingRequest(toBeSent, pickingReqId++);
-  }
-
-  /**
-   * When a picker is ready this hands him a picking request.
-   *
-   * @param picker the Picker who's ready.
-   */
-  public void readyPicker(Picker picker) {
-    if (outStandingPickingRequests.isEmpty() && orders.size() >= 4) {
-      picker.setCurrPickingReq(generatePickingReq());
-    } else if (!outStandingPickingRequests.isEmpty()) {
-      picker.setCurrPickingReq(outStandingPickingRequests.pop());
-    }
-  }
-
-  /**
-   * When a sequencer it gets a picking request to sequence.
-   *
-   * @param sequencer the sequencer who's ready.
-   */
-  public void readySequencer(Sequencer sequencer) {
-    if (!marshallingArea.isEmpty()) {
-      sequencer.setCurrPickingReq(marshallingArea.pop());
-    }
-  }
-
-
-  /**
-   * When a loader is ready it gets a picking request to laod.
-   *
-   * @param loader the loader who's ready.
-   */
-  public void readyLoader(Loader loader) {
-    if (!loadingArea.isEmpty()) {
-      ArrayList<Object> toBeSent = loadingArea.pop();
-      loader.setCurrPickingReq((PickingRequest) toBeSent.get(0));
-      loader.setPallets((int[]) toBeSent.get(1), (int[]) toBeSent.get(2));
-    }
-  }
-
-
-  /**
-   * When a picker goes to marshalling area he dumps his picking request
-   *
-   * @param request the picking request to be marshalled.
-   */
-  public void sendToMarshalling(PickingRequest request) {
-    marshallingArea.add(request);
-  }
-
-  /**
-   * When a sequencer is finished it sends the picking request to loading
-   *
-   * @param request     the picking request to be loaded.
-   * @param frontPallet the front pallet to be loaded.
-   * @param backPallet  the back pallet to be loaded.
-   */
-  public void sendToLoading(PickingRequest request, int[] frontPallet, int[]
-      backPallet) {
-    loadingArea.add(new ArrayList<>(
-        Arrays.asList(new Object[]{request, frontPallet, backPallet})));
-    loadingArea.sort((p1, p2) -> ((PickingRequest) p1.get(0)).compareTo(
-        (PickingRequest) p2.get(0)));
-  }
-
-
-  /**
-   * When a picking request failed it's sent back to picking.
-   *
-   * @param request the failed picking request
-   */
-  public void sendBackToPicking(PickingRequest request) {
-    outStandingPickingRequests.add(request);
+  public void addTruck(Truck truck){
+    trucks.add(truck);
   }
 
   /**
@@ -231,15 +121,6 @@ public class Warehouse {
   }
 
   /**
-   * A getter for outPutFileDir.
-   *
-   * @return outPutFileDir
-   */
-  public String getOutputFileDir() {
-    return outputFileDir;
-  }
-
-  /**
    * A getter for toBeReplenished.
    *
    * @return toBeReplenished
@@ -249,78 +130,55 @@ public class Warehouse {
   }
 
   /**
-   * Add a loader to the warehouse.
+   * A getter for PickingRequestManager.
    *
-   * @param loader the loader to be added
+   * @return PickingRequestManager
    */
-  public void addLoader(Loader loader) {
-    loaders.put(loader.getName(), loader);
+  public PickingRequestManager getPickingRequestManager() {
+    return pickingRequestManager;
   }
 
   /**
-   * Add a sequencer to the warehouse.
+   * A getter for skuTranslater.
    *
-   * @param sequencer the sequencer to be added
+   * @return skuTranslater.
    */
-  public void addSequencer(Sequencer sequencer) {
-    sequencers.put(sequencer.getName(), sequencer);
+  public SkuTranslator getSkuTranslator() {
+    return skuTranslator;
   }
 
   /**
-   * Add a picker to the warehouse.
-   *
-   * @param picker the picker to be added
+   * Output the warehouse simulation results.
    */
-  public void addPicker(Picker picker) {
-    pickers.put(picker.getName(), picker);
+  public void outPutResult() {
+    ArrayList<String> finalCsv = new ArrayList<>();
+    for (int sku : this.inventory.keySet()) {
+      if (inventory.get(sku) < 30) {
+        finalCsv.add(skuTranslator.getLocation(sku) + "," + String
+            .valueOf(inventory.get(sku)));
+      }
+    }
+    this.fileSystem.setWritingFile(this.outFile + File.separator + "final"
+        + ".csv", finalCsv);
+    this.fileSystem.writeAll();
   }
 
   /**
-   * Add a replenisher to the warehouse.
+   * A getter fot workerManager.
    *
-   * @param replenisher the replenisher to be added
+   * @return workerManager
    */
-  public void addReplenisher(Replenisher replenisher) {
-    replenishers.put(replenisher.getName(), replenisher);
+  public WorkerManager getWorkerManager() {
+    return workerManager;
   }
 
   /**
-   * Get a loader by name.
+   * A method to log loaded orders.
    *
-   * @param name the name
-   * @return the loader with that name
+   * @param order the order to be logged
    */
-  public Loader getLoader(String name) {
-    return loaders.get(name);
-  }
-
-  /**
-   * Get a picker by name.
-   *
-   * @param name the name
-   * @return the picker with that name
-   */
-  public Picker getPicker(String name) {
-    return pickers.get(name);
-  }
-
-  /**
-   * Get a sequencer by name.
-   *
-   * @param name the name
-   * @return the sequencer with that name
-   */
-  public Sequencer getSequencer(String name) {
-    return sequencers.get(name);
-  }
-
-  /**
-   * Get a replenisher by name.
-   *
-   * @param name the name
-   * @return the replenisher with that name
-   */
-  public Replenisher getReplenisher(String name) {
-    return replenishers.get(name);
+  public void logLoading(String order) {
+    fileSystem.getWritingFileForEdit(outFile + File.separator + "orders"
+        + ".csv").add(order);
   }
 }

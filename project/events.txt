@@ -23,6 +23,7 @@ Order Black SE
 Order Black SES
 Order Black SEL
 Picker Alice ready
+Picker Alice pick 10
 Picker Alice pick 1
 Picker Alice pick 2
 Picker Alice pick 3
@@ -143,18 +144,3 @@ Loader Tom scan 28
 Loader Tom scan 30
 Loader Tom scan 32
 Loader Tom load
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

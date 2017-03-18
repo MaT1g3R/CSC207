@@ -19,6 +19,7 @@ public class Simulator {
    */
   private ArrayList<String> eventList;
 
+
   /**
    * This initialize a simulator object.
    *
@@ -28,13 +29,26 @@ public class Simulator {
    * @param traversalFilePath   the file path to the traversal table
    * @param outFilePath         the file path for output
    */
-  public Simulator(final String eventFile, final String warehouseFilePath,
-      final String translationFilePath, final String traversalFilePath,
-      final String outFilePath) {
-    this.eventList = CsvReadWrite.readCsv(eventFile);
-    SkuTranslator.setLocations(traversalFilePath);
-    SkuTranslator.setProperties(translationFilePath);
-    this.warehouse = new Warehouse(warehouseFilePath, outFilePath, 30);
+  public Simulator(String eventFile, String warehouseFilePath,
+                   String translationFilePath, String traversalFilePath, String outFilePath) {
+    eventList = CsvReadWrite.readCsv(eventFile);
+
+    FileSystem fileSystem = new FileSystem(
+            new String[]{warehouseFilePath, translationFilePath, traversalFilePath}, new String[]{outFilePath});
+
+    SkuTranslator skuTranslator = new SkuTranslator(
+            fileSystem.getFileContent(traversalFilePath), fileSystem.getFileContent(translationFilePath));
+
+    WorkerManager workerManager = new WorkerManager();
+
+    PickingRequestManager pickingRequestManager = new PickingRequestManager();
+
+    warehouse = new Warehouse(
+            fileSystem,skuTranslator,pickingRequestManager,workerManager,warehouseFilePath,outFilePath,30);
+
+    workerManager.setWarehouse(warehouse);
+    pickingRequestManager.setWarehouse(warehouse);
+    warehouse.addTruck(new Truck(0));
   }
 
   /**
@@ -175,53 +189,56 @@ public class Simulator {
   public void run() {
     for (String s : eventList) {
       if (isOrder(s)) {
-        warehouse.addOrder(s);
+        warehouse.getPickingRequestManager().addOrder(s);
       }
       if (pickerReady(s)) {
-        if (warehouse.getPicker(s) == null) {
-          warehouse.addPicker(new Picker(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getPicker(s) == null) {
+          warehouse.getWorkerManager().addPicker(new Picker(getName(s),
+              warehouse));
         }
-        warehouse.getPicker(getName(s)).ready();
+        warehouse.getWorkerManager().getPicker(getName(s)).ready();
       }
       if (pickerPick(s)) {
-        warehouse.getPicker(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getPicker(getName(s)).scan(getSku(s));
       }
       if (pickerMarshall(s)) {
-        warehouse.getPicker(getName(s)).goToMarshall();
+        warehouse.getWorkerManager().getPicker(getName(s)).goToMarshall();
       }
       if (sequencerReady(s)) {
-        if (warehouse.getSequencer(getName(s)) == null) {
-          warehouse.addSequencer(new Sequencer(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getSequencer(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addSequencer(new Sequencer(getName(s), warehouse));
         }
-        warehouse.getSequencer(getName(s)).ready();
+        warehouse.getWorkerManager().getSequencer(getName(s)).ready();
       }
       if (sequencerScan(s)) {
-        warehouse.getSequencer(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getSequencer(getName(s)).scan(getSku(s));
       }
       if (sequencerSequence(s)) {
-        warehouse.getSequencer(getName(s)).sequence();
+        warehouse.getWorkerManager().getSequencer(getName(s)).sequence();
       }
       if (loaderReady(s)) {
-        if (warehouse.getLoader(getName(s)) == null) {
-          warehouse.addLoader(new Loader(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getLoader(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addLoader(new Loader(getName(s), warehouse));
         }
-        warehouse.getLoader(getName(s)).ready();
+        warehouse.getWorkerManager().getLoader(getName(s)).ready();
       }
       if (loaderScan(s)) {
-        warehouse.getLoader(getName(s)).scan(getSku(s));
+        warehouse.getWorkerManager().getLoader(getName(s)).scan(getSku(s));
       }
       if (loaderLoad(s)) {
-        warehouse.getLoader(getName(s)).load();
+        warehouse.getWorkerManager().getLoader(getName(s)).load();
       }
       if (replenish(s)) {
-        if (warehouse.getReplenisher(getName(s)) == null) {
-          warehouse.addReplenisher(new Replenisher(getName(s), warehouse));
+        if (warehouse.getWorkerManager().getReplenisher(getName(s)) == null) {
+          warehouse.getWorkerManager()
+              .addReplenisher(new Replenisher(getName(s), warehouse));
         }
-        warehouse.getReplenisher(getName(s)).replenish(getSku(s));
-
+        warehouse.getWorkerManager().getReplenisher(getName(s))
+            .replenish(getSku(s));
       }
     }
-    warehouse.outPutInventory();
+    warehouse.outPutResult();
   }
-
 }
