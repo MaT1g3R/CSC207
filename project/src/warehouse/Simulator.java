@@ -30,21 +30,25 @@ public class Simulator {
    * @param outFilePath         the file path for output
    */
   public Simulator(String eventFile, String warehouseFilePath,
-                   String translationFilePath, String traversalFilePath, String outFilePath) {
+      String translationFilePath, String traversalFilePath,
+      String outFilePath) {
     eventList = CsvReadWrite.readCsv(eventFile);
 
     FileSystem fileSystem = new FileSystem(
-            new String[]{warehouseFilePath, translationFilePath, traversalFilePath}, new String[]{outFilePath});
+        new String[]{warehouseFilePath, translationFilePath, traversalFilePath},
+        new String[]{outFilePath + "orders.csv", outFilePath + "final.csv"});
 
     SkuTranslator skuTranslator = new SkuTranslator(
-            fileSystem.getFileContent(traversalFilePath), fileSystem.getFileContent(translationFilePath));
+        fileSystem.getFileContent(traversalFilePath),
+        fileSystem.getFileContent(translationFilePath));
 
     WorkerManager workerManager = new WorkerManager();
 
     PickingRequestManager pickingRequestManager = new PickingRequestManager();
 
     warehouse = new Warehouse(
-            fileSystem,skuTranslator,pickingRequestManager,workerManager,warehouseFilePath,outFilePath,30);
+        fileSystem, skuTranslator, pickingRequestManager, workerManager,
+        warehouseFilePath, outFilePath, 30);
 
     workerManager.setWarehouse(warehouse);
     pickingRequestManager.setWarehouse(warehouse);
@@ -62,10 +66,10 @@ public class Simulator {
   }
 
   /**
-   * Check if the string is for ready a picker.
+   * Check if the string is for tryReady a picker.
    *
    * @param s the string to be checked
-   * @return true if it's ready a picker
+   * @return true if it's tryReady a picker
    */
   private boolean pickerReady(String s) {
     return Pattern.matches("Picker \\w+ ready", s);
@@ -92,10 +96,10 @@ public class Simulator {
   }
 
   /**
-   * Check if the string is for ready a sequencer.
+   * Check if the string is for tryReady a sequencer.
    *
    * @param s the string to be checked
-   * @return true if it's ready a sequencer
+   * @return true if it's tryReady a sequencer
    */
   private boolean sequencerReady(String s) {
     return Pattern.matches("Sequencer \\w+ ready", s);
@@ -122,10 +126,10 @@ public class Simulator {
   }
 
   /**
-   * Check if the string is for ready a loader.
+   * Check if the string is for tryReady a loader.
    *
    * @param s the string to be checked
-   * @return true if it's ready a loader
+   * @return true if it's tryReady a loader
    */
   private boolean loaderReady(String s) {
     return Pattern.matches("Loader \\w+ ready", s);
@@ -178,8 +182,8 @@ public class Simulator {
    * @param s the event string
    * @return the sku number
    */
-  private int getSku(String s) {
-    return Integer.valueOf(s.split("\\s")[3]);
+  private String getSku(String s) {
+    return s.split("\\s")[3];
   }
 
 
@@ -196,39 +200,39 @@ public class Simulator {
           warehouse.getWorkerManager().addPicker(new Picker(getName(s),
               warehouse));
         }
-        warehouse.getWorkerManager().getPicker(getName(s)).ready();
+        warehouse.getWorkerManager().getPicker(getName(s)).tryReady();
       }
       if (pickerPick(s)) {
         warehouse.getWorkerManager().getPicker(getName(s)).scan(getSku(s));
       }
       if (pickerMarshall(s)) {
-        warehouse.getWorkerManager().getPicker(getName(s)).goToMarshall();
+        warehouse.getWorkerManager().getPicker(getName(s)).finish();
       }
       if (sequencerReady(s)) {
         if (warehouse.getWorkerManager().getSequencer(getName(s)) == null) {
           warehouse.getWorkerManager()
               .addSequencer(new Sequencer(getName(s), warehouse));
         }
-        warehouse.getWorkerManager().getSequencer(getName(s)).ready();
+        warehouse.getWorkerManager().getSequencer(getName(s)).tryReady();
       }
       if (sequencerScan(s)) {
         warehouse.getWorkerManager().getSequencer(getName(s)).scan(getSku(s));
       }
       if (sequencerSequence(s)) {
-        warehouse.getWorkerManager().getSequencer(getName(s)).sequence();
+        warehouse.getWorkerManager().getSequencer(getName(s)).finish();
       }
       if (loaderReady(s)) {
         if (warehouse.getWorkerManager().getLoader(getName(s)) == null) {
           warehouse.getWorkerManager()
               .addLoader(new Loader(getName(s), warehouse));
         }
-        warehouse.getWorkerManager().getLoader(getName(s)).ready();
+        warehouse.getWorkerManager().getLoader(getName(s)).tryReady();
       }
       if (loaderScan(s)) {
         warehouse.getWorkerManager().getLoader(getName(s)).scan(getSku(s));
       }
       if (loaderLoad(s)) {
-        warehouse.getWorkerManager().getLoader(getName(s)).load();
+        warehouse.getWorkerManager().getLoader(getName(s)).finish();
       }
       if (replenish(s)) {
         if (warehouse.getWorkerManager().getReplenisher(getName(s)) == null) {

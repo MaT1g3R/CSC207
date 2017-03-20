@@ -15,7 +15,7 @@ public class Truck {
    * The four pallets are represented like this in each level: FRONTLEFT
    * BACKLEFT FRONTRIGHT BACKRIGHT
    */
-  private ArrayList<ArrayList<int[]>> cargo = new ArrayList<>();
+  private ArrayList<ArrayList<String[]>> cargo = new ArrayList<>();
   private int currReqId;
 
   /**
@@ -39,12 +39,14 @@ public class Truck {
 
   /**
    * Adds pallets to an appropriate location on the Truck.
-   * @param reqId the id for the picking request
+   *
+   * @param reqId       the id for the picking request
    * @param frontPallet The pallet containing the four front SKU's
    * @param backPallet  The pallet containing the four rear SKU's
    * @return if the cargo is loaded
    */
-  public boolean addCargo(int[] frontPallet, int[] backPallet, int reqId) {
+  public boolean addCargo(String[] frontPallet, String[] backPallet,
+      int reqId) {
     if (reqId == currReqId && !this.isFull()) {
       if (!addToRight) {
         this.cargo.add(currentLevel, new ArrayList<>());

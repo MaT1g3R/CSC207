@@ -35,7 +35,7 @@ public class Replenisher {
    *
    * @param sku the sku to be replenished
    */
-  public void replenish(int sku) {
+  public void replenish(String sku) {
     if (worksAt.getToBeReplenished().contains(sku)) {
       System.out.println("Fascia of SKU " + String.valueOf(sku) + " has been "
           + "replenished.");

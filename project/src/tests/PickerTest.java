@@ -42,18 +42,18 @@
 //  }
 //
 //  @Test
-//  public void ready() throws Exception {
+//  public void tryReady() throws Exception {
 //    resetPrint();
-//    String displayString = "Picker Donald Trump is ready, it will go to "
+//    String displayString = "Picker Donald Trump is tryReady, it will go to "
 //        + "locations:\nA,0,0,0\nA,0,0,1\nA,0,0,2\nA,0,0,3\nA,0,1,0\nA,0,1,1\nA,0,1,2\nA,0,1,3"
 //        + "\n\r\n";
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    assertEquals(displayString, printStr.toString());
 //  }
 //
 //  @Test
 //  public void getScanOrder() throws Exception {
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    assertEquals(theDonald.getScanOrder(), new LinkedList<Integer>(Arrays.asList(1, 2, 3,
 //        4, 5, 6, 7, 8)));
 //
@@ -61,7 +61,7 @@
 //
 //  @Test
 //  public void incorrectScan() throws Exception {
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    resetPrint();
 //    theDonald.scan(4);
 //    String displayString = "A fascia of SKU 4 was taken.\r\n"
@@ -72,7 +72,7 @@
 //
 //  @Test
 //  public void correctScan() throws Exception {
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    resetPrint();
 //    theDonald.scan(1);
 //    String displayString = "A fascia of SKU 1 was taken.\r\n"
@@ -85,7 +85,7 @@
 //
 //  @Test
 //  public void goToMarshallIncorrect() throws Exception { //If they go when they shouldn't
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    resetPrint();
 //    theDonald.goToMarshall();
 //
@@ -97,7 +97,7 @@
 //
 //  @Test
 //  public void goToMarshallCorrect() throws Exception {
-//    theDonald.ready();
+//    theDonald.tryReady();
 //    theDonald.scan(1);
 //    theDonald.scan(2);
 //    theDonald.scan(3);

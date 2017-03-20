@@ -8,7 +8,7 @@ package warehouse;
 
 public class Order {
 
-  private int[] skus = new int[2];
+  private String[] skus = new String[2];
   private String colour;
   private String model;
 
@@ -32,7 +32,7 @@ public class Order {
    *
    * @return Array of 2 ints, the SKU number of the front object, then the back.
    */
-  public int[] getSkus() {
+  public String[] getSkus() {
     return skus;
   }
 

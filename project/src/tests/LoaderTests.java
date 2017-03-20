@@ -62,8 +62,8 @@
 //  @Test
 //  public void testReady() {
 //    resetOutput();
-//    loader.ready();
-//    assertEquals("Loader Joe is ready to load.\r\n", outContent.toString());
+//    loader.tryReady();
+//    assertEquals("Loader Joe is tryReady to load.\r\n", outContent.toString());
 //  }
 //
 //  @Test
@@ -84,7 +84,7 @@
 //
 //  @Test
 //  public void testGoodLoad() {
-//    loader.ready();
+//    loader.tryReady();
 //    resetOutput();
 //    for (int i = 0; i < 8; i++) {
 //      loader.addScanCount();
@@ -100,12 +100,12 @@
 //    resetOutput();
 //    pick = new PickingRequest(orders, 0);
 //    warehouse.sendToLoading(pick, frontPal, backPal);
-//    loader.ready();
+//    loader.tryReady();
 //    for (int i = 0; i < 8; i++) {
 //      loader.addScanCount();
 //    }
 //    loader.load();
-//    assertEquals("Loader Joe is ready to load.\n"
+//    assertEquals("Loader Joe is tryReady to load.\n"
 //            + "Loader Joe loaded picking request 0\n",
 //        outContent.toString());
 //  }

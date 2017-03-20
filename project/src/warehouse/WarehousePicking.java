@@ -9,11 +9,11 @@ public class WarehousePicking {
    * @param skuTranslator the skuTranslator
    * @return an ArrayList containing the locations of the SKU's.
    */
-  public static ArrayList<String> optimize(ArrayList<Integer> skus,
+  public static ArrayList<String> optimize(ArrayList<String> skus,
       SkuTranslator skuTranslator) {
     ArrayList<String> locations = new ArrayList<>();
 
-    for (int sku : skus) {
+    for (String sku : skus) {
       locations.add(skuTranslator.getLocation(sku));
     }
     return locations;

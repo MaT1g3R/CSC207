@@ -1,6 +1,5 @@
 package warehouse;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,9 +8,9 @@ import java.util.LinkedList;
 public class Warehouse {
 
   private final int maxStock;
-  private HashMap<Integer, Integer> inventory = new HashMap<>();
+  private HashMap<String, Integer> inventory = new HashMap<>();
   private ArrayList<Truck> trucks = new ArrayList<>();
-  private LinkedList<Integer> toBeReplenished = new LinkedList<>();
+  private LinkedList<String> toBeReplenished = new LinkedList<>();
   private PickingRequestManager pickingRequestManager;
   private WorkerManager workerManager;
   private FileSystem fileSystem;
@@ -21,13 +20,14 @@ public class Warehouse {
 
   /**
    * Initialize a new warehouse.
-   * @param fileSystem the file system it uses
-   * @param skuTranslator the skuTranslator it uses
+   *
+   * @param fileSystem            the file system it uses
+   * @param skuTranslator         the skuTranslator it uses
    * @param pickingRequestManager the pickingRequestManager it uses.
-   * @param workerManager the workerManager it uses.
-   * @param warehouseFile the file path to read inventory from.
-   * @param outFile the output file dir.
-   * @param max the max stock level.
+   * @param workerManager         the workerManager it uses.
+   * @param warehouseFile         the file path to read inventory from.
+   * @param outFile               the output file dir.
+   * @param max                   the max stock level.
    */
   public Warehouse(
       FileSystem fileSystem,
@@ -53,7 +53,7 @@ public class Warehouse {
    * Set the stock levels from the initial file.
    */
   private void setInventory() {
-    for (int sku : skuTranslator.getAllSku()) {
+    for (String sku : skuTranslator.getAllSku()) {
       inventory.put(sku, maxStock);
     }
     if (!fileSystem.getFileContent(warehouseFile).isEmpty()) {
@@ -71,7 +71,7 @@ public class Warehouse {
    *
    * @param sku the sku of the facsia to be added
    */
-  public void addFacsia(int sku) {
+  public void addFacsia(String sku) {
     this.inventory.put(sku, this.inventory.get(sku) + 25);
   }
 
@@ -82,10 +82,10 @@ public class Warehouse {
    *
    * @param sku the sku being removed
    */
-  public void removeFascia(int sku) {
+  public void removeFascia(String sku) {
     if (inventory.get(sku) < 1) {
       System.out.println(
-          "An attempt of trying to remove fascia of SKU " + String.valueOf(sku)
+          "An attempt of trying to remove fascia of SKU " + sku
               + " from an empty rack was made");
     } else {
       inventory.put(sku, inventory.get(sku) - 1);
@@ -100,9 +100,10 @@ public class Warehouse {
 
   /**
    * Add a truck to the warehouse.
+   *
    * @param truck the truck to be added.
    */
-  public void addTruck(Truck truck){
+  public void addTruck(Truck truck) {
     trucks.add(truck);
   }
 
@@ -125,7 +126,7 @@ public class Warehouse {
    *
    * @return toBeReplenished
    */
-  public LinkedList<Integer> getToBeReplenished() {
+  public LinkedList<String> getToBeReplenished() {
     return toBeReplenished;
   }
 
@@ -152,13 +153,13 @@ public class Warehouse {
    */
   public void outPutResult() {
     ArrayList<String> finalCsv = new ArrayList<>();
-    for (int sku : this.inventory.keySet()) {
+    for (String sku : this.inventory.keySet()) {
       if (inventory.get(sku) < 30) {
         finalCsv.add(skuTranslator.getLocation(sku) + "," + String
             .valueOf(inventory.get(sku)));
       }
     }
-    this.fileSystem.setWritingFile(this.outFile + File.separator + "final"
+    this.fileSystem.setWritingFile(outFile + "final"
         + ".csv", finalCsv);
     this.fileSystem.writeAll();
   }
@@ -178,7 +179,7 @@ public class Warehouse {
    * @param order the order to be logged
    */
   public void logLoading(String order) {
-    fileSystem.getWritingFileForEdit(outFile + File.separator + "orders"
+    fileSystem.getWritingFileForEdit(outFile + "orders"
         + ".csv").add(order);
   }
 }

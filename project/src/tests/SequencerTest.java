@@ -101,7 +101,7 @@
 //    warehouse.sendToMarshalling(pickreq);
 //    warehouse.sendToMarshalling(pickreq2);
 //
-//    sequencer.ready();
+//    sequencer.tryReady();
 //    sequencer.setToBeScanned(scanOrder);
 //  }
 //
@@ -161,7 +161,7 @@
 //    sequencer.setCurrPickingReq(newPick);
 //    sequencer.sequence();
 //
-//    loader.ready();
+//    loader.tryReady();
 //    PickingRequest expected = loader.getCurrPickingReq();
 //
 //    Assert.assertEquals(newPick, expected);

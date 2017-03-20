@@ -1,16 +1,17 @@
 package warehouse;
 
 import java.util.LinkedList;
+import java.util.Observable;
 
 /**
  * A generic worker class.
  *
  * @author Andrew
  */
-abstract class Worker {
+abstract class Worker extends Observable {
 
   private String name;
-  private LinkedList<Integer> toBeScanned = new LinkedList<>();
+  private LinkedList<String> toBeScanned = new LinkedList<>();
   private Warehouse worksAt;
   private PickingRequest currPickingReq;
   private int scanCount = 0;
@@ -20,6 +21,7 @@ abstract class Worker {
     this.name = name;
     this.worksAt = worksAt;
     this.pickingRequestManager = this.worksAt.getPickingRequestManager();
+    addObserver(worksAt.getWorkerManager());
   }
 
   /**
@@ -28,14 +30,25 @@ abstract class Worker {
    *
    * @return The expected order that the worker should scan in.
    */
-  public LinkedList<Integer> getScanOrder() {
+  public LinkedList<String> getScanOrder() {
     return new LinkedList<>(currPickingReq.getProperSkus());
   }
 
   /**
-   * The action for a worker being ready.
+   * The action for a worker trying to ready.
    */
-  abstract void ready();
+  public void tryReady() {
+    setChanged();
+    notifyObservers(true);
+  }
+
+  /**
+   * The action for a worker being finished.
+   */
+  public void finish() {
+    setChanged();
+    notifyObservers(false);
+  }
 
   /**
    * Sets the current picking request for this worker.
@@ -53,19 +66,18 @@ abstract class Worker {
    * @param expected the expected sku to match up with the sku being scanned.
    * @return true if the scan matches, else returns false.
    */
-  public boolean scanResult(int sku, int expected) {
+  public boolean scanResult(String sku, String expected) {
     System.out.println(this.getClass().getSimpleName() + " " + name + " "
         + "preformed a scan action!");
-    if (sku == expected) {
+    if (sku.equals(expected)) {
       System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " matched with"
+          .println("Scan of SKU " + sku + " matched with"
               + " the expected result");
       return true;
     } else {
       System.out
-          .println("Scan of SKU " + String.valueOf(sku) + " did not match "
-              + "with the expected result of SKU " + String
-              .valueOf(expected));
+          .println("Scan of SKU " + sku + " did not match "
+              + "with the expected result of SKU " + expected);
       return false;
     }
   }
@@ -75,7 +87,7 @@ abstract class Worker {
    *
    * @return the expected sku.
    */
-  private int expected() {
+  private String expected() {
     return toBeScanned.pop();
   }
 
@@ -84,7 +96,7 @@ abstract class Worker {
    *
    * @param sku the sku being scanned.
    */
-  public void scan(int sku) {
+  public void scan(String sku) {
     if (getCurrPickingReq() != null) {
       if (!scanResult(sku, expected())) {
         getWorksAt().getPickingRequestManager()
@@ -123,7 +135,7 @@ abstract class Worker {
    *
    * @return the sku's to be scanned.
    */
-  public LinkedList<Integer> getToBeScanned() {
+  public LinkedList<String> getToBeScanned() {
     return toBeScanned;
   }
 
@@ -132,7 +144,7 @@ abstract class Worker {
    *
    * @param scanOrder sets the order that the sku's should be in.
    */
-  public void setToBeScanned(LinkedList<Integer> scanOrder) {
+  public void setToBeScanned(LinkedList<String> scanOrder) {
     toBeScanned = scanOrder;
   }
 
@@ -175,6 +187,16 @@ abstract class Worker {
    */
   public PickingRequestManager getPickingRequestManager() {
     return pickingRequestManager;
+  }
+
+  /**
+   * An event for rescan.
+   */
+  public void rescan() {
+    resetScanCount();
+    setToBeScanned(getScanOrder());
+    System.out.println(getClass().getSimpleName() + " " + getName() + " "
+        + "restarted its scan process.");
   }
 
 }

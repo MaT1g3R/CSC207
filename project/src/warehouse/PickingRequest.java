@@ -46,8 +46,8 @@ public class PickingRequest extends Observable implements
    *
    * @return : The skus as an IntegerArray list.
    */
-  public LinkedList<Integer> getProperSkus() {
-    LinkedList<Integer> res = new LinkedList<>();
+  public LinkedList<String> getProperSkus() {
+    LinkedList<String> res = new LinkedList<>();
     for (Order o : orders) {
       res.add(o.getSkus()[0]);
     }

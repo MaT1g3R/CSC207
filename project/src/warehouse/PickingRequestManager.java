@@ -17,21 +17,22 @@ public class PickingRequestManager implements Observer {
       LinkedList<>();
   private LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
   private LinkedList<PickingRequest> loadingArea = new LinkedList<>();
-  private HashMap<Integer, int[][]> pallets = new HashMap<>();
+  private HashMap<Integer, String[][]> pallets = new HashMap<>();
   private LinkedList<Order> orders = new LinkedList<>();
   private int pickingReqId = 0;
   private Warehouse warehouse;
 
   /**
    * A setter for this.warehouse.
+   *
    * @param warehouse the warehouse to set to
    */
-  public void setWarehouse(Warehouse warehouse){
+  public void setWarehouse(Warehouse warehouse) {
     this.warehouse = warehouse;
   }
 
   /**
-   * This method is called whenever the observed object is changed.
+   * This method is called whenever the observed picking request is changed.
    *
    * @param request the observable object.
    * @param arg     an argument passed to the notifyObservers
@@ -112,7 +113,7 @@ public class PickingRequestManager implements Observer {
    * @param pallet the front and back pallets.
    * @param id     the picking request id.
    */
-  public void putPalletes(int[][] pallet, int id) {
+  public void putPalletes(String[][] pallet, int id) {
     this.pallets.put(id, pallet);
   }
 
@@ -121,9 +122,9 @@ public class PickingRequestManager implements Observer {
    *
    * @param id the picking request id.
    */
-  public int[][] popPallets(int id) {
+  public String[][] popPallets(int id) {
     if (pallets.containsKey(id)) {
-      int[][] result = pallets.get(id);
+      String[][] result = pallets.get(id);
       pallets.remove(id);
       return result;
     } else {
