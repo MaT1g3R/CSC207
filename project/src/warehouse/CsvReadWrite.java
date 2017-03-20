@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class reads and writes to files.
@@ -50,51 +49,6 @@ public final class CsvReadWrite {
 
   }
 
-  /**
-   * Read the file into an ArrayList, where each line is split into an
-   * ArrayList by commas.
-   *
-   * @param fileName The file name
-   * @return An ArrayList of ArrayList, representing the file.
-   */
-  public static ArrayList<ArrayList<String>> readAsArrays(
-      final String fileName) {
-    try {
-      ArrayList<ArrayList<String>> result = new ArrayList<>();
-      Path pathToFile = Paths.get(fileName);
-
-      BufferedReader br = Files.newBufferedReader(pathToFile);
-      // read the first line from the text file
-      String line = br.readLine();
-
-      // loop until all lines are read
-      while (line != null) {
-        ArrayList<String> lineList = new ArrayList<>(
-            Arrays.asList(line.split(",")));
-        result.add(lineList);
-        line = br.readLine();
-      }
-      return result;
-    } catch (IOException | NullPointerException ex) {
-      return null;
-    }
-  }
-
-  /**
-   * This appends a line to the file.
-   *
-   * @param content  The string to be appended
-   * @param fileName The name of the file
-   */
-  public static void addLine(String content, final String fileName) {
-    try {
-      FileWriter output = new FileWriter(fileName, true);
-      output.append(content + "\n");
-      output.close();
-    } catch (IOException error) {
-      System.out.println("Cannot read the file");
-    }
-  }
 
   /**
    * This overrides the file.

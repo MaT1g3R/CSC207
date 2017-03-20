@@ -66,22 +66,6 @@ public class CsvReadWriteTest {
     Assert.assertEquals(defaultData, result);
   }
 
-  /**
-   * Test for the addLine method.
-   *
-   * @throws IOException File not found, probably
-   */
-  @Test
-  public void addLine() throws IOException {
-    CsvReadWrite.addLine("New Line!", PATH);
-    ArrayList<String> result = CsvReadWrite.readCsv(PATH);
-    ArrayList<String> expected = new ArrayList<>();
-    for (String s : defaultData) {
-      expected.add(s);
-    }
-    expected.add("New Line!");
-    Assert.assertEquals(expected, result);
-  }
 
   /**
    * Test for the overWrite method.
@@ -116,18 +100,4 @@ public class CsvReadWriteTest {
     file.delete();
   }
 
-  /**
-   * Test for reading as arrays.
-   *
-   * @throws IOException File not found, probably
-   */
-  @Test
-  public void readAsArrays() throws IOException {
-    ArrayList<ArrayList<String>> expected = new ArrayList<>();
-    for (String s : defaultData) {
-      expected.add(new ArrayList<>(Arrays.asList(s.split(","))));
-    }
-    ArrayList<ArrayList<String>> result = CsvReadWrite.readAsArrays(PATH);
-    Assert.assertEquals(expected, result);
-  }
 }
