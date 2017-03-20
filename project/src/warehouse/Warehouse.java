@@ -122,15 +122,6 @@ public class Warehouse {
   }
 
   /**
-   * A getter for toBeReplenished.
-   *
-   * @return toBeReplenished
-   */
-  public LinkedList<String> getToBeReplenished() {
-    return toBeReplenished;
-  }
-
-  /**
    * A getter for PickingRequestManager.
    *
    * @return PickingRequestManager
@@ -181,5 +172,14 @@ public class Warehouse {
   public void logLoading(String order) {
     fileSystem.getWritingFileForEdit(outFile + "orders"
         + ".csv").add(order);
+  }
+
+  /**
+   * Return and remove the first element of toBeReplenished.
+   *
+   * @return first element of toBeReplenished
+   */
+  public String popReplenished() {
+    return toBeReplenished.isEmpty() ? null : toBeReplenished.pop();
   }
 }

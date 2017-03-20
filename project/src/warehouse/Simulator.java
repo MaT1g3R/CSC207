@@ -19,6 +19,8 @@ public class Simulator {
    */
   private ArrayList<String> eventList;
 
+  private WorkerManager workerManager;
+  private PickingRequestManager pickingRequestManager;
 
   /**
    * This initialize a simulator object.
@@ -42,9 +44,9 @@ public class Simulator {
         fileSystem.getFileContent(traversalFilePath),
         fileSystem.getFileContent(translationFilePath));
 
-    WorkerManager workerManager = new WorkerManager();
+    workerManager = new WorkerManager();
 
-    PickingRequestManager pickingRequestManager = new PickingRequestManager();
+    pickingRequestManager = new PickingRequestManager();
 
     warehouse = new Warehouse(
         fileSystem, skuTranslator, pickingRequestManager, workerManager,
@@ -54,6 +56,7 @@ public class Simulator {
     pickingRequestManager.setWarehouse(warehouse);
     warehouse.addTruck(new Truck(0));
   }
+
 
   /**
    * Check if the string is for adding an order.
@@ -66,105 +69,44 @@ public class Simulator {
   }
 
   /**
-   * Check if the string is for tryReady a picker.
+   * Check if the string is for a worker being ready.
    *
    * @param s the string to be checked
-   * @return true if it's tryReady a picker
+   * @return true if it's a worker trying to ready.
    */
-  private boolean pickerReady(String s) {
-    return Pattern.matches("Picker \\w+ ready", s);
+  private boolean workerReady(String s) {
+    return Pattern.matches("\\w+ \\w+ ready", s);
   }
 
   /**
-   * Check if the string is for picker pick.
+   * Check if the string is for worker to scan.
    *
    * @param s the string to be checked
-   * @return true if it's picker pick
+   * @return true if it's worker scan
    */
-  private boolean pickerPick(String s) {
-    return Pattern.matches("Picker \\w+ pick [0-9]+", s);
+  private boolean workerScan(String s) {
+    return Pattern.matches("\\w+ \\w+ scan [0-9]+", s);
   }
 
   /**
-   * Check if the string is for picker to marshall.
+   * Check if the string is for worker to finish.
    *
    * @param s the string to be checked
-   * @return true if it's picker to marshall
+   * @return true if it's worker finish
    */
-  private boolean pickerMarshall(String s) {
-    return Pattern.matches("Picker \\w+ to marshalling", s);
+  private boolean workerFinish(String s) {
+    return Pattern.matches("\\w+ \\w+ finish", s);
   }
 
   /**
-   * Check if the string is for tryReady a sequencer.
+   * Check if the string is for worker to rescan.
    *
-   * @param s the string to be checked
-   * @return true if it's tryReady a sequencer
+   * @param s the event string
+   * @return true if it's worker to rescan
    */
-  private boolean sequencerReady(String s) {
-    return Pattern.matches("Sequencer \\w+ ready", s);
+  private boolean workerRescan(String s) {
+    return Pattern.matches("\\w+ \\w+ rescan", s);
   }
-
-  /**
-   * Check if the string is for sequencer scan.
-   *
-   * @param s the string to be checked
-   * @return true if it's sequencer scan
-   */
-  private boolean sequencerScan(String s) {
-    return Pattern.matches("Sequencer \\w+ scan [0-9]+", s);
-  }
-
-  /**
-   * Check if the string is for sequencer sequence.
-   *
-   * @param s the string to be checked
-   * @return true if it's sequencer sequence
-   */
-  private boolean sequencerSequence(String s) {
-    return Pattern.matches("Sequencer \\w+ sequence", s);
-  }
-
-  /**
-   * Check if the string is for tryReady a loader.
-   *
-   * @param s the string to be checked
-   * @return true if it's tryReady a loader
-   */
-  private boolean loaderReady(String s) {
-    return Pattern.matches("Loader \\w+ ready", s);
-  }
-
-  /**
-   * Check if the string is for loader scan.
-   *
-   * @param s the string to be checked
-   * @return true if it's loader scan
-   */
-  private boolean loaderScan(String s) {
-    return Pattern.matches("Loader \\w+ scan [0-9]+", s);
-  }
-
-  /**
-   * Check if the string is for loader load.
-   *
-   * @param s the string to be checked
-   * @return true if it's loader load
-   */
-  private boolean loaderLoad(String s) {
-    return Pattern.matches("Loader \\w+ load", s);
-  }
-
-  /**
-   * Check if the string is for replenish.
-   *
-   * @param s the string to be checked
-   * @return true if it's replenish
-   */
-  private boolean replenish(String s) {
-    return Pattern.matches("Replenisher \\w+ replenish [0-9]+", s);
-  }
-
 
   /**
    * Get the name of the worker from an event string.
@@ -186,6 +128,16 @@ public class Simulator {
     return s.split("\\s")[3];
   }
 
+  /**
+   * Get the job of a worker.
+   *
+   * @param s the event string
+   * @return the job of the worker
+   */
+  private String getJob(String s) {
+    return s.split("\\s")[0];
+  }
+
 
   /**
    * The main event loop.
@@ -193,56 +145,102 @@ public class Simulator {
   public void run() {
     for (String s : eventList) {
       if (isOrder(s)) {
-        warehouse.getPickingRequestManager().addOrder(s);
+        pickingRequestManager.addOrder(s);
+      } else if (workerReady(s)) {
+        createOrReadyWorker(getJob(s), getName(s));
+      } else if (workerScan(s)) {
+        scanHelper(getJob(s), getName(s), getSku(s));
+      } else if (workerFinish(s)) {
+        finishHelper(getJob(s), getName(s));
+      } else if (workerRescan(s)) {
+        rescanHelper(getJob(s), getName(s));
       }
-      if (pickerReady(s)) {
-        if (warehouse.getWorkerManager().getPicker(s) == null) {
-          warehouse.getWorkerManager().addPicker(new Picker(getName(s),
-              warehouse));
-        }
-        warehouse.getWorkerManager().getPicker(getName(s)).tryReady();
-      }
-      if (pickerPick(s)) {
-        warehouse.getWorkerManager().getPicker(getName(s)).scan(getSku(s));
-      }
-      if (pickerMarshall(s)) {
-        warehouse.getWorkerManager().getPicker(getName(s)).finish();
-      }
-      if (sequencerReady(s)) {
-        if (warehouse.getWorkerManager().getSequencer(getName(s)) == null) {
-          warehouse.getWorkerManager()
-              .addSequencer(new Sequencer(getName(s), warehouse));
-        }
-        warehouse.getWorkerManager().getSequencer(getName(s)).tryReady();
-      }
-      if (sequencerScan(s)) {
-        warehouse.getWorkerManager().getSequencer(getName(s)).scan(getSku(s));
-      }
-      if (sequencerSequence(s)) {
-        warehouse.getWorkerManager().getSequencer(getName(s)).finish();
-      }
-      if (loaderReady(s)) {
-        if (warehouse.getWorkerManager().getLoader(getName(s)) == null) {
-          warehouse.getWorkerManager()
-              .addLoader(new Loader(getName(s), warehouse));
-        }
-        warehouse.getWorkerManager().getLoader(getName(s)).tryReady();
-      }
-      if (loaderScan(s)) {
-        warehouse.getWorkerManager().getLoader(getName(s)).scan(getSku(s));
-      }
-      if (loaderLoad(s)) {
-        warehouse.getWorkerManager().getLoader(getName(s)).finish();
-      }
-      if (replenish(s)) {
-        if (warehouse.getWorkerManager().getReplenisher(getName(s)) == null) {
-          warehouse.getWorkerManager()
-              .addReplenisher(new Replenisher(getName(s), warehouse));
-        }
-        warehouse.getWorkerManager().getReplenisher(getName(s))
-            .replenish(getSku(s));
-      }
+      warehouse.outPutResult();
     }
-    warehouse.outPutResult();
+  }
+
+
+  /**
+   * A helper to check for worker and ready it.
+   *
+   * @param job  the job of the worker
+   * @param name the name of the worker
+   */
+
+  private void createOrReadyWorker(String job, String name) {
+    if (job.equals(Picker.class.getSimpleName())) {
+      if (workerManager.getPicker(name) == null) {
+        workerManager.addPicker(new Picker(name, warehouse));
+      }
+      workerManager.getPicker(name).tryReady();
+    } else if (job.equals(Sequencer.class.getSimpleName())) {
+      if (workerManager.getSequencer(name) == null) {
+        workerManager.addSequencer(new Sequencer(name, warehouse));
+      }
+      workerManager.getSequencer(name).tryReady();
+    } else if (job.equals(Loader.class.getSimpleName())) {
+      if (workerManager.getLoader(name) == null) {
+        workerManager.addLoader(new Loader(name, warehouse));
+      }
+      workerManager.getLoader(name).tryReady();
+    } else if (job.equals(Replenisher.class.getSimpleName())) {
+      if (workerManager.getReplenisher(name) == null) {
+        workerManager.addReplenisher(new Replenisher(name, warehouse));
+      }
+      workerManager.getReplenisher(name).ready();
+    }
+  }
+
+  /**
+   * A helper method to deal with scanning.
+   *
+   * @param job  the job of the worker.
+   * @param name the name of the worker.
+   * @param sku  the sku the worker scanned.
+   */
+  private void scanHelper(String job, String name, String sku) {
+    if (job.equals(Picker.class.getSimpleName())) {
+      workerManager.getPicker(name).scan(sku);
+    } else if (job.equals(Sequencer.class.getSimpleName())) {
+      workerManager.getSequencer(name).scan(sku);
+    } else if (job.equals(Loader.class.getSimpleName())) {
+      workerManager.getLoader(name).scan(sku);
+    } else if (job.equals(Replenisher.class.getSimpleName())) {
+      workerManager.getReplenisher(name).scan(sku);
+    }
+  }
+
+  /**
+   * A helper method to deal with finishing.
+   *
+   * @param job  the job of the worker
+   * @param name the name of the worker
+   */
+  private void finishHelper(String job, String name) {
+    if (job.equals(Picker.class.getSimpleName())) {
+      workerManager.getPicker(name).finish();
+    } else if (job.equals(Sequencer.class.getSimpleName())) {
+      workerManager.getSequencer(name).finish();
+    } else if (job.equals(Loader.class.getSimpleName())) {
+      workerManager.getLoader(name).finish();
+    } else if (job.equals(Replenisher.class.getSimpleName())) {
+      workerManager.getReplenisher(name).finish();
+    }
+  }
+
+  /**
+   * A helper to deal with rescan.
+   *
+   * @param job  the job of the worker.
+   * @param name the name of the worker.
+   */
+  private void rescanHelper(String job, String name) {
+    if (job.equals(Picker.class.getSimpleName())) {
+      workerManager.getPicker(name).rescan();
+    } else if (job.equals(Sequencer.class.getSimpleName())) {
+      workerManager.getSequencer(name).rescan();
+    } else if (job.equals(Loader.class.getSimpleName())) {
+      workerManager.getLoader(name).rescan();
+    }
   }
 }
