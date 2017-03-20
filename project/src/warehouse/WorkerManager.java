@@ -106,6 +106,11 @@ public class WorkerManager implements Observer {
     if (worker.getCurrPickingReq() == null) {
       System.out.println(job + " " + name + " tried to finish its job with no"
           + " picking request, finish action aborted.");
+    } else if (worker.getCurrPickingReq() != null && worker.getScanCount() != 8){
+      worker.getCurrPickingReq().updateLocation(Location.pick);
+      System.out.println(job + name
+              + " tried to go to finish its job with less than 8 skus scanned, "
+              + "the picking request has been sent back to be picked again.");
     } else {
       if (worker instanceof Loader) {
         loaderFinish((Loader) worker);
@@ -126,16 +131,9 @@ public class WorkerManager implements Observer {
    * @param picker the finished picker.
    */
   private void pickerFinish(Picker picker) {
-    if (picker.getScanCount() == 8) {
       picker.getCurrPickingReq().updateLocation(Location.marshall);
       System.out.println(
           "Picker " + picker.getName() + " has gone to marshalling area.");
-    } else {
-      picker.getCurrPickingReq().updateLocation(Location.pick);
-      System.out.println("Picker " + picker.getName()
-          + " tried to go to marshalling area with less than 8 fascias picked, "
-          + "the picking request has been sent back to be picked again.");
-    }
   }
 
   /**
@@ -144,7 +142,6 @@ public class WorkerManager implements Observer {
    * @param sequencer the finished sequencer.
    */
   private void sequencerFinish(Sequencer sequencer) {
-    if (sequencer.getScanCount() == 8) {
       LinkedList<String> skus = sequencer.getCurrPickingReq().getProperSkus();
       String[] frontPallet = new String[4];
       String[] backPallet = new String[4];
@@ -159,12 +156,6 @@ public class WorkerManager implements Observer {
       System.out
           .println("The sequencer " + sequencer.getName() + " has finished "
               + "sequencing and sent the picking request for loading.");
-    } else {
-      sequencer.getCurrPickingReq().updateLocation(Location.pick);
-      System.out.println("The sequencer tried to send an incomplete picking "
-          + "request for loading, the picking request was sent to be re "
-          + "picked instead.");
-    }
   }
 
   /**
@@ -173,7 +164,6 @@ public class WorkerManager implements Observer {
    * @param loader the finished loader.
    */
   private void loaderFinish(Loader loader) {
-    if (loader.getScanCount() == 8) {
       Truck truck = loader.getWorksAt().getFirstNonFullTruck();
       if (truck.addCargo(loader.getFrontPallet(), loader.getBackPallet(), loader
           .getCurrPickingReq().getId()
@@ -196,12 +186,6 @@ public class WorkerManager implements Observer {
                 new String[][]{loader.getFrontPallet(), loader.getBackPallet()},
                 loader.getCurrPickingReq().getId());
       }
-    } else {
-      loader.getCurrPickingReq().updateLocation(Location.pick);
-      System.out.println("The loader tried to load an incomplete picking "
-          + "request, the picking request was sent to be re "
-          + "picked instead.");
-    }
   }
 
   /**
