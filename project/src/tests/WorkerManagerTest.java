@@ -1,13 +1,11 @@
 package tests;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by umi on 21/03/17.
+ * Unit test for WorkerManager class.
  */
 public class WorkerManagerTest {
 
