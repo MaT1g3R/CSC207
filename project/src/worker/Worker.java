@@ -11,7 +11,7 @@ import warehousefloor.Location;
  *
  * @author Andrew
  */
-abstract class Worker extends Observable {
+public abstract class Worker extends Observable {
 
   private String name;
   private LinkedList<String> toBeScanned = new LinkedList<>();

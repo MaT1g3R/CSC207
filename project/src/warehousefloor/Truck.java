@@ -73,7 +73,7 @@ public class Truck {
    * @return Boolean of whether the truck is full.
    */
 
-  boolean isFull() {
+  public boolean isFull() {
     if (cargo.size() < 10) {
       return false;
     } else if (cargo.get(9).size() < 4) {

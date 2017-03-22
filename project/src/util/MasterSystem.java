@@ -27,7 +27,7 @@ public class MasterSystem {
    * @param fileSystem            the fileSystem.
    * @param skuTranslator         the skuTranslator.
    */
-  void setAll(
+  public void setAll(
       WarehouseFloor warehouseFloor,
       WorkerManager workerManager,
       PickingRequestManager pickingRequestManager,

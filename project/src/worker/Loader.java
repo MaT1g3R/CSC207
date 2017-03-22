@@ -10,9 +10,7 @@ import warehousefloor.Truck;
  *
  * @author Chaitanya
  */
-
 public class Loader extends Worker {
-
 
   private String[] frontPallet = new String[4];
   private String[] backPallet = new String[4];

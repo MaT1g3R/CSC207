@@ -16,7 +16,6 @@ public class PickingRequest extends Observable implements
 
   private ArrayList<Order> orders;
   private int id;
-  private Location location;
 
   /**
    * Constructor, which initializes given parameters.
@@ -28,7 +27,6 @@ public class PickingRequest extends Observable implements
       PickingRequestManager manager) {
     this.orders = orders;
     this.id = id;
-    this.location = Location.pick;
     addObserver(manager);
   }
 
@@ -87,8 +85,7 @@ public class PickingRequest extends Observable implements
    * @param location the location to set to.
    */
   public void updateLocation(Location location) {
-    this.location = location;
     setChanged();
-    notifyObservers(this.location);
+    notifyObservers(location);
   }
 }
