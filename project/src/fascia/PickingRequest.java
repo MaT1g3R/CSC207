@@ -18,7 +18,6 @@ public class PickingRequest extends Observable implements
   private int id;
   private Location location;
 
-
   /**
    * Constructor, which initializes given parameters.
    *
@@ -75,7 +74,7 @@ public class PickingRequest extends Observable implements
    *
    * @param request the request to be compared.
    * @return a negative integer, zero, or a positive integer as this object is
-   *        less than, equal to, or greater than the specified object.
+   * less than, equal to, or greater than the specified object.
    */
   @Override
   public int compareTo(PickingRequest request) {

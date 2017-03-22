@@ -8,5 +8,5 @@ package warehousefloor;
 public enum Location {
   pick,
   marshall,
-  load,
+  load
 }
