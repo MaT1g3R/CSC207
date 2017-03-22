@@ -19,13 +19,19 @@ public class Order {
    *
    * @param orderAsString The Order in the format "Order Colour Model"
    * @param skuTranslator the skuTranslator
+   * @throws UnsupportedOperationException when the skuTranslator returned null
+   *                                       for one of the getSku calls.
    */
-  public Order(String orderAsString, SkuTranslator skuTranslator) {
+  public Order(String orderAsString, SkuTranslator skuTranslator)
+      throws UnsupportedOperationException {
     String[] orderSplit = orderAsString.split("\\s");
     colour = orderSplit[1];
     model = orderSplit[2];
     skus[0] = skuTranslator.getSku(colour, model, true);
     skus[1] = skuTranslator.getSku(colour, model, false);
+    if (skus[0] == null | skus[1] == null) {
+      throw new UnsupportedOperationException();
+    }
   }
 
 

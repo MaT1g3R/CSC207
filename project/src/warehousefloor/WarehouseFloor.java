@@ -47,10 +47,13 @@ public class WarehouseFloor {
           .getFileContent(warehouseFile)) {
         ArrayList<String> line = new ArrayList<>(Arrays.asList(s.split(",")));
         String[] location = line.subList(0, 4).toArray(new String[4]);
+        String sku = masterSystem.getSkuTranslator()
+            .getSkuFromLocation(location);
         int amount = Integer.valueOf(line.get(4));
-        this.inventory
-            .put(masterSystem.getSkuTranslator().getSkuFromLocation(location),
-                amount);
+        this.inventory.put(sku, amount);
+        if (amount <= 5) {
+          toBeReplenished.add(sku);
+        }
       }
     }
   }

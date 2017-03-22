@@ -135,7 +135,7 @@ class TestFactory {
    *
    * @return testEnviroment
    */
-  public MasterSystem getTestEnviroment() {
+  MasterSystem getTestEnviroment() {
     return this.testEnviroment();
   }
 }

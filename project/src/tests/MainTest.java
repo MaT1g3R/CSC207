@@ -1,27 +1,21 @@
 package tests;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
+import util.Main;
 
 /**
  * Unit test for Main class.
  */
 public class MainTest {
 
-  @Before
-  public void setUp() throws Exception {
-
-  }
-
-  @After
-  public void tearDown() throws Exception {
-
-  }
-
   @Test
-  public void main() throws Exception {
-
+  public void main() {
+    try {
+      String[] args = new String[]{"../events.txt"};
+      Main.main(args);
+    } catch (NullPointerException | IndexOutOfBoundsException ex) {
+      Assert.fail();
+    }
   }
-
 }

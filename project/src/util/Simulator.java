@@ -94,7 +94,7 @@ public class Simulator {
    * @return true if it's worker scan
    */
   private boolean workerScan(String s) {
-    return Pattern.matches("\\w+ \\w+ scan [0-9]+", s);
+    return Pattern.matches("\\w+ \\w+ scan \\w+", s);
   }
 
   /**
