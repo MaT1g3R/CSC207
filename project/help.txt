@@ -3,8 +3,8 @@ This tutorial assumes you have already cloned the repo and changed directory to 
 The following commands should be entered into the terminal to compile and execute the program:
 -------------------
 cd src
-javac warehouse/Main.java
-java warehouse/Main
+javac util/Main.java
+java util/Main
 -------------------
 
 After this, the program should run and automatically select files for input.

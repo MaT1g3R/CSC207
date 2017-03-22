@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import warehouse.CsvReadWrite;
+import util.CsvReadWrite;
 
 /**
  * The unit tests for the CsvReadWrite class.

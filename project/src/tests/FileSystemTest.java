@@ -7,8 +7,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import warehouse.CsvReadWrite;
-import warehouse.FileSystem;
+import util.CsvReadWrite;
+import util.FileSystem;
 
 /**
  * Tests for the FileSystem class.

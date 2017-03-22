@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
-import warehouse.CsvReadWrite;
-import warehouse.Simulator;
+import util.CsvReadWrite;
+import util.Simulator;
 
 
 /**
@@ -25,6 +25,7 @@ public class SimulatorTest {
     String translationFile = "../translation.csv";
     String traversalFile = "../traversal_table.csv";
     String outFile = "tests/";
+
     Simulator simulator = new Simulator(eventFile, warehouseFile,
         translationFile, traversalFile, outFile);
     simulator.run();
@@ -35,10 +36,17 @@ public class SimulatorTest {
         .readCsv("tests/expected_orders.csv");
     ArrayList<String> actualFinal = CsvReadWrite.readCsv("tests/final.csv");
     ArrayList<String> actualOrders = CsvReadWrite.readCsv("tests/orders.csv");
-    File finalFile = new File("tests/final.csv");
-    finalFile.delete();
-    Assert.assertTrue(expectedFinal.equals(actualFinal) && expectedOrders
-        .equals(actualOrders));
-  }
 
+    File finalFile = new File("tests/final.csv");
+    File orderFile = new File("tests/orders.csv");
+    if (!(finalFile.delete() && orderFile.delete())) {
+      Assert.fail("Something went wrong with deleting the test outputs.");
+    } else if (expectedFinal == null || expectedOrders == null || actualFinal
+        == null || actualOrders == null) {
+      Assert.fail("Something went wrong with reading the test results.");
+    } else {
+      Assert.assertTrue(expectedFinal.equals(actualFinal) && expectedOrders
+          .equals(actualOrders));
+    }
+  }
 }
