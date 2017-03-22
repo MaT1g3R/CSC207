@@ -57,7 +57,7 @@ public abstract class Worker extends Observable {
    *
    * @return The expected order that the worker should scan in.
    */
-  public LinkedList<String> getScanOrder() {
+  LinkedList<String> getScanOrder() {
     return new LinkedList<>(currPickingReq.getProperSkus());
   }
 

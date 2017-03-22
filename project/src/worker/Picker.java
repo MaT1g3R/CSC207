@@ -32,7 +32,7 @@ public class Picker extends Worker {
    */
   @Override
   void readyAction() {
-    String displayString = "";
+    StringBuilder displayString = new StringBuilder();
     ArrayList<String> toBeOptimized = new ArrayList<>();
     for (Order o : getCurrPickingReq().getOrders()) {
       toBeOptimized.add(o.getSkus()[0]);
@@ -40,11 +40,13 @@ public class Picker extends Worker {
     }
     locations = WarehousePicking
         .optimize(toBeOptimized, masterSystem.getSkuTranslator());
-    displayString += "It will go to locations:\n";
+    displayString.append("It will go to locations:\n");
     for (String loc : locations) {
-      displayString += loc + "\n";
+      displayString.append(loc);
+      displayString.append("\n");
+
     }
-    System.out.println(displayString);
+    System.out.println(displayString.toString());
   }
 
   /**
@@ -64,7 +66,7 @@ public class Picker extends Worker {
    * @return The expected scan order
    */
   @Override
-  public LinkedList<String> getScanOrder() {
+  LinkedList<String> getScanOrder() {
     LinkedList<String> res = new LinkedList<>();
     for (String location : locations) {
       String[] toBeTr = location.split(",");
