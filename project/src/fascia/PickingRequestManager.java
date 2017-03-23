@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import util.MasterSystem;
 import warehousefloor.Location;
-
 
 /**
  * A class to keep track of all PickingRequests.
@@ -23,26 +21,25 @@ public class PickingRequestManager implements Observer {
   private HashMap<Integer, String[][]> pallets = new HashMap<>();
   private LinkedList<Order> orders = new LinkedList<>();
   private int pickingReqId = 0;
-  private MasterSystem masterSystem;
-
-  public PickingRequestManager(MasterSystem masterSystem) {
-    this.masterSystem = masterSystem;
-  }
 
   /**
-   * This method is called whenever the observed picking request is changed.
+   * This method is called whenever the observed PickingRequest is changed.
    *
    * @param request the observable object.
    * @param arg     an argument passed to the notifyObservers
    */
   @Override
   public void update(Observable request, Object arg) {
+    if (!(arg instanceof Location) | !(request instanceof PickingRequest)) {
+      throw new UnsupportedOperationException();
+    }
+    PickingRequest castedRequest = (PickingRequest) request;
     if (arg == Location.pick) {
-      outStandingPickingRequests.add((PickingRequest) request);
+      outStandingPickingRequests.add(castedRequest);
     } else if (arg == Location.marshall) {
-      marshallingArea.add((PickingRequest) request);
+      marshallingArea.add(castedRequest);
     } else {
-      loadingArea.add((PickingRequest) request);
+      loadingArea.add(castedRequest);
       loadingArea.sort(PickingRequest::compareTo);
     }
   }
@@ -98,11 +95,12 @@ public class PickingRequestManager implements Observer {
   /**
    * Method for adding an order to the system.
    *
-   * @param order the order as a string to be added
+   * @param order the order to be added
    */
-  public void addOrder(String order) {
-    System.out.println(order + " has been added to the warehousefloor.");
-    orders.add(new Order(order, masterSystem.getSkuTranslator()));
+  public void addOrder(Order order) {
+    orders.add(order);
+    System.out.println("Order " + order + " has been added to the "
+        + "warehousefloor.");
   }
 
   /**

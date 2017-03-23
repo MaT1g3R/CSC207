@@ -3,6 +3,9 @@ package tests;
 import fascia.Order;
 import fascia.PickingRequest;
 import fascia.PickingRequestManager;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -118,8 +121,7 @@ class TestFactory {
 
     WorkerManager workerManager = new WorkerManager(masterSystem);
 
-    PickingRequestManager pickingRequestManager = new PickingRequestManager(
-        masterSystem);
+    PickingRequestManager pickingRequestManager = new PickingRequestManager();
 
     WarehouseFloor warehouseFloor = new WarehouseFloor(
         warehouseFile, outFile, masterSystem, 30);
@@ -137,5 +139,17 @@ class TestFactory {
    */
   MasterSystem getTestEnviroment() {
     return this.testEnviroment();
+  }
+
+  /**
+   * Supress the print stream for testing.
+   */
+  static void supressPrint() {
+    System.setOut(new PrintStream(new OutputStream() {
+      @Override
+      public void write(int num) throws IOException {
+        //Do nothing
+      }
+    }));
   }
 }

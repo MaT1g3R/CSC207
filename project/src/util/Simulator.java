@@ -1,5 +1,6 @@
 package util;
 
+import fascia.Order;
 import fascia.PickingRequestManager;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -55,8 +56,7 @@ public class Simulator {
 
     WorkerManager workerManager = new WorkerManager(masterSystem);
 
-    PickingRequestManager pickingRequestManager = new PickingRequestManager(
-        masterSystem);
+    PickingRequestManager pickingRequestManager = new PickingRequestManager();
 
     warehouseFloor = new WarehouseFloor(
         warehouseFilePath, outFilePath, masterSystem, 30);
@@ -154,7 +154,8 @@ public class Simulator {
   public void run() {
     for (String s : eventList) {
       if (isOrder(s)) {
-        masterSystem.getPickingRequestManager().addOrder(s);
+        Order order = new Order(s, masterSystem.getSkuTranslator());
+        masterSystem.getPickingRequestManager().addOrder(order);
       } else if (workerReady(s)) {
         createOrReadyWorker(getJob(s), getName(s));
       } else if (workerScan(s)) {
@@ -167,7 +168,6 @@ public class Simulator {
       warehouseFloor.outPutResult();
     }
   }
-
 
   /**
    * A helper to check for worker and ready it.

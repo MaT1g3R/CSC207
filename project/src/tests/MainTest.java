@@ -11,6 +11,7 @@ public class MainTest {
 
   @Test
   public void main() {
+    TestFactory.supressPrint();
     try {
       String[] args = new String[]{"../events.txt"};
       Main.main(args);

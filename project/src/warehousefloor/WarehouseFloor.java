@@ -74,12 +74,18 @@ public class WarehouseFloor {
    * any.
    *
    * @param sku the sku being removed
+   * @return true if the fascia is taken.
    */
-  public void removeFascia(String sku) {
+  public boolean removeFascia(String sku) {
+    if (!inventory.containsKey(sku)) {
+      System.out.println("Sku " + sku + " doesn't exist.");
+      return false;
+    }
     if (inventory.get(sku) < 1) {
       System.out.println(
           "An attempt of trying to remove fascia of SKU " + sku
               + " from an empty rack was made");
+      return false;
     } else {
       inventory.put(sku, inventory.get(sku) - 1);
       System.out.println("A fascia of SKU " + String.valueOf(sku) + " was "
@@ -89,6 +95,7 @@ public class WarehouseFloor {
       // put a replenish request in the system when the amout is <= 5
       toBeReplenished.add(sku);
     }
+    return true;
   }
 
   /**

@@ -84,13 +84,12 @@ public class Picker extends Worker {
    */
   @Override
   public void scan(String sku) {
-    if (getCurrPickingReq() != null) {
-      masterSystem.getWarehouseFloor().removeFascia(sku);
-      if (scanResult(sku, expected())) {
-        addScanCount();
-        getToBeScanned().removeFirst();
-      }
-    } else {
+    if (getCurrPickingReq() != null
+        && masterSystem.getWarehouseFloor().removeFascia(sku)
+        && scanResult(sku, expected())) {
+      addScanCount();
+      getToBeScanned().removeFirst();
+    } else if (getCurrPickingReq() == null) {
       System.out.println("Picker " + getName() + " tried to scan with no "
           + "picking order assigned. Scan action aborted.");
     }
