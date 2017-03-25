@@ -50,7 +50,7 @@ class TestFactory {
         "Order Black SES",
         "Order Black SEL"
     };
-    testEnviroment = testEnviroment();
+    testEnviroment = getTestEnviroment();
   }
 
   /**
@@ -104,7 +104,7 @@ class TestFactory {
    *
    * @return MasterSystem
    */
-  private MasterSystem testEnviroment() {
+  MasterSystem getTestEnviroment() {
     String warehouseFile = "../initial.csv";
     String translationFile = "../translation.csv";
     String traversalFile = "../traversal_table.csv";
@@ -130,15 +130,6 @@ class TestFactory {
         fileSystem, skuTranslator);
 
     return masterSystem;
-  }
-
-  /**
-   * A getter for testEnvironment.
-   *
-   * @return testEnviroment
-   */
-  MasterSystem getTestEnviroment() {
-    return this.testEnviroment();
   }
 
   /**

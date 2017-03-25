@@ -65,7 +65,11 @@ public class WarehouseFloor {
    * @param amount the amount to be added
    */
   public void addFacsia(String sku, int amount) {
-    this.inventory.put(sku, this.inventory.get(sku) + amount);
+    if (inventory.containsKey(sku)) {
+      inventory.put(sku, Math.min(maxStock, inventory.get(sku) + amount));
+    } else {
+      System.out.println("The sku doesn't exist.");
+    }
   }
 
   /**
@@ -120,7 +124,6 @@ public class WarehouseFloor {
     }
     return null;
   }
-
 
   /**
    * Output the warehousefloor simulation results.
