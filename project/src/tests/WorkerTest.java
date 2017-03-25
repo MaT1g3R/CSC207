@@ -10,92 +10,92 @@ import org.junit.Test;
 public class WorkerTest {
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
 
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void tearDown() {
 
   }
 
   @Test
-  public void tryReady() throws Exception {
+  public void tryReady() {
 
   }
 
   @Test
-  public void readyAction() throws Exception {
+  public void readyAction() {
 
   }
 
   @Test
-  public void finish() throws Exception {
+  public void finish() {
 
   }
 
   @Test
-  public void finishAction() throws Exception {
+  public void finishAction() {
 
   }
 
   @Test
-  public void getScanOrder() throws Exception {
+  public void getScanOrder() {
 
   }
 
   @Test
-  public void scanResult() throws Exception {
+  public void scanResult() {
 
   }
 
   @Test
-  public void scan() throws Exception {
+  public void scan() {
 
   }
 
   @Test
-  public void rescan() throws Exception {
+  public void rescan() {
 
   }
 
   @Test
-  public void getCurrPickingReq() throws Exception {
+  public void getCurrPickingReq() {
 
   }
 
   @Test
-  public void getToBeScanned() throws Exception {
+  public void getToBeScanned() {
 
   }
 
   @Test
-  public void getName() throws Exception {
+  public void getName() {
 
   }
 
   @Test
-  public void getScanCount() throws Exception {
+  public void getScanCount() {
 
   }
 
   @Test
-  public void setToBeScanned() throws Exception {
+  public void setToBeScanned() {
 
   }
 
   @Test
-  public void setCurrPickingReq() throws Exception {
+  public void setCurrPickingReq() {
 
   }
 
   @Test
-  public void addScanCount() throws Exception {
+  public void addScanCount() {
 
   }
 
   @Test
-  public void resetScanCount() throws Exception {
+  public void resetScanCount() {
 
   }
 
