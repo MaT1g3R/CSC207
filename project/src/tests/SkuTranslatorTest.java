@@ -1,9 +1,7 @@
 package tests;
 
 import java.util.ArrayList;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.SkuTranslator;
@@ -21,16 +19,6 @@ public class SkuTranslatorTest {
   @BeforeClass
   public static void setUpBeforeClass() {
     translator = new TestFactory().getTestEnviroment().getSkuTranslator();
-  }
-
-  @Before
-  public void setUp() throws Exception {
-
-  }
-
-  @After
-  public void tearDown() throws Exception {
-
   }
 
   /**
