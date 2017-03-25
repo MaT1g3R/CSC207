@@ -154,7 +154,16 @@ public class WarehouseFloor {
    *
    * @return first element of toBeReplenished
    */
-  public String popReplenished() {
+  public String popReplenishRequest() {
     return toBeReplenished.isEmpty() ? null : toBeReplenished.pop();
+  }
+
+  /**
+   * Add a sku to the front of toBeReplenished list.
+   *
+   * @param toBeRemoved the sku to be added.
+   */
+  public void addReplenishRequestToFront(String toBeRemoved) {
+    toBeReplenished.add(0, toBeRemoved);
   }
 }

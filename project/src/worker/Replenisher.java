@@ -40,7 +40,14 @@ public class Replenisher {
    * @param sku the sku to be replenished
    */
   public void scan(String sku) {
-    needed = sku.equals(this.sku);
+    needed = this.sku != null && sku.equals(this.sku);
+  }
+
+  /**
+   * Ready action for the replenisher.
+   */
+  public void ready() {
+    sku = masterSystem.getWarehouseFloor().popReplenishRequest();
   }
 
   /**
@@ -55,13 +62,11 @@ public class Replenisher {
       System.out.println("Unneeded replenish, nothing was added to the "
           + "inventory");
     }
-    this.sku = null;
+    if (sku != null) {
+      masterSystem.getWarehouseFloor().addReplenishRequestToFront(sku);
+    }
+    sku = null;
+    needed = false;
   }
 
-  /**
-   * Ready action for the replenisher.
-   */
-  public void ready() {
-    sku = masterSystem.getWarehouseFloor().popReplenished();
-  }
 }
