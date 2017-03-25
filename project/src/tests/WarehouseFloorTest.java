@@ -239,5 +239,4 @@ public class WarehouseFloorTest {
     Assert.assertNull(warehouseFloor.popReplenishRequest());
     Assert.assertTrue(replenList.isEmpty());
   }
-
 }

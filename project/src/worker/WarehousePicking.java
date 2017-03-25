@@ -3,7 +3,7 @@ package worker;
 import java.util.ArrayList;
 import util.SkuTranslator;
 
-class WarehousePicking {
+public class WarehousePicking {
 
   /**
    * @param skus          the list of SKU numbers to be converted to locations.
@@ -13,9 +13,12 @@ class WarehousePicking {
   public static ArrayList<String> optimize(ArrayList<String> skus,
       SkuTranslator skuTranslator) {
     ArrayList<String> locations = new ArrayList<>();
-
     for (String sku : skus) {
-      locations.add(skuTranslator.getLocation(sku));
+      String location = skuTranslator.getLocation(sku);
+      if (location == null) {
+        return null;
+      }
+      locations.add(location);
     }
     return locations;
   }
