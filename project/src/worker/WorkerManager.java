@@ -31,7 +31,12 @@ public class WorkerManager implements Observer {
    */
   @Override
   public void update(Observable observableWorker, Object isReady) {
-    if (isReady instanceof Boolean && observableWorker instanceof Worker) {
+    if (observableWorker == null
+        || isReady == null
+        || !(isReady instanceof Boolean
+        && observableWorker instanceof Worker)) {
+      throw new UnsupportedOperationException();
+    } else {
       boolean readyBool = (boolean) isReady;
       Worker worker = (Worker) observableWorker;
       if (readyBool) {
@@ -40,8 +45,6 @@ public class WorkerManager implements Observer {
       } else {
         finishHelper(worker);
       }
-    } else {
-      throw new UnsupportedOperationException();
     }
   }
 
