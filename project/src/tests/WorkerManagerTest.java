@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import util.MasterSystem;
+import warehousefloor.Truck;
 import worker.Loader;
 import worker.Picker;
 import worker.Replenisher;
@@ -38,6 +39,13 @@ public class WorkerManagerTest {
   private HashMap<String, Sequencer> sequencersMap;
   private HashMap<String, Replenisher> replenishersMap;
   private HashMap<String, Object> pickingRequestManagerVars;
+  private Picker picker;
+  private Sequencer sequencer;
+  private Loader loader;
+  private LinkedList<PickingRequest> outStandingPickingRequests;
+  private LinkedList<PickingRequest> marshallingArea;
+  private LinkedList<PickingRequest> loadingArea;
+  private PickingRequest pickingRequest;
 
   /**
    * Setup the static fields once before all tests.
@@ -83,6 +91,14 @@ public class WorkerManagerTest {
       pickingRequestManagerVars.put(field.getName(), field.get(masterSystem
           .getPickingRequestManager()));
     }
+    picker = new Picker("Baka", masterSystem);
+    sequencer = new Sequencer("Aho", masterSystem);
+    loader = new Loader("idk", masterSystem);
+    outStandingPickingRequests = getRequestsList("outStandingPickingRequests");
+    marshallingArea = getRequestsList("marshallingArea");
+    loadingArea = getRequestsList("loadingArea");
+    pickingRequest = factory
+        .pickingRequest(0, masterSystem.getPickingRequestManager());
   }
 
   /**
@@ -92,12 +108,8 @@ public class WorkerManagerTest {
   @Test
   public void updateReadyPickerNotNull()
       throws IllegalAccessException, NoSuchFieldException {
-    Picker picker = new Picker("Names are hard", masterSystem);
-    ArrayList<Order> orders = factory.randomOrders(10);
-    for (Order order : orders) {
-      masterSystem.getPickingRequestManager().addOrder(order);
-    }
-    workerManager.update(picker, true);
+    addTenOrders();
+    picker.tryReady();
     Assert.assertEquals(6, getOrdersFromPickManage().size());
     Assert.assertNotNull(currPicReq(picker));
     Assert.assertEquals(8, getPickerLocations(picker).size());
@@ -112,9 +124,8 @@ public class WorkerManagerTest {
   @Test
   public void updateReadyPickerNull()
       throws IllegalAccessException, NoSuchFieldException {
-    Picker picker = new Picker("FeelsBadMan", masterSystem);
-    workerManager.update(picker, true);
-    readyNullHelper(picker);
+    picker.tryReady();
+    workerDefaultState(picker);
     Assert.assertNull(getPickerLocations(picker));
   }
 
@@ -124,13 +135,8 @@ public class WorkerManagerTest {
    */
   @Test
   public void updateReadySequencerNotNull() throws IllegalAccessException {
-    PickingRequest pickingRequest = factory.pickingRequest(0, masterSystem
-        .getPickingRequestManager());
-    LinkedList<PickingRequest> marshallingArea = getRequestsList(
-        "marshallingArea");
     marshallingArea.add(pickingRequest);
-    Sequencer sequencer = new Sequencer("I want C#", masterSystem);
-    workerManager.update(sequencer, true);
+    sequencer.tryReady();
     readyNotNullHelper(sequencer, pickingRequest);
     Assert.assertEquals(0, marshallingArea.size());
   }
@@ -142,9 +148,8 @@ public class WorkerManagerTest {
    */
   @Test
   public void updateReadySequencerNull() throws IllegalAccessException {
-    Sequencer sequencer = new Sequencer("baka", masterSystem);
-    workerManager.update(sequencer, true);
-    readyNullHelper(sequencer);
+    sequencer.tryReady();
+    workerDefaultState(sequencer);
   }
 
   /**
@@ -154,14 +159,10 @@ public class WorkerManagerTest {
   @Test
   public void updateReadyLoaderNotNull()
       throws IllegalAccessException, NoSuchFieldException {
-    Loader loader = new Loader("Alwin Catindig", masterSystem);
-    PickingRequest pickingRequest = factory.pickingRequest(0, masterSystem
-        .getPickingRequestManager());
     String[][] pallets = factory.generatePallets(pickingRequest);
     getManagerPallets().put(pickingRequest.getId(), pallets);
-    LinkedList<PickingRequest> loadingArea = getRequestsList("loadingArea");
     loadingArea.add(pickingRequest);
-    workerManager.update(loader, true);
+    loader.tryReady();
     readyNotNullHelper(loader, pickingRequest);
     Assert.assertEquals(0, loadingArea.size());
     Assert.assertArrayEquals(pallets, getLoaderPallets(loader));
@@ -175,9 +176,8 @@ public class WorkerManagerTest {
   @Test
   public void updateReadyLoaderNull()
       throws IllegalAccessException, NoSuchFieldException {
-    Loader loader = new Loader("yasennnnn!!!!!", masterSystem);
-    workerManager.update(loader, true);
-    readyNullHelper(loader);
+    loader.tryReady();
+    workerDefaultState(loader);
     String[][] expected = new String[][]{new String[4], new String[4]};
     Assert.assertArrayEquals(expected, getLoaderPallets(loader));
   }
@@ -187,8 +187,8 @@ public class WorkerManagerTest {
    * argument is false. And the Picker has null pickingRequest.
    */
   @Test
-  public void updateFinishPickerNull() {
-
+  public void updateFinishPickerNull() throws IllegalAccessException {
+    finishNullHelper(picker);
   }
 
   /**
@@ -196,8 +196,12 @@ public class WorkerManagerTest {
    * argument is false. And the Picker has scanCount != 8.
    */
   @Test
-  public void updateFinishPickerFail() {
-
+  public void updateFinishPickerFail() throws IllegalAccessException {
+    addTenOrders();
+    picker.tryReady();
+    picker.finish();
+    Assert.assertEquals(1, outStandingPickingRequests.size());
+    workerDefaultState(picker);
   }
 
   /**
@@ -205,8 +209,15 @@ public class WorkerManagerTest {
    * argument is false. And the Picker has scanCount == 8.
    */
   @Test
-  public void updateFinishPickerSuccess() {
-
+  public void updateFinishPickerSuccess() throws IllegalAccessException {
+    outStandingPickingRequests.add(pickingRequest);
+    picker.tryReady();
+    workerFields.get("scanCount").set(picker, 8);
+    picker.finish();
+    Assert.assertTrue(outStandingPickingRequests.size() == 0
+        && marshallingArea.size() == 1);
+    Assert.assertEquals(pickingRequest, marshallingArea.get(0));
+    workerDefaultState(picker);
   }
 
   /**
@@ -214,8 +225,8 @@ public class WorkerManagerTest {
    * argument is false. And the Sequencer has null pickingRequest.
    */
   @Test
-  public void updateFinishSequencerNull() {
-
+  public void updateFinishSequencerNull() throws IllegalAccessException {
+    finishNullHelper(sequencer);
   }
 
   /**
@@ -223,8 +234,14 @@ public class WorkerManagerTest {
    * argument is false. And the Sequencer has scanCount != 8.
    */
   @Test
-  public void updateFinishSequencerFail() {
-
+  public void updateFinishSequencerFail() throws IllegalAccessException {
+    marshallingArea.add(pickingRequest);
+    sequencer.tryReady();
+    sequencer.finish();
+    Assert.assertEquals(1, outStandingPickingRequests.size());
+    Assert.assertEquals(outStandingPickingRequests.get(0), pickingRequest);
+    Assert.assertEquals(0, marshallingArea.size());
+    workerDefaultState(sequencer);
   }
 
   /**
@@ -232,8 +249,16 @@ public class WorkerManagerTest {
    * argument is false. And the Sequencer has scanCount == 8.
    */
   @Test
-  public void updateFinishSequencerSuccess() {
-
+  public void updateFinishSequencerSuccess() throws IllegalAccessException {
+    marshallingArea.add(pickingRequest);
+    sequencer.tryReady();
+    workerFields.get("scanCount").set(sequencer, 8);
+    sequencer.finish();
+    String[][] pallets = factory.generatePallets(pickingRequest);
+    Assert.assertArrayEquals(pallets, getManagerPallets().get(0));
+    Assert.assertEquals(1, loadingArea.size());
+    Assert.assertEquals(0, marshallingArea.size());
+    workerDefaultState(sequencer);
   }
 
   /**
@@ -241,8 +266,8 @@ public class WorkerManagerTest {
    * argument is false. And the Loader has null pickingRequest.
    */
   @Test
-  public void updateFinishLoaderNull() {
-
+  public void updateFinishLoaderNull() throws IllegalAccessException {
+    finishNullHelper(loader);
   }
 
   /**
@@ -250,17 +275,75 @@ public class WorkerManagerTest {
    * argument is false. And the Loader has scanCount != 8.
    */
   @Test
-  public void updateFinishLoaderFail() {
-
+  public void updateFinishLoaderFail()
+      throws IllegalAccessException, NoSuchFieldException {
+    String[][] pallets = factory.generatePallets(pickingRequest);
+    loadingArea.add(pickingRequest);
+    getManagerPallets().put(0, pallets);
+    loader.tryReady();
+    loader.finish();
+    Assert.assertEquals(0, getManagerPallets().size());
+    Assert.assertEquals(0, loadingArea.size());
+    Assert.assertEquals(outStandingPickingRequests.get(0), pickingRequest);
+    Assert.assertEquals(1, outStandingPickingRequests.size());
+    String[][] expected = new String[][]{new String[4], new String[4]};
+    Assert.assertArrayEquals(expected, getLoaderPallets(loader));
+    workerDefaultState(loader);
   }
 
   /**
    * Test for the update method when the Observable is a Loader and the
-   * argument is false. And the Loader has scanCount == 8.
+   * argument is false. And the Loader has scanCount == 8, but the loader
+   * can't load the pallets onto a truck.
    */
   @Test
-  public void updateFinishLoaderSuccess() {
+  public void updateFinishLoaderTruckFail()
+      throws IllegalAccessException, NoSuchFieldException {
+    Truck truck = new Truck(1111);
+    masterSystem.getWarehouseFloor().addTruck(truck);
+    String[][] pallets = factory.generatePallets(pickingRequest);
+    loadingArea.add(pickingRequest);
+    getManagerPallets().put(0, pallets);
+    loader.tryReady();
+    workerFields.get("scanCount").set(loader, 8);
+    loader.finish();
+    Assert.assertEquals(1, getManagerPallets().size());
+    Assert.assertEquals(1, loadingArea.size());
+    Assert.assertEquals(0, outStandingPickingRequests.size());
+    String[][] expected = new String[][]{new String[4], new String[4]};
+    Assert.assertArrayEquals(expected, getLoaderPallets(loader));
+    workerDefaultState(loader);
+  }
 
+
+  /**
+   * Test for the update method when the Observable is a Loader and the
+   * argument is false. And the Loader has scanCount == 8, and the loader
+   * loaded the pallets onto a truck.
+   */
+  @Test
+  public void updateFinishLoaderSuccess()
+      throws IllegalAccessException, NoSuchFieldException {
+    Truck truck = new Truck(0);
+    masterSystem.getWarehouseFloor().addTruck(truck);
+    String[][] pallets = factory.generatePallets(pickingRequest);
+    loadingArea.add(pickingRequest);
+    getManagerPallets().put(0, pallets);
+    loader.tryReady();
+    workerFields.get("scanCount").set(loader, 8);
+    loader.finish();
+    Field cargo = Truck.class.getDeclaredField("cargo");
+    cargo.setAccessible(true);
+    ArrayList<ArrayList<String[]>> cargoList = (ArrayList<ArrayList<String[]>>)
+        cargo.get(truck);
+    Assert.assertEquals(0, getManagerPallets().size());
+    Assert.assertEquals(0, loadingArea.size());
+    Assert.assertEquals(0, outStandingPickingRequests.size());
+    String[][] expected = new String[][]{new String[4], new String[4]};
+    Assert.assertArrayEquals(expected, getLoaderPallets(loader));
+    workerDefaultState(loader);
+    Assert.assertArrayEquals(cargoList.get(0).get(0), pallets[0]);
+    Assert.assertArrayEquals(cargoList.get(0).get(1), pallets[1]);
   }
 
   /**
@@ -271,45 +354,89 @@ public class WorkerManagerTest {
     workerManager.update(null, "");
   }
 
+  /*
+  YAY TESTING BOILERPLATE THANKS JAVA
+   */
 
+  /**
+   * Test for the addLoader method.
+   */
   @Test
   public void addLoader() {
-
+    workerManager.addLoader(loader);
+    Assert.assertEquals(loader, loadersMap.get(loader.getName()));
   }
 
+  /**
+   * Test for the addSequencer method.
+   */
   @Test
   public void addSequencer() {
-
+    workerManager.addSequencer(sequencer);
+    Assert.assertEquals(sequencer, sequencersMap.get(sequencer.getName()));
   }
 
+  /**
+   * Test for the addPicker method.
+   */
   @Test
   public void addPicker() {
-
+    workerManager.addPicker(picker);
+    Assert.assertEquals(picker, pickersMap.get(picker.getName()));
   }
 
+  /**
+   * Test for the addReplenisher method.
+   */
   @Test
   public void addReplenisher() {
-
+    Replenisher replenisher = new Replenisher("", masterSystem);
+    workerManager.addReplenisher(replenisher);
+    Assert
+        .assertEquals(replenisher, replenishersMap.get(replenisher.getName()));
   }
 
+  /**
+   * Test for the getLoader method.
+   */
   @Test
   public void getLoader() {
-
+    loadersMap.put(loader.getName(), loader);
+    Assert.assertEquals(loader, workerManager.getLoader(loader.getName()));
+    Assert.assertNull(workerManager.getLoader("asdasdsadasdasd"));
   }
 
+  /**
+   * Test for the getPicker method.
+   */
   @Test
   public void getPicker() {
-
+    pickersMap.put(picker.getName(), picker);
+    Assert.assertEquals(picker, workerManager.getPicker(picker.getName()));
+    Assert.assertNull(workerManager.getPicker("asdas"));
   }
 
+  /**
+   * Test for the getSequencer method.
+   */
   @Test
   public void getSequencer() {
-
+    sequencersMap.put(sequencer.getName(), sequencer);
+    Assert.assertEquals(sequencer,
+        workerManager.getSequencer(sequencer.getName()));
+    Assert.assertNull(workerManager.getSequencer("aaaa"));
   }
 
+  /**
+   * Test for the getReplenisher method.
+   */
   @Test
   public void getReplenisher() {
-
+    Replenisher replenisher = new Replenisher("sssssasd", masterSystem);
+    replenishersMap.put(replenisher.getName(), replenisher);
+    Assert.assertEquals(replenisher, workerManager.getReplenisher(replenisher
+        .getName()));
+    Assert.assertNull(workerManager.getReplenisher("miku"));
   }
 
   /**
@@ -375,12 +502,12 @@ public class WorkerManagerTest {
   }
 
   /**
-   * A helper method to test when a worker tries to ready without available
-   * picking requests.
+   * A helper method to check for a worker where it is at the it's default
+   * state.
    *
    * @param worker the worker instance
    */
-  private void readyNullHelper(Worker worker) throws IllegalAccessException {
+  private void workerDefaultState(Worker worker) throws IllegalAccessException {
     Assert.assertNull(currPicReq(worker));
     Assert.assertEquals(0, getWorkerVar(worker, "scanCount"));
     Assert.assertEquals(0, getToBeScanned(worker).size());
@@ -427,5 +554,44 @@ public class WorkerManagerTest {
     String[] frontPallet = (String[]) frontPalletField.get(loader);
     String[] backPallet = (String[]) backPalletField.get(loader);
     return new String[][]{frontPallet, backPallet};
+  }
+
+  /**
+   * Returns an array of 3 deep copies of the PickingRequestManager
+   * PickingRequest LinkedLists.
+   */
+  private LinkedList[] deepCopyLists() {
+    LinkedList<PickingRequest> outStandingPickingRequests = new LinkedList<>();
+    LinkedList<PickingRequest> marshallingArea = new LinkedList<>();
+    LinkedList<PickingRequest> loadingArea = new LinkedList<>();
+    outStandingPickingRequests
+        .addAll(getRequestsList("outStandingPickingRequests"));
+    marshallingArea.addAll(getRequestsList("marshallingArea"));
+    loadingArea.addAll(getRequestsList("loadingArea"));
+    return new LinkedList[]{outStandingPickingRequests, marshallingArea,
+        loadingArea};
+  }
+
+  /**
+   * A helper method to add 10 random orders to PickingRequestManager.
+   */
+  private void addTenOrders() {
+    for (Order order : factory.randomOrders(10)) {
+      masterSystem.getPickingRequestManager().addOrder(order);
+    }
+  }
+
+  /**
+   * A helper method to check for Worker doing finish with null
+   * currPickingRequest.
+   *
+   * @param worker the worker to check for
+   */
+  private void finishNullHelper(Worker worker) throws IllegalAccessException {
+    LinkedList[] init = deepCopyLists();
+    worker.finish();
+    LinkedList[] fin = deepCopyLists();
+    workerDefaultState(worker);
+    Assert.assertArrayEquals(init, fin);
   }
 }

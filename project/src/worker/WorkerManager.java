@@ -107,6 +107,10 @@ public class WorkerManager implements Observer {
     }
     worker.setCurrPickingReq(null);
     worker.resetScanCount();
+    worker.getToBeScanned().clear();
+    if (worker instanceof Loader) {
+      ((Loader) worker).setPallets(new String[4], new String[4]);
+    }
   }
 
   /**

@@ -44,28 +44,23 @@ public class Loader extends Worker {
   @Override
   void finishAction() {
     Truck truck = masterSystem.getWarehouseFloor().getFirstNonFullTruck();
-    if (truck.addCargo(frontPallet, backPallet, getCurrPickingReq()
-        .getId()
-    )) {
-      System.out
-          .println("Loader " + getName() + " loaded picking request"
-              + " " + String.valueOf(getCurrPickingReq().getId()));
+    if (truck == null
+        || !truck.addCargo(
+        frontPallet, backPallet, getCurrPickingReq().getId())) {
+      System.out.println("Loader " + getName() + " could not load picking "
+          + "request " + String.valueOf(getCurrPickingReq().getId())
+          + "\nThe picking request is sent back to loading area.");
+      getCurrPickingReq().updateLocation(Location.load);
+      masterSystem.getPickingRequestManager().putPalletes(
+          new String[][]{frontPallet, backPallet},
+          getCurrPickingReq().getId());
+    } else {
+      System.out.println("Loader " + getName() + " loaded picking request"
+          + " " + String.valueOf(getCurrPickingReq().getId()));
       for (Order o : getCurrPickingReq().getOrders()) {
         masterSystem.getWarehouseFloor().logLoading(o.toString());
       }
-    } else {
-      System.out
-          .println("Loader " + getName() + " could not load picking "
-              + "request " + String
-              .valueOf(getCurrPickingReq().getId())
-              + "\nThe picking request is sent back to loading area.");
-      getCurrPickingReq().updateLocation(Location.load);
-      masterSystem.getPickingRequestManager()
-          .putPalletes(
-              new String[][]{frontPallet, backPallet},
-              getCurrPickingReq().getId());
     }
-    setPallets(new String[4], new String[4]);
   }
 
   /**
@@ -74,7 +69,7 @@ public class Loader extends Worker {
    * @param frontPallet the front pallet
    * @param backPallet  the back pallet
    */
-  private void setPallets(String[] frontPallet, String[] backPallet) {
+  void setPallets(String[] frontPallet, String[] backPallet) {
     this.frontPallet = frontPallet;
     this.backPallet = backPallet;
   }
