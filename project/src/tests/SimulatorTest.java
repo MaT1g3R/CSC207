@@ -20,6 +20,7 @@ public class SimulatorTest {
    */
   @Test
   public void run() {
+    TestFactory.supressPrint();
     String eventFile = "../events.txt";
     String warehouseFile = "../initial.csv";
     String translationFile = "../translation.csv";

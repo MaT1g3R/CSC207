@@ -1,7 +1,6 @@
 package util;
 
 import fascia.Order;
-import fascia.PickingRequestManager;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import warehousefloor.Truck;
@@ -10,7 +9,6 @@ import worker.Loader;
 import worker.Picker;
 import worker.Replenisher;
 import worker.Sequencer;
-import worker.WorkerManager;
 
 /**
  * A class to simulate real world events from an input file.
@@ -43,27 +41,11 @@ public class Simulator {
   public Simulator(String eventFile, String warehouseFilePath,
       String translationFilePath, String traversalFilePath,
       String outFilePath) {
-    masterSystem = new MasterSystem();
+    masterSystem = MasterSystemFactory.getMasterSystem(warehouseFilePath,
+        translationFilePath, traversalFilePath, outFilePath);
     eventList = CsvReadWrite.readCsv(eventFile);
-
-    FileSystem fileSystem = new FileSystem(
-        new String[]{warehouseFilePath, translationFilePath, traversalFilePath},
-        new String[]{outFilePath + "orders.csv", outFilePath + "final.csv"});
-
-    SkuTranslator skuTranslator = new SkuTranslator(
-        fileSystem.getFileContent(traversalFilePath),
-        fileSystem.getFileContent(translationFilePath));
-
-    WorkerManager workerManager = new WorkerManager(masterSystem);
-
-    PickingRequestManager pickingRequestManager = new PickingRequestManager();
-
-    warehouseFloor = new WarehouseFloor(
-        warehouseFilePath, outFilePath, masterSystem, 30);
-
-    warehouseFloor.addTruck(new Truck(0));
-    masterSystem.setAll(warehouseFloor, workerManager, pickingRequestManager,
-        fileSystem, skuTranslator);
+    masterSystem.getWarehouseFloor().addTruck(new Truck((0)));
+    warehouseFloor = masterSystem.getWarehouseFloor();
   }
 
 
