@@ -12,7 +12,7 @@ public class Main {
   /**
    * The main run class.
    *
-   * @param args meh
+   * @param args the path to the event file.
    */
   public static void main(String[] args) {
     String eventFile = args[0];
