@@ -15,13 +15,12 @@ public class Main {
    * @param args the path to the event file.
    */
   public static void main(String[] args) {
-    String eventFile = args[0];
-    if (args.length == 1 && new File(eventFile).exists()) {
+    if (args.length == 1 && new File(args[0]).exists()) {
       String warehouseFile = "../initial.csv";
       String translationFile = "../translation.csv";
       String traversalFile = "../traversal_table.csv";
       String outFile = "../";
-      Simulator mySim = new Simulator(eventFile, warehouseFile, translationFile,
+      Simulator mySim = new Simulator(args[0], warehouseFile, translationFile,
           traversalFile, outFile);
       mySim.run();
     } else {
