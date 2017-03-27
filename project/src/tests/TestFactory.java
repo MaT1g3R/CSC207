@@ -9,11 +9,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
-import util.FileSystem;
 import util.MasterSystem;
-import util.SkuTranslator;
-import warehousefloor.WarehouseFloor;
-import worker.WorkerManager;
+import util.MasterSystemFactory;
 
 /**
  * Generates PickingRequest for testing.
@@ -109,27 +106,8 @@ class TestFactory {
     String translationFile = "../translation.csv";
     String traversalFile = "../traversal_table.csv";
     String outFile = "tests/";
-    MasterSystem masterSystem = new MasterSystem();
-
-    FileSystem fileSystem = new FileSystem(
-        new String[]{warehouseFile, translationFile, traversalFile},
-        new String[]{outFile + "orders.csv", outFile + "final.csv"});
-
-    SkuTranslator skuTranslator = new SkuTranslator(
-        fileSystem.getFileContent(traversalFile),
-        fileSystem.getFileContent(translationFile));
-
-    WorkerManager workerManager = new WorkerManager(masterSystem);
-
-    PickingRequestManager pickingRequestManager = new PickingRequestManager();
-
-    WarehouseFloor warehouseFloor = new WarehouseFloor(
-        warehouseFile, outFile, masterSystem, 30);
-
-    masterSystem.setAll(warehouseFloor, workerManager, pickingRequestManager,
-        fileSystem, skuTranslator);
-
-    return masterSystem;
+    return MasterSystemFactory.getMasterSystem(warehouseFile, translationFile,
+        traversalFile, outFile, 30);
   }
 
   /**
