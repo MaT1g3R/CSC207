@@ -9,14 +9,26 @@ import util.Main;
  */
 public class MainTest {
 
+  /**
+   * Test for when the main method is successful.
+   */
   @Test
-  public void main() {
+  public void mainSuccess() {
     TestFactory.supressPrint();
     try {
       String[] args = new String[]{"../events.txt"};
       Main.main(args);
-    } catch (NullPointerException | IndexOutOfBoundsException ex) {
+    } catch (UnsupportedOperationException ex) {
       Assert.fail();
     }
+  }
+
+  /**
+   * Test for when the main method fails.
+   */
+  @Test(expected = UnsupportedOperationException.class)
+  public void mainFail() {
+    String[] args = new String[]{"sadasdsa"};
+    Main.main(args);
   }
 }

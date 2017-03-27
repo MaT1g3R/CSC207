@@ -1,5 +1,7 @@
 package util;
 
+import java.io.File;
+
 /**
  * The main run class.
  *
@@ -13,8 +15,8 @@ public class Main {
    * @param args meh
    */
   public static void main(String[] args) {
-    try {
-      String eventFile = args[0];
+    String eventFile = args[0];
+    if (args.length == 1 && new File(eventFile).exists()) {
       String warehouseFile = "../initial.csv";
       String translationFile = "../translation.csv";
       String traversalFile = "../traversal_table.csv";
@@ -22,8 +24,9 @@ public class Main {
       Simulator mySim = new Simulator(eventFile, warehouseFile, translationFile,
           traversalFile, outFile);
       mySim.run();
-    } catch (IndexOutOfBoundsException | NullPointerException ex) {
-      System.out.println("Please provide a vaild path to the event file.");
+    } else {
+      throw new UnsupportedOperationException("Please enter a vaild path to "
+          + "the event file.");
     }
   }
 }
