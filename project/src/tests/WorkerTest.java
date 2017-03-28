@@ -2,18 +2,15 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedList;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import fascia.Order;
 import fascia.PickingRequest;
 import fascia.PickingRequestManager;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import util.MasterSystem;
 import worker.Sequencer;
 import worker.Worker;
@@ -40,14 +37,16 @@ public class WorkerTest {
     scanCount.setAccessible(true);
     toBeScanned = Worker.class.getDeclaredField("toBeScanned");
     toBeScanned.setAccessible(true);
-    marshallingArea = PickingRequestManager.class.getDeclaredField("marshallingArea");
+    marshallingArea = PickingRequestManager.class
+        .getDeclaredField("marshallingArea");
     marshallingArea.setAccessible(true);
     masterSystem = testFactory.getTestEnviroment();
     worker = new Sequencer("Bob", masterSystem);
   }
 
   @Test
-  public void scanEmpty() throws IllegalArgumentException, IllegalAccessException {
+  public void scanEmpty()
+      throws IllegalArgumentException, IllegalAccessException {
     worker.scan("234");
     Assert.assertEquals(0, scanCount.get(worker));
   }
@@ -60,8 +59,10 @@ public class WorkerTest {
     ArrayList<Order> orders = testFactory.randomOrders(4);
     String expectedSku = orders.get(0).getSkus()[0];
     // currPickingReq.set(worker, );
-    ((LinkedList<PickingRequest>) marshallingArea.get(masterSystem.getPickingRequestManager()))
-        .add(new PickingRequest(orders, 0, masterSystem.getPickingRequestManager()));
+    ((LinkedList<PickingRequest>) marshallingArea
+        .get(masterSystem.getPickingRequestManager()))
+        .add(new PickingRequest(orders, 0,
+            masterSystem.getPickingRequestManager()));
     worker.tryReady();
     worker.scan(expectedSku);
     Assert.assertEquals(1, scanCount.get(worker));
@@ -73,8 +74,10 @@ public class WorkerTest {
   @Test
   public void scanUnxpectedSku() throws IllegalAccessException {
     ArrayList<Order> orders = testFactory.randomOrders(4);
-    ((LinkedList<PickingRequest>) marshallingArea.get(masterSystem.getPickingRequestManager()))
-        .add(new PickingRequest(orders, 0, masterSystem.getPickingRequestManager()));
+    ((LinkedList<PickingRequest>) marshallingArea
+        .get(masterSystem.getPickingRequestManager()))
+        .add(new PickingRequest(orders, 0,
+            masterSystem.getPickingRequestManager()));
     worker.tryReady();
     worker.scan("Bad");
     Assert.assertEquals(0, scanCount.get(worker));
