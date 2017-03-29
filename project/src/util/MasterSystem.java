@@ -56,18 +56,18 @@ public class MasterSystem {
   }
 
   private void setLogger(boolean makeFile) {
-    if (makeFile){
     ConsoleHandler ch = new ConsoleHandler();
     this.logger = Logger.getLogger(getClass().getSimpleName());
     try {
+      if (makeFile){
       FileHandler fh = new FileHandler(outPutPath + "log.txt");
       fh.setFormatter(new SimpleFormatter());
-      this.logger.addHandler(fh);
+      this.logger.addHandler(fh);}
     } catch (IOException exception) {
       System.out.println("Logging file could not be opened. Logging only to console");
     }
     this.logger.addHandler(ch);}
-  }
+
 
   /**
    * A getter for warehouseFloor.
