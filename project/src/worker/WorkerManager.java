@@ -24,10 +24,11 @@ public class WorkerManager implements Observer {
   }
 
   /**
-   * This method is called whenever the observed observableWorker is changed.
+   * This method is called whenever the observed observableWorker is changed. Handles what happens
+   * when the worker is ready for a new duty or they finished their current.
    *
    * @param observableWorker the Worker object to be updated.
-   * @param isReady          the isReady boolean passed to this method.
+   * @param isReady          whether the worker is ready or not. If false, then the worker finished.
    */
   @Override
   public void update(Observable observableWorker, Object isReady) {
