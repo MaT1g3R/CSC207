@@ -53,15 +53,14 @@ public class MasterSystem {
 
   private void setLogger() {
     ConsoleHandler ch = new ConsoleHandler();
-
+    this.logger = Logger.getLogger(getClass().getSimpleName());
     try {
-      FileHandler fh = new FileHandler("log.txt");
+      FileHandler fh = new FileHandler("../log.txt");
       fh.setFormatter(new SimpleFormatter());
       this.logger.addHandler(fh);
     } catch (IOException exception) {
       System.out.println("Logging file could not be opened. Logging only to console");
     }
-    this.logger = Logger.getLogger(getClass().getSimpleName());
     this.logger.addHandler(ch);
   }
 
