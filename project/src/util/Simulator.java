@@ -11,7 +11,7 @@ import worker.Replenisher;
 import worker.Sequencer;
 
 /**
- * A class to simulate real world events from an input file.
+ * A class to simulate real world events using an input file.
  *
  * @author Peijun
  */
@@ -42,7 +42,7 @@ public class Simulator {
       String translationFilePath, String traversalFilePath,
       String outFilePath) {
     masterSystem = MasterSystemFactory.getMasterSystem(warehouseFilePath,
-        translationFilePath, traversalFilePath, outFilePath, 30);
+        translationFilePath, traversalFilePath, outFilePath, 30, 5);
     eventList = CsvReadWrite.readCsv(eventFile);
     masterSystem.getWarehouseFloor().addTruck(new Truck((0)));
     warehouseFloor = masterSystem.getWarehouseFloor();
@@ -50,52 +50,52 @@ public class Simulator {
 
 
   /**
-   * Check if the string is for adding an order.
+   * Check if the string says an order was made.
    *
    * @param s the string to be checked
    * @return true if it's adding an order
    */
-  private boolean isOrder(String s) {
+  private boolean isOrderMade(String s) {
     return Pattern.matches("Order \\w+ [A-Z]+", s);
   }
 
   /**
-   * Check if the string is for a worker being ready.
+   * Check if the string says a worker is ready.
    *
    * @param s the string to be checked
    * @return true if it's a worker trying to ready.
    */
-  private boolean workerReady(String s) {
+  private boolean isWorkerReady(String s) {
     return Pattern.matches("\\w+ \\w+ ready", s);
   }
 
   /**
-   * Check if the string is for worker to scan.
+   * Check if the string says worker scanned.
    *
    * @param s the string to be checked
    * @return true if it's worker scan
    */
-  private boolean workerScan(String s) {
+  private boolean didWorkerScan(String s) {
     return Pattern.matches("\\w+ \\w+ scan \\w+", s);
   }
 
   /**
-   * Check if the string is for worker to finish.
+   * Check if the string says a worker finished.
    *
    * @param s the string to be checked
    * @return true if it's worker finish
    */
-  private boolean workerFinish(String s) {
+  private boolean didWorkerFinish(String s) {
     return Pattern.matches("\\w+ \\w+ finish", s);
   }
 
   /**
-   * Check if the string is for worker to rescan.
+   * Check if the string says a worker wants to rescan.
    *
    * @param s the event string
    * @return true if it's worker to rescan
    */
-  private boolean workerRescan(String s) {
+  private boolean didWorkerRescan(String s) {
     return Pattern.matches("\\w+ \\w+ rescan", s);
   }
 
@@ -120,7 +120,7 @@ public class Simulator {
   }
 
   /**
-   * Get the job of a worker.
+   * Get the job of a worker from the event string.
    *
    * @param s the event string
    * @return the job of the worker
@@ -135,24 +135,28 @@ public class Simulator {
    */
   public void run() {
     for (String s : eventList) {
-      if (isOrder(s)) {
+      System.out.println("SIMULATOR EVENT : " + s);
+      if (isOrderMade(s)) {
         Order order = new Order(s, masterSystem.getSkuTranslator());
         masterSystem.getPickingRequestManager().addOrder(order);
-      } else if (workerReady(s)) {
+      } else if (isWorkerReady(s)) {
         createOrReadyWorker(getJob(s), getName(s));
-      } else if (workerScan(s)) {
+      } else if (didWorkerScan(s)) {
         scanHelper(getJob(s), getName(s), getSku(s));
-      } else if (workerFinish(s)) {
+      } else if (didWorkerFinish(s)) {
         finishHelper(getJob(s), getName(s));
-      } else if (workerRescan(s)) {
+      } else if (didWorkerRescan(s)) {
         rescanHelper(getJob(s), getName(s));
+      } else {
+        System.out.println("Invalid Simulator Event");
       }
-      warehouseFloor.outPutResult();
+      warehouseFloor.writeInventoryQuantities();
     }
   }
 
   /**
-   * A helper to check for worker and ready it.
+   * A helper to check for worker and ready it. An instance of a worker is created in the system
+   * if a ready event happens and the worker isn't in the system already.
    *
    * @param job  the job of the worker
    * @param name the name of the worker
@@ -206,7 +210,7 @@ public class Simulator {
   }
 
   /**
-   * A helper method to deal with finishing.
+   * A helper method to deal with finishing actions of different types of workers.
    *
    * @param job  the job of the worker
    * @param name the name of the worker
@@ -224,7 +228,7 @@ public class Simulator {
   }
 
   /**
-   * A helper to deal with rescan.
+   * A helper to deal with rescanning of different types of workers.
    *
    * @param job  the job of the worker.
    * @param name the name of the worker.

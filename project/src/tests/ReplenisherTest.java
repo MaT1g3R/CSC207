@@ -105,7 +105,7 @@ public class ReplenisherTest {
    */
   @Test
   public void readyFail() {
-    system.getWarehouseFloor().popReplenishRequest();
+    system.getWarehouseFloor().getFirstReplenishRequest();
     replenisher.ready();
     updateVals();
     Assert.assertNull(skuStr);

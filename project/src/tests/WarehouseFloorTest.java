@@ -86,60 +86,60 @@ public class WarehouseFloorTest {
   }
 
   /**
-   * Test for the addFacsia method when the add amout + the current stock
+   * Test for the addSku method when the add amout + the current stock
    * level is over the limit of max stock level.
    */
   @Test
   public void addFacsiaUnderLimit() {
-    system.getWarehouseFloor().addFacsia("19", 3);
+    system.getWarehouseFloor().addSku("19", 3);
     int actual = inventoryMap.get("19");
     Assert.assertEquals(7, actual);
   }
 
   /**
-   * Test for the addFacsia method when the add amout + the current stock
+   * Test for the addSku method when the add amout + the current stock
    * level is under the limit of max stock level.
    */
   @Test
   public void addFacsiaOverLimit() {
-    system.getWarehouseFloor().addFacsia("19", 3030303);
+    system.getWarehouseFloor().addSku("19", 3030303);
     int actual = inventoryMap.get("19");
     Assert.assertEquals(30, actual);
   }
 
   /**
-   * Test for the addFacsia method when the sku is not found.
+   * Test for the addSku method when the sku is not found.
    */
   @Test
   public void addFacsiaSkuNotFound() {
-    system.getWarehouseFloor().addFacsia("asdasd", 3030303);
+    system.getWarehouseFloor().addSku("asdasd", 3030303);
     assertDefault();
   }
 
   /**
-   * Test for the removeFascia method when the sku is not found.
+   * Test for the removeSku method when the sku is not found.
    */
   @Test
   public void removeFasciaNotFound() {
-    Assert.assertFalse(warehouseFloor.removeFascia("ASDSAD"));
+    Assert.assertFalse(warehouseFloor.removeSku("ASDSAD"));
     assertDefault();
   }
 
   /**
-   * Test for the removeFascia method when the stock level of that sku is empty.
+   * Test for the removeSku method when the stock level of that sku is empty.
    */
   @Test
   public void removeFasciaEmpty() {
     inventoryMap.put("19", 0);
-    Assert.assertFalse(warehouseFloor.removeFascia("19"));
+    Assert.assertFalse(warehouseFloor.removeSku("19"));
   }
 
   /**
-   * Test for the removeFascia method when it's successful.
+   * Test for the removeSku method when it's successful.
    */
   @Test
   public void removeFasciaSuccess() {
-    warehouseFloor.removeFascia("3");
+    warehouseFloor.removeSku("3");
     int actual = inventoryMap.get("3");
     HashMap<String, Integer> expectedMap = generateDefaultInventory();
     expectedMap.put("3", 29);
@@ -148,14 +148,14 @@ public class WarehouseFloorTest {
   }
 
   /**
-   * Test for the removeFascia method when it's successful and triggers a
+   * Test for the removeSku method when it's successful and triggers a
    * replenish request.
    */
   @Test
   public void removeFasciaSuccessTriggerReplenishRequest()
       throws NoSuchFieldException, IllegalAccessException {
     inventoryMap.put("5", 5);
-    warehouseFloor.removeFascia("5");
+    warehouseFloor.removeSku("5");
     int actual = inventoryMap.get("5");
     HashMap<String, Integer> expectedMap = generateDefaultInventory();
     expectedMap.put("5", 4);
@@ -187,16 +187,16 @@ public class WarehouseFloorTest {
   }
 
   /**
-   * Test for the outPutResult method.
+   * Test for the writeInventoryQuantities method.
    */
   @Test
   public void outPutResult() throws FileNotFoundException {
-    warehouseFloor.logLoading("TEST");
-    warehouseFloor.outPutResult();
-    File finalcsv = new File("tests/final.csv");
-    File orderscsv = new File("tests/orders.csv");
+    warehouseFloor.writeLoadedOrders("TEST");
+    warehouseFloor.writeInventoryQuantities();
+    final File finalcsv = new File("tests/final.csv");
+    final File orderscsv = new File("tests/orders.csv");
     ArrayList<String> actualFinal = CsvReadWrite.readCsv("tests/final.csv");
-    ArrayList<String> actualOrders = CsvReadWrite.readCsv("tests/orders.csv");
+    final ArrayList<String> actualOrders = CsvReadWrite.readCsv("tests/orders.csv");
     ArrayList<String> expectedFinal = new ArrayList<>();
     expectedFinal.add("A,1,1,2,4");
     ArrayList<String> expectedOrders = new ArrayList<>();
@@ -209,11 +209,11 @@ public class WarehouseFloorTest {
   }
 
   /**
-   * Test for logLoading method.
+   * Test for writeLoadedOrders method.
    */
   @Test
   public void logLoading() {
-    warehouseFloor.logLoading("Ayy Lmao");
+    warehouseFloor.writeLoadedOrders("Ayy Lmao");
     ArrayList<String> actual = system.getFileSystem()
         .getWritingFileForEdit("tests/orders.csv");
     ArrayList<String> expected = new ArrayList<>();
@@ -226,7 +226,7 @@ public class WarehouseFloorTest {
    */
   @Test
   public void popReplenishedSuccess() {
-    Assert.assertEquals("19", warehouseFloor.popReplenishRequest());
+    Assert.assertEquals("19", warehouseFloor.getFirstReplenishRequest());
     Assert.assertTrue(replenList.isEmpty());
   }
 
@@ -236,7 +236,7 @@ public class WarehouseFloorTest {
   @Test
   public void popReplenishedFail() {
     replenList.remove(0);
-    Assert.assertNull(warehouseFloor.popReplenishRequest());
+    Assert.assertNull(warehouseFloor.getFirstReplenishRequest());
     Assert.assertTrue(replenList.isEmpty());
   }
 }

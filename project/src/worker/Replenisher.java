@@ -47,7 +47,7 @@ public class Replenisher {
    * Ready action for the replenisher.
    */
   public void ready() {
-    sku = masterSystem.getWarehouseFloor().popReplenishRequest();
+    sku = masterSystem.getWarehouseFloor().getFirstReplenishRequest();
   }
 
   /**
@@ -57,7 +57,7 @@ public class Replenisher {
     if (needed) {
       System.out.println("Fascia of SKU " + sku + " has been "
           + "replenished by " + name);
-      masterSystem.getWarehouseFloor().addFacsia(sku, 25);
+      masterSystem.getWarehouseFloor().addSku(sku, 25);
     } else {
       System.out.println("Unneeded replenish, nothing was added to the "
           + "inventory");

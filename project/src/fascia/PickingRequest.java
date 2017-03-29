@@ -67,11 +67,12 @@ public class PickingRequest extends Observable implements
   /**
    * Compares this object with the specified object for order.
    * Returns a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the specified object.
+   * is less than, equal to, or greater than the specified object. Uses
+   * the id field to compare.
    *
    * @param request the request to be compared.
    * @return a negative integer, zero, or a positive integer as this object is
-   * less than, equal to, or greater than the specified object.
+   *     less than, equal to, or greater than the specified object.
    */
   @Override
   public int compareTo(PickingRequest request) {

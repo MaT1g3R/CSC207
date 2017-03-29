@@ -60,9 +60,9 @@ public class SkuTranslator {
   }
 
   /**
-   * Using traversal table, fetches sku stored in <location></location>.
+   * Using traversal table, fetches sku stored in location.
    *
-   * @param location is in String array format {Zone, Aisle, Rack, Rack Level}
+   * @param location is in String array format such as {Zone, Aisle, Rack, Rack Level}
    * @return sku stored in given area according to translation table
    */
   public String getSkuFromLocation(String[] location) {

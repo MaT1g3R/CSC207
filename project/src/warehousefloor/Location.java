@@ -1,7 +1,7 @@
 package warehousefloor;
 
 /**
- * All the locations that the PickingRequest can be in.
+ * All the locations that a PickingRequest can be in.
  *
  * @author Peijun
  */

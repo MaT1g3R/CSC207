@@ -10,6 +10,7 @@ import java.util.HashMap;
  */
 public class FileSystem {
 
+  //Maps path to content. Each element in content is a line.
   private HashMap<String, ArrayList<String>> readingFiles = new HashMap<>();
   private HashMap<String, ArrayList<String>> writingFiles = new HashMap<>();
 
@@ -71,7 +72,7 @@ public class FileSystem {
    * @param path    the path of the file.
    * @param content the content to set it to.
    */
-  public void setWritingFile(String path, ArrayList<String> content) {
+  public void setWritingFileContents(String path, ArrayList<String> content) {
     writingFiles.put(path, content);
   }
 }

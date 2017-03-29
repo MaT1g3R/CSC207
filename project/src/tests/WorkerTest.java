@@ -28,6 +28,9 @@ public class WorkerTest {
   private static Field marshallingArea;
   private Worker worker;
 
+  /**
+   * Sets up all the items needed for testing this class.
+   **/
   @Before
   public void setUp() throws NoSuchFieldException {
     testFactory = new TestFactory();

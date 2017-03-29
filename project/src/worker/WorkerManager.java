@@ -56,7 +56,7 @@ public class WorkerManager implements Observer {
   private void assignPickingRequest(Worker worker) {
     if (worker instanceof Picker) {
       worker.setCurrPickingReq(
-          masterSystem.getPickingRequestManager().getForPicking());
+          masterSystem.getPickingRequestManager().getUnpickedRequest());
     } else if (worker instanceof Sequencer) {
       worker.setCurrPickingReq(masterSystem
           .getPickingRequestManager().popRequest(Location.marshall));

@@ -26,7 +26,7 @@ public abstract class Worker extends Observable {
   }
 
   /**
-   * The action for a worker trying to ready.
+   * The action for a worker trying to ready i.e, the ready button is pressed.
    */
   public void tryReady() {
     setChanged();
@@ -52,10 +52,10 @@ public abstract class Worker extends Observable {
   abstract void finishAction();
 
   /**
-   * The expected order that the worker should scan in.
+   * The getExpectedScan order that the worker should scan in.
    * The picker class overwrites this method.
    *
-   * @return The expected order that the worker should scan in.
+   * @return The getExpectedScan order that the worker should scan in.
    */
   LinkedList<String> getScanOrder() {
     return new LinkedList<>(currPickingReq.getProperSkus());
@@ -66,7 +66,7 @@ public abstract class Worker extends Observable {
    *
    * @return the expected sku.
    */
-  private String expected() {
+  private String getExpectedScan() {
     return toBeScanned.pop();
   }
 
@@ -74,21 +74,17 @@ public abstract class Worker extends Observable {
    * The result of a scan from a worker.
    *
    * @param sku      the sku being scanned.
-   * @param expected the expected sku to match up with the sku being scanned.
+   * @param expected the getExpectedScan sku to match up with the sku being scanned.
    * @return true if the scan matches, else returns false.
    */
   boolean scanResult(String sku, String expected) {
-    System.out.println(this.getClass().getSimpleName() + " " + name + " "
-        + "preformed a scan action!");
     if (sku.equals(expected)) {
       System.out
-          .println("Scan of SKU " + sku + " matched with"
-              + " the expected result");
+          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku + " correct scan");
       return true;
     } else {
       System.out
-          .println("Scan of SKU " + sku + " did not match "
-              + "with the expected result of SKU " + expected);
+          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku + " incorrect scan");
       return false;
     }
   }
@@ -99,8 +95,9 @@ public abstract class Worker extends Observable {
    * @param sku the sku being scanned.
    */
   public void scan(String sku) {
+    System.out.println(getClass().getSimpleName() + " " + name + " scanned sku: " + sku);
     if (getCurrPickingReq() != null) {
-      if (!scanResult(sku, expected())) {
+      if (!scanResult(sku, getExpectedScan())) {
         masterSystem.getPickingRequestManager()
             .update(getCurrPickingReq(), Location.load);
       } else {
@@ -116,10 +113,10 @@ public abstract class Worker extends Observable {
    * An event for rescan.
    */
   public void rescan() {
+    System.out.println(getClass().getSimpleName() + " " + getName() + " "
+        + "rescanned");
     resetScanCount();
     setToBeScanned(getScanOrder());
-    System.out.println(getClass().getSimpleName() + " " + getName() + " "
-        + "restarted its scan process.");
   }
 
   /**

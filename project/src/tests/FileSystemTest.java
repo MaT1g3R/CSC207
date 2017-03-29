@@ -73,19 +73,19 @@ public class FileSystemTest {
    */
   @Test
   public void getWritingFileForEdit() {
-    fileSystem.setWritingFile(writePaths[0], content);
+    fileSystem.setWritingFileContents(writePaths[0], content);
     ArrayList<String> actual = fileSystem.getWritingFileForEdit(writePaths[0]);
     Assert.assertEquals(content, actual);
   }
 
   /**
-   * Test setWritingFile.
+   * Test setWritingFileContents.
    */
   @Test
   public void setWritingFile() {
-    fileSystem.setWritingFile("DansGame", new ArrayList<>(
+    fileSystem.setWritingFileContents("DansGame", new ArrayList<>(
         Arrays.asList(new String[]{"lololol", "lasdlasld", "asdsad"})));
-    fileSystem.setWritingFile("DansGame", content);
+    fileSystem.setWritingFileContents("DansGame", content);
     ArrayList<String> actual = fileSystem.getWritingFileForEdit("DansGame");
     Assert.assertEquals(content, actual);
   }
@@ -95,7 +95,7 @@ public class FileSystemTest {
    */
   @Test
   public void writeAll() {
-    fileSystem.setWritingFile(writePaths[0], content);
+    fileSystem.setWritingFileContents(writePaths[0], content);
     fileSystem.writeAll();
     ArrayList<String> actual = CsvReadWrite.readCsv(writePaths[0]);
     File file = new File(writePaths[0]);

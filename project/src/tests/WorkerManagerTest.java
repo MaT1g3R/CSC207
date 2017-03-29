@@ -334,7 +334,7 @@ public class WorkerManagerTest {
     loader.finish();
     Field cargo = Truck.class.getDeclaredField("cargo");
     cargo.setAccessible(true);
-    ArrayList<ArrayList<String[]>> cargoList = (ArrayList<ArrayList<String[]>>)
+    final ArrayList<ArrayList<String[]>> cargoList = (ArrayList<ArrayList<String[]>>)
         cargo.get(truck);
     Assert.assertEquals(0, getManagerPallets().size());
     Assert.assertEquals(0, loadingArea.size());

@@ -45,7 +45,7 @@ public class Sequencer extends Worker {
     }
     getCurrPickingReq().updateLocation(Location.load);
     masterSystem.getPickingRequestManager()
-        .putPalletes(new String[][]{frontPallet,
+        .addPallets(new String[][]{frontPallet,
             backPallet}, getCurrPickingReq().getId());
     System.out
         .println("The sequencer " + getName() + " has finished "

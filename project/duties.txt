@@ -1,13 +1,12 @@
-========================Tasbir Rahman=====================
-I created, impelemented, and documented the SkuTranslator, 
-PickingRequest, and Picker classes and all associated 
-methods (except for one in SkuTranslator). I also wrote 
-the three methods for assigning workers to do certain 
-requests. Everyone in my group was involved in fixing 
-various tiny mistakes in other classes such as a subclass 
-not extending its parent or doing style fixes. We all took
-part in the design decisions for the program. I also handled 
-some of the debugging near the end.
+﻿========================Tasbir Rahman=====================
+I converted all the print statements so that they use the logger.
+I added logging to all the events when read. I refactored a lot of
+the code so that the names are more descriptive. I also modified the 
+documentation of a lot of the code to be more clear and added bits 
+and pieces of it throughout the program. I also added the minStock
+field to warehouse floor because replenishing when stock levels
+reach 5 is hardcoding. I made tests for the classes I created in 
+phase 1.
 
 ========================Peijun Ma=========================
 I created, implemented, and documented the Main,

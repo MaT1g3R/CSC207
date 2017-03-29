@@ -29,7 +29,7 @@ public class Loader extends Worker {
   }
 
   /**
-   * What a loder does when it gets ready.
+   * What a loader does when it gets ready.
    */
   @Override
   void readyAction() {
@@ -39,7 +39,7 @@ public class Loader extends Worker {
   }
 
   /**
-   * What a loder does when it tries to load to a truck.
+   * What a loader does when it tries to load to a truck.
    */
   @Override
   void finishAction() {
@@ -51,14 +51,14 @@ public class Loader extends Worker {
           + "request " + String.valueOf(getCurrPickingReq().getId())
           + "\nThe picking request is sent back to loading area.");
       getCurrPickingReq().updateLocation(Location.load);
-      masterSystem.getPickingRequestManager().putPalletes(
+      masterSystem.getPickingRequestManager().addPallets(
           new String[][]{frontPallet, backPallet},
           getCurrPickingReq().getId());
     } else {
       System.out.println("Loader " + getName() + " loaded picking request"
           + " " + String.valueOf(getCurrPickingReq().getId()));
       for (Order o : getCurrPickingReq().getOrders()) {
-        masterSystem.getWarehouseFloor().logLoading(o.toString());
+        masterSystem.getWarehouseFloor().writeLoadedOrders(o.toString());
       }
     }
   }

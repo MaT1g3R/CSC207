@@ -24,11 +24,12 @@ public final class MasterSystemFactory {
    * @param traversalFilePath   the file path to the traversal table
    * @param outFilePath         the file path for output
    * @param maxStock            the max stock level for warehouseFloor
+   * @param minStock            the point the stock level can reach when a replenish request is made
    */
   public static MasterSystem getMasterSystem(
       String warehouseFilePath,
       String translationFilePath, String traversalFilePath,
-      String outFilePath, int maxStock) {
+      String outFilePath, int maxStock, int minStock) {
     MasterSystem masterSystem = new MasterSystem();
 
     FileSystem fileSystem = new FileSystem(
@@ -44,7 +45,7 @@ public final class MasterSystemFactory {
     PickingRequestManager pickingRequestManager = new PickingRequestManager();
 
     WarehouseFloor warehouseFloor = new WarehouseFloor(
-        warehouseFilePath, outFilePath, masterSystem, maxStock);
+        warehouseFilePath, outFilePath, masterSystem, maxStock, minStock);
 
     masterSystem.setAll(warehouseFloor, workerManager, pickingRequestManager,
         fileSystem, skuTranslator);

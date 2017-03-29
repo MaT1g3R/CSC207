@@ -9,6 +9,7 @@ import util.MasterSystem;
 public class WarehouseFloor {
 
   private final int maxStock;
+  private final int minStock;
   private HashMap<String, Integer> inventory = new HashMap<>();
   private ArrayList<Truck> trucks = new ArrayList<>();
   private LinkedList<String> toBeReplenished = new LinkedList<>();
@@ -27,10 +28,11 @@ public class WarehouseFloor {
       String warehouseFile,
       String outFile,
       MasterSystem masterSystem,
-      int max
+      int max, int min
   ) {
     this.masterSystem = masterSystem;
     this.maxStock = max;
+    this.minStock = min;
     this.warehouseFile = warehouseFile;
     this.outFile = outFile;
   }
@@ -39,9 +41,12 @@ public class WarehouseFloor {
    * Set the stock levels from the initial file.
    */
   public void setInventory() {
+    //initial stock levels are at max unless specified otherwise from input file
     for (String sku : masterSystem.getSkuTranslator().getAllSku()) {
       inventory.put(sku, maxStock);
     }
+
+    //updating stock levels from file
     if (!masterSystem.getFileSystem().getFileContent(warehouseFile).isEmpty()) {
       for (String s : masterSystem.getFileSystem()
           .getFileContent(warehouseFile)) {
@@ -51,7 +56,8 @@ public class WarehouseFloor {
             .getSkuFromLocation(location);
         int amount = Integer.valueOf(line.get(4));
         this.inventory.put(sku, amount);
-        if (amount <= 5) {
+        //Replenish request is always made when stock level is at the min amount or less.
+        if (amount <= minStock) {
           toBeReplenished.add(sku);
         }
       }
@@ -59,45 +65,44 @@ public class WarehouseFloor {
   }
 
   /**
-   * Add facsias to the inventory.
+   * Add SKUs to the inventory.
    *
    * @param sku    the sku of the facsia to be added
    * @param amount the amount to be added
    */
-  public void addFacsia(String sku, int amount) {
+  public void addSku(String sku, int amount) {
     if (inventory.containsKey(sku)) {
       inventory.put(sku, Math.min(maxStock, inventory.get(sku) + amount));
     } else {
-      System.out.println("The sku doesn't exist.");
+      System.out.println("SKU does not exist");
     }
   }
 
   /**
    * Removes one quantity of SKU from inventory if there are any. If the
-   * quantity is <= 5 a replenish request is created for that SKU if there isn't
+   * quantity is <= minStock a replenish request is created for that SKU if there isn't
    * any.
    *
    * @param sku the sku being removed
-   * @return true if the fascia is taken.
+   * @return true if the sku is taken.
    */
-  public boolean removeFascia(String sku) {
+  public boolean removeSku(String sku) {
     if (!inventory.containsKey(sku)) {
       System.out.println("Sku " + sku + " doesn't exist.");
       return false;
     }
     if (inventory.get(sku) < 1) {
       System.out.println(
-          "An attempt of trying to remove fascia of SKU " + sku
-              + " from an empty rack was made");
+          "Empty Rack Removal Attempt");
       return false;
     } else {
       inventory.put(sku, inventory.get(sku) - 1);
-      System.out.println("A fascia of SKU " + String.valueOf(sku) + " was "
-          + "taken.");
+      System.out.println("SKU " + String.valueOf(sku) + " taken.");
     }
-    if (inventory.get(sku) <= 5 && !toBeReplenished.contains(sku)) {
-      // put a replenish request in the system when the amout is <= 5
+    if (inventory.get(sku) <= minStock && !toBeReplenished.contains(sku)) {
+      // put a replenish request in the system when the amount is <= 5
       toBeReplenished.add(sku);
+      System.out.println("Repleneish Request for SKU: " + sku);
     }
     return true;
   }
@@ -112,7 +117,7 @@ public class WarehouseFloor {
   }
 
   /**
-   * Get the first truck that's not full in all trucks.
+   * Get the first truck that's not full.
    *
    * @return the not full truck
    */
@@ -126,10 +131,11 @@ public class WarehouseFloor {
   }
 
   /**
-   * Output the warehousefloor simulation results.
+   * Writes the warehousefloor inventory quantities to a file.
    */
-  public void outPutResult() {
+  public void writeInventoryQuantities() {
     ArrayList<String> finalCsv = new ArrayList<>();
+    //Create arrayList of Sku quantities
     for (String sku : this.inventory.keySet()) {
       if (inventory.get(sku) < 30) {
         finalCsv.add(
@@ -137,32 +143,34 @@ public class WarehouseFloor {
                 .get(sku));
       }
     }
-    masterSystem.getFileSystem().setWritingFile(outFile + "final"
+
+    //Write the contents to file
+    masterSystem.getFileSystem().setWritingFileContents(outFile + "final"
         + ".csv", finalCsv);
     masterSystem.getFileSystem().writeAll();
   }
 
   /**
-   * A method to log loaded orders.
+   * A method to write loaded orders to a file.
    *
    * @param order the order to be logged
    */
-  public void logLoading(String order) {
+  public void writeLoadedOrders(String order) {
     masterSystem.getFileSystem().getWritingFileForEdit(outFile + "orders"
         + ".csv").add(order);
   }
 
   /**
-   * Return and remove the first element of toBeReplenished.
+   * Gets the earliest replenish request made.
    *
-   * @return first element of toBeReplenished
+   * @return The sku that must be replenished.
    */
-  public String popReplenishRequest() {
+  public String getFirstReplenishRequest() {
     return toBeReplenished.isEmpty() ? null : toBeReplenished.pop();
   }
 
   /**
-   * Add a sku to the front of toBeReplenished list.
+   * Add a sku to the front of replenish requests to be made.
    *
    * @param toBeRemoved the sku to be added.
    */

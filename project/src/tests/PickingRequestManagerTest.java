@@ -150,7 +150,7 @@ public class PickingRequestManagerTest {
     for (Order order : tmpOrders) {
       manager.addOrder(order);
     }
-    PickingRequest tempRequest = manager.getForPicking();
+    PickingRequest tempRequest = manager.getUnpickedRequest();
     Assert.assertNotNull(tempRequest);
     Assert.assertEquals(0, pickingRequests.size());
     Assert.assertEquals(0, ordersList.size());
@@ -168,7 +168,7 @@ public class PickingRequestManagerTest {
       manager.addOrder(order);
     }
     assert (pickingRequests.isEmpty() && ordersList.size() == 2);
-    Assert.assertNull(manager.getForPicking());
+    Assert.assertNull(manager.getUnpickedRequest());
   }
 
   /**
@@ -185,12 +185,12 @@ public class PickingRequestManagerTest {
   }
 
   /**
-   * Test for putPallets method.
+   * Test for addPallets method.
    */
   @Test
   public void putPalletes() {
     String[][] pallets = factory.generatePallets(request);
-    manager.putPalletes(pallets, 0);
+    manager.addPallets(pallets, 0);
     Assert.assertArrayEquals(pallets, palletsMap.get(0));
     Assert.assertEquals(1, palletsMap.size());
   }

@@ -10,7 +10,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
- * This class reads and writes to files.
+ * This class reads and writes to files. Methods are all static because reading and writing
+ * to a csv file happens the same way no matter what.
  *
  * @author Peijun
  */
@@ -25,7 +26,7 @@ public final class CsvReadWrite {
   /**
    * This reads the file into an ArrayList, line by line.
    *
-   * @param fileName The file name
+   * @param fileName The file name, with the path
    * @return An ArrayList representing the file
    */
   public static ArrayList<String> readCsv(final String fileName) {
@@ -51,10 +52,10 @@ public final class CsvReadWrite {
 
 
   /**
-   * This overrides the file.
+   * This overwrites the file with the content.
    *
-   * @param content  An ArrayList, each item is a new line
-   * @param fileName The name of the file
+   * @param content  An ArrayList, each element is a new line
+   * @param fileName The path including the name of the file
    */
   public static void overWrite(final ArrayList<String> content,
       final String fileName) {

@@ -107,7 +107,7 @@ class TestFactory {
     String traversalFile = "../traversal_table.csv";
     String outFile = "tests/";
     return MasterSystemFactory.getMasterSystem(warehouseFile, translationFile,
-        traversalFile, outFile, 30);
+        traversalFile, outFile, 30,5);
   }
 
   /**

@@ -23,7 +23,8 @@ public class PickingRequestManager implements Observer {
   private int pickingReqId = 0;
 
   /**
-   * This method is called whenever the observed PickingRequest is changed.
+   * This method is called whenever any PickingRequest is changed. Such as when it is ready for
+   * loading and sequencing.
    *
    * @param request the observable object.
    * @param arg     an argument passed to the notifyObservers
@@ -78,14 +79,14 @@ public class PickingRequestManager implements Observer {
   }
 
   /**
-   * Get a picking request for the picker.
+   * Get a picking request for the picker. Requests are sent in the order they are made.
    *
    * @return a picking request for the picker.
    */
-  public PickingRequest getForPicking() {
+  public PickingRequest getUnpickedRequest() {
     if (!outStandingPickingRequests.isEmpty()) {
       return popRequest(Location.pick);
-    } else if (orders.size() >= 4) {
+    } else if (orders.size() >= 4) { //Create one from earliest four orders if there aren't any.
       return generatePickingReq();
     } else {
       return null;
@@ -99,8 +100,7 @@ public class PickingRequestManager implements Observer {
    */
   public void addOrder(Order order) {
     orders.add(order);
-    System.out.println("Order " + order + " has been added to the "
-        + "warehousefloor.");
+    System.out.println("New Order:" + order);
   }
 
   /**
@@ -109,12 +109,12 @@ public class PickingRequestManager implements Observer {
    * @param pallet the front and back pallets.
    * @param id     the picking request id.
    */
-  public void putPalletes(String[][] pallet, int id) {
+  public void addPallets(String[][] pallet, int id) {
     this.pallets.put(id, pallet);
   }
 
   /**
-   * Remove and return pallets by picking request id.
+   * Remove and return pallets by given picking request id.
    *
    * @param id the picking request id.
    */

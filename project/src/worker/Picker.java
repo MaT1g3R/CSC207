@@ -40,7 +40,7 @@ public class Picker extends Worker {
     }
     locations = WarehousePicking
         .optimize(toBeOptimized, masterSystem.getSkuTranslator());
-    displayString.append("It will go to locations:\n");
+    displayString.append(getClass().getSimpleName() + getName() + " go to locations:\n");
     for (String loc : locations) {
       displayString.append(loc);
       displayString.append("\n");
@@ -85,7 +85,7 @@ public class Picker extends Worker {
   @Override
   public void scan(String sku) {
     if (getCurrPickingReq() != null
-        && masterSystem.getWarehouseFloor().removeFascia(sku)
+        && masterSystem.getWarehouseFloor().removeSku(sku)
         && scanResult(sku, expected())) {
       addScanCount();
       getToBeScanned().removeFirst();
