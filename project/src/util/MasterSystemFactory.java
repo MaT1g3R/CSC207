@@ -29,7 +29,7 @@ public final class MasterSystemFactory {
   public static MasterSystem getMasterSystem(
       String warehouseFilePath,
       String translationFilePath, String traversalFilePath,
-      String outFilePath, int maxStock, int minStock) {
+      String outFilePath, int maxStock, int minStock, boolean makeFile) {
     MasterSystem masterSystem = new MasterSystem();
 
     FileSystem fileSystem = new FileSystem(
@@ -45,10 +45,10 @@ public final class MasterSystemFactory {
     PickingRequestManager pickingRequestManager = new PickingRequestManager();
 
     WarehouseFloor warehouseFloor = new WarehouseFloor(
-        warehouseFilePath, outFilePath, masterSystem, maxStock, minStock);
+        warehouseFilePath, masterSystem, maxStock, minStock);
 
     masterSystem.setAll(warehouseFloor, workerManager, pickingRequestManager,
-        fileSystem, skuTranslator);
+        fileSystem, skuTranslator, outFilePath, makeFile);
     return masterSystem;
   }
 }

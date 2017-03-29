@@ -14,19 +14,16 @@ public class WarehouseFloor {
   private ArrayList<Truck> trucks = new ArrayList<>();
   private LinkedList<String> toBeReplenished = new LinkedList<>();
   private String warehouseFile;
-  private String outFile;
   private MasterSystem masterSystem;
 
   /**
    * Initialize a new warehousefloor.
    *
    * @param warehouseFile the file path to read inventory from.
-   * @param outFile       the output file dir.
    * @param max           the max stock level.
    */
   public WarehouseFloor(
       String warehouseFile,
-      String outFile,
       MasterSystem masterSystem,
       int max, int min
   ) {
@@ -34,7 +31,6 @@ public class WarehouseFloor {
     this.maxStock = max;
     this.minStock = min;
     this.warehouseFile = warehouseFile;
-    this.outFile = outFile;
   }
 
   /**
@@ -145,7 +141,7 @@ public class WarehouseFloor {
     }
 
     //Write the contents to file
-    masterSystem.getFileSystem().setWritingFileContents(outFile + "final"
+    masterSystem.getFileSystem().setWritingFileContents(masterSystem.getOutPutPath() + "final"
         + ".csv", finalCsv);
     masterSystem.getFileSystem().writeAll();
   }
@@ -156,7 +152,7 @@ public class WarehouseFloor {
    * @param order the order to be logged
    */
   public void writeLoadedOrders(String order) {
-    masterSystem.getFileSystem().getWritingFileForEdit(outFile + "orders"
+    masterSystem.getFileSystem().getWritingFileForEdit(masterSystem.getOutPutPath() + "orders"
         + ".csv").add(order);
   }
 

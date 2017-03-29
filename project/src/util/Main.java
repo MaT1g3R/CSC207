@@ -21,7 +21,7 @@ public class Main {
       String traversalFile = "../traversal_table.csv";
       String outFile = "../";
       Simulator mySim = new Simulator(args[0], warehouseFile, translationFile,
-          traversalFile, outFile);
+          traversalFile, outFile, true);
       mySim.run();
     } else {
       throw new UnsupportedOperationException("Please enter a vaild path to "

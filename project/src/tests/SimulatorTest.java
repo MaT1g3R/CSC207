@@ -28,7 +28,7 @@ public class SimulatorTest {
     String outFile = "tests/";
 
     Simulator simulator = new Simulator(eventFile, warehouseFile,
-        translationFile, traversalFile, outFile);
+        translationFile, traversalFile, outFile, false);
     simulator.run();
 
     ArrayList<String> expectedFinal = CsvReadWrite

@@ -40,9 +40,9 @@ public class Simulator {
    */
   public Simulator(String eventFile, String warehouseFilePath,
       String translationFilePath, String traversalFilePath,
-      String outFilePath) {
+      String outFilePath, boolean makeFile) {
     masterSystem = MasterSystemFactory.getMasterSystem(warehouseFilePath,
-        translationFilePath, traversalFilePath, outFilePath, 30, 5);
+        translationFilePath, traversalFilePath, outFilePath, 30, 5, makeFile);
     eventList = CsvReadWrite.readCsv(eventFile);
     masterSystem.getWarehouseFloor().addTruck(new Truck((0)));
     warehouseFloor = masterSystem.getWarehouseFloor();

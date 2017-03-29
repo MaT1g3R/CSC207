@@ -23,6 +23,7 @@ public class MasterSystem {
   private FileSystem fileSystem;
   private SkuTranslator skuTranslator;
   private Logger logger;
+  private String outPutPath;
 
   /**
    * A setter for all the instance variables in this class.
@@ -39,29 +40,33 @@ public class MasterSystem {
       WorkerManager workerManager,
       PickingRequestManager pickingRequestManager,
       FileSystem fileSystem,
-      SkuTranslator skuTranslator
+      SkuTranslator skuTranslator,
+      String outPutPath,
+      boolean makeFile
   ) {
+    this.outPutPath = outPutPath;
     this.warehouseFloor = warehouseFloor;
     this.workerManager = workerManager;
     this.pickingRequestManager = pickingRequestManager;
     this.fileSystem = fileSystem;
     this.skuTranslator = skuTranslator;
     this.warehouseFloor.setInventory();
-    setLogger();
+    setLogger(makeFile);
 
   }
 
-  private void setLogger() {
+  private void setLogger(boolean makeFile) {
+    if (makeFile){
     ConsoleHandler ch = new ConsoleHandler();
     this.logger = Logger.getLogger(getClass().getSimpleName());
     try {
-      FileHandler fh = new FileHandler("../log.txt");
+      FileHandler fh = new FileHandler(outPutPath + "log.txt");
       fh.setFormatter(new SimpleFormatter());
       this.logger.addHandler(fh);
     } catch (IOException exception) {
       System.out.println("Logging file could not be opened. Logging only to console");
     }
-    this.logger.addHandler(ch);
+    this.logger.addHandler(ch);}
   }
 
   /**
@@ -107,5 +112,9 @@ public class MasterSystem {
    */
   public SkuTranslator getSkuTranslator() {
     return skuTranslator;
+  }
+
+  public String getOutPutPath(){
+    return outPutPath;
   }
 }
