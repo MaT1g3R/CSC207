@@ -54,6 +54,11 @@ public class MasterSystem {
 
   }
 
+  /**
+   * A setter for the logger.
+   *
+   * @param makeFile weather if the logger is going to log to a file
+   */
   private void setLogger(boolean makeFile) {
     ConsoleHandler ch = new ConsoleHandler();
     this.logger = Logger.getLogger(getClass().getSimpleName());
