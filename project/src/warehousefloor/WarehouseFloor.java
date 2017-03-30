@@ -128,9 +128,9 @@ public class WarehouseFloor {
   }
 
   /**
-   * Writes the warehousefloor inventory quantities to a file.
+   *  Creates the output files. The output files are the loaded orders, and the updated inventory.
    */
-  public void writeInventoryQuantities() {
+  public void createOutputFiles() {
     ArrayList<String> finalCsv = new ArrayList<>();
     //Create arrayList of Sku quantities
     for (String sku : this.inventory.keySet()) {
