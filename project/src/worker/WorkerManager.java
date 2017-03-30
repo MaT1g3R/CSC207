@@ -3,6 +3,8 @@ package worker;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+
 import util.MasterSystem;
 import warehousefloor.Location;
 
@@ -78,14 +80,15 @@ public class WorkerManager implements Observer {
     String job = worker.getClass().getSimpleName();
     String name = worker.getName();
     if (worker.getCurrPickingReq() == null) {
-      System.out.println(job + " " + name + " tried to finish its job with no"
-          + " picking request, finish action aborted.");
+      masterSystem.getLogger().log(Level.WARNING,job + " " + name
+          + " can't finish with no request!");
     } else if (worker.getCurrPickingReq() != null
-        && worker.getScanCount() != 8) {
+        && worker.getScanCount() < worker.getScanOrder().size()) {
       worker.getCurrPickingReq().updateLocation(Location.pick);
-      System.out.println(job + name
-          + " tried to go to finish its job with less than 8 skus scanned, "
-          + "the picking request has been sent back to be picked again.");
+      masterSystem.getLogger().log(Level.WARNING, job + name
+          + " can't finish without scanning all correct SKUs!");
+      masterSystem.getLogger().log(Level.WARNING,"Picking request "
+          + worker.getCurrPickingReq().getId() + " has been sent to be repicked.");
     } else {
       worker.finishAction();
     }
