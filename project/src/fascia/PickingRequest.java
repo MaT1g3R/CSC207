@@ -40,9 +40,9 @@ public class PickingRequest extends Observable implements
   }
 
   /**
-   * Return the proper order that the Skus should be in for loading
+   * Return the proper order that the Skus should be in
    *
-   * @return : The skus as an IntegerArray list.
+   * @return : The skus as a LinkedList of Strings.
    */
   public LinkedList<String> getProperSkus() {
     LinkedList<String> res = new LinkedList<>();

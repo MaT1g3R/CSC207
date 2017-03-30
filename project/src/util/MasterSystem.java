@@ -90,7 +90,7 @@ public class MasterSystem {
   }
 
   /**
-   * A getter fot pickingRequestManager.
+   * A getter for pickingRequestManager.
    *
    * @return pickingRequestManager
    */
@@ -108,7 +108,7 @@ public class MasterSystem {
   }
 
   /**
-   * A getter fot skuTranslator.
+   * A getter for skuTranslator.
    *
    * @return skuTranslator
    */

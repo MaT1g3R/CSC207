@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class is responsible for taking in csv files that have data about SKUs
- * and returning information for a particular set of that data, or about an
- * SKU.
+ * This class is responsible for translating SKUs and returning information
+ * for a particular set of that data, or about a SKU.
  *
  * @author Tasbir
  */
@@ -24,12 +23,13 @@ public class SkuTranslator {
   }
 
   /**
-   * Using given translation table, returns SKU unit given the info.
+   * Using the given translation table, returns the front or back
+   * SKU given the colour, model, and whether it is a front or back bumper.
    *
    * @param colour  the colour of this sku
    * @param model   the model of this sku
-   * @param isFront whether or not the sku is on the front or the back
-   * @return : the sku with the three above traits as an int
+   * @param isFront true if the sku is a front fascia, false if its a rear fascia
+   * @return : the sku that matches the colour, model, and orientation
    */
   public String getSku(String colour, String model, boolean isFront) {
     for (String s : properties) {
@@ -42,11 +42,11 @@ public class SkuTranslator {
   }
 
   /**
-   * Using given traversal table, returns location of <sku></sku> in
+   * Using the given traversal table, returns the location of <sku></sku> in
    * warehousefloor.
    *
-   * @param sku whether or not the sku is on the front or the back
-   * @return : the <sku></sku> with the given location as an int
+   * @param sku the sku that is being looked up for its location
+   * @return : the <sku></sku> with the given location as a String
    */
   public String getLocation(String sku) {
     for (String s : locations) {
@@ -60,10 +60,10 @@ public class SkuTranslator {
   }
 
   /**
-   * Using traversal table, fetches sku stored in location.
+   * Using the given traversal table, fetches the sku stored at a location.
    *
    * @param location is in String array format such as {Zone, Aisle, Rack, Rack Level}
-   * @return sku stored in given area according to translation table
+   * @return sku the sku stored in given area according to the translation table
    */
   public String getSkuFromLocation(String[] location) {
     for (String s : locations) {
@@ -77,9 +77,9 @@ public class SkuTranslator {
   }
 
   /**
-   * Get a list of all skus from translation table.
+   * Get a list of all skus from the translation table.
    *
-   * @return a list of all skus from translation table.
+   * @return a list of all skus from the translation table.
    */
   public ArrayList<String> getAllSku() {
     ArrayList<String> result = new ArrayList<>();
