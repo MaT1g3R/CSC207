@@ -3,8 +3,6 @@ package worker;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-
 import util.MasterSystem;
 import warehousefloor.Location;
 
@@ -48,7 +46,7 @@ public class WorkerManager implements Observer {
         assignPickingRequest(worker);
         worker.readyHelper();
       } else {
-        finishHelper(worker);
+        worker.finishHelper();
       }
     }
   }
@@ -68,35 +66,6 @@ public class WorkerManager implements Observer {
     } else if (worker instanceof Loader) {
       worker.setCurrPickingReq(
           masterSystem.getPickingRequestManager().popRequest(Location.load));
-    }
-  }
-
-  /**
-   * Finish action for a worker.
-   *
-   * @param worker the worker whose finished
-   */
-  private void finishHelper(Worker worker) {
-    String job = worker.getClass().getSimpleName();
-    String name = worker.getName();
-    if (worker.getCurrPickingReq() == null) {
-      masterSystem.getLogger().log(Level.WARNING,job + " " + name
-          + " can't finish with no request!");
-    } else if (worker.getCurrPickingReq() != null
-        && worker.getScanCount() < worker.getScanOrder().size()) {
-      worker.getCurrPickingReq().updateLocation(Location.pick);
-      masterSystem.getLogger().log(Level.WARNING, job + name
-          + " can't finish without scanning all correct SKUs!");
-      masterSystem.getLogger().log(Level.WARNING,"Picking request "
-          + worker.getCurrPickingReq().getId() + " has been sent to be repicked.");
-    } else {
-      worker.finishAction();
-    }
-    worker.setCurrPickingReq(null);
-    worker.resetScanCount();
-    worker.getToBeScanned().clear();
-    if (worker instanceof Loader) {
-      ((Loader) worker).setPallets(new String[4], new String[4]);
     }
   }
 
@@ -145,6 +114,7 @@ public class WorkerManager implements Observer {
   public Loader getLoader(String name) {
     return loaders.get(name);
   }
+
 
   /**
    * Get a picker by name.

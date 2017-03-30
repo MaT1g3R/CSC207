@@ -1,11 +1,10 @@
 package worker;
 
 import fascia.Order;
+import java.util.logging.Level;
 import util.MasterSystem;
 import warehousefloor.Location;
 import warehousefloor.Truck;
-
-import java.util.logging.Level;
 
 /**
  * A class to represent Loaders.
@@ -49,17 +48,18 @@ public class Loader extends Worker {
     if (truck == null
         || !truck.addCargo(
         frontPallet, backPallet, getCurrPickingReq().getId())) {
-        masterSystem.getLogger().log(Level.WARNING, "Loader " + getName()
-            + " could not load picking "
-            + "request " + String.valueOf(getCurrPickingReq().getId())
-            + "\nThe picking request is sent back to loading area.");
+      masterSystem.getLogger().log(Level.WARNING, "Loader " + getName()
+          + " could not load picking "
+          + "request " + String.valueOf(getCurrPickingReq().getId())
+          + "\nThe picking request is sent back to loading area.");
       getCurrPickingReq().updateLocation(Location.load);
       masterSystem.getPickingRequestManager().addPallets(
           new String[][]{frontPallet, backPallet},
           getCurrPickingReq().getId());
     } else {
-      masterSystem.getLogger().log(Level.INFO, "Loader " + getName() + " loaded picking request"
-          + " " + String.valueOf(getCurrPickingReq().getId()));
+      masterSystem.getLogger()
+          .log(Level.INFO, "Loader " + getName() + " loaded picking request"
+              + " " + String.valueOf(getCurrPickingReq().getId()));
       for (Order o : getCurrPickingReq().getOrders()) {
         masterSystem.getWarehouseFloor().writeLoadedOrders(o.toString());
       }
@@ -75,5 +75,11 @@ public class Loader extends Worker {
   void setPallets(String[] frontPallet, String[] backPallet) {
     this.frontPallet = frontPallet;
     this.backPallet = backPallet;
+  }
+
+  @Override
+  void finishHelper() {
+    super.finishHelper();
+    setPallets(new String[4], new String[4]);
   }
 }
