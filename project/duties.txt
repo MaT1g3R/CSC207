@@ -22,13 +22,9 @@ some of the debugging near the end.
 NOTE: In commit history, username is Umi and Unknown and email is 982341777@qq.com
 
 ==================Venkata Chaitanya Peesapati===================
-I created, implemented, and documented the Loader, Truck and Order classes.
-I also implemented some of the methods in the Warehouse class.
-I created and wrote the help.txt file. I was also noting down any 
-important design decisions that were made during our discussions.
-Everyone the group was involved in fixing various tiny mistakes 
-in other files. We all took part in the design decisions for the
-program. I helped contribute to some of the testing done at the end.
+I created and implemented some unittests. I redid half the UML with Andrew doing the other 
+half. I helped find and tweak smaller bugs as I came across them. We all contributed to making
+design decisions.
 NOTE: In commit history, username is betaman3 and email is chaitanya1998@gmail.com
 
 ========================Andrew Olechtchouk=========================
