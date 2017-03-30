@@ -77,6 +77,10 @@ public class Loader extends Worker {
     this.backPallet = backPallet;
   }
 
+  /**
+   * Overrides the finishHelper in Worker so this also calls setPallets and
+   * set them to empty array.
+   */
   @Override
   void finishHelper() {
     super.finishHelper();

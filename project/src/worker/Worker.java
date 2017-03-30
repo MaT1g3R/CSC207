@@ -20,6 +20,11 @@ public abstract class Worker extends Observable {
   private int scanCount = 0;
   private MasterSystem masterSystem;
 
+  /**
+   * Initialize a new instance of Worker
+   * @param name the name of the worker
+   * @param masterSystem the MasterSystem the worker belongs to
+   */
   Worker(String name, MasterSystem masterSystem) {
     this.name = name;
     this.masterSystem = masterSystem;
@@ -208,7 +213,7 @@ public abstract class Worker extends Observable {
   }
 
   /**
-   * Finish action for a worker.
+   * A helper method to try to make worker become finished.
    */
   void finishHelper() {
     String job = getClass().getSimpleName();
