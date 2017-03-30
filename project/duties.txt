@@ -1,13 +1,12 @@
-Phase 2
+﻿Phase 2
 ========================Tasbir Rahman=====================
 I converted all the print statements so that they use the logger.
 I added logging to all the events when read. I refactored a lot of
 the code so that the names are more descriptive. I also modified the 
 documentation of a lot of the code to be more clear and added bits 
-and pieces of it throughout the program. I also added the minStock
-field to warehouse floor because replenishing when stock levels
-reach 5 is hardcoding. I made tests for the classes I created in 
-phase 1.
+and pieces of it throughout the program. I also removed some instances
+of hardcoding in WarehouseFloor and WorkerManager. I also did some of 
+the walkthrough as well.
 
 ========================Peijun Ma=========================
 I wrote all of the unit tests for phase 2 except for WorkerTest. I also
