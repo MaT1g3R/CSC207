@@ -24,11 +24,13 @@ public class WorkerManager implements Observer {
   }
 
   /**
-   * This method is called whenever the observed observableWorker is changed. Handles what happens
-   * when the worker is ready for a new duty or they finished their current.
+   * This method is called whenever the observed observableWorker is changed.
+   * Handles what happens when the worker is ready for a new duty or they
+   * finished their current.
    *
    * @param observableWorker the Worker object to be updated.
-   * @param isReady          whether the worker is ready or not. If false, then the worker finished.
+   * @param isReady          whether the worker is ready or not. If false, then
+   *                         the worker finished.
    */
   @Override
   public void update(Observable observableWorker, Object isReady) {
@@ -42,7 +44,7 @@ public class WorkerManager implements Observer {
       Worker worker = (Worker) observableWorker;
       if (readyBool) {
         assignPickingRequest(worker);
-        readyHelper(worker);
+        worker.readyHelper();
       } else {
         finishHelper(worker);
       }
@@ -64,25 +66,6 @@ public class WorkerManager implements Observer {
     } else if (worker instanceof Loader) {
       worker.setCurrPickingReq(
           masterSystem.getPickingRequestManager().popRequest(Location.load));
-    }
-  }
-
-  /**
-   * A helper method to make a worker become ready.
-   *
-   * @param worker the worker to become ready.
-   */
-  private void readyHelper(Worker worker) {
-    String job = worker.getClass().getSimpleName();
-    String name = worker.getName();
-    if (worker.getCurrPickingReq() == null) {
-      System.out.println(job + " " + name + " tried to ready with no picking"
-          + " request. Ready " + "action aborted.");
-    } else {
-      System.out.println(job + " " + name + " is ready.");
-      worker.readyAction();
-      worker.resetScanCount();
-      worker.setToBeScanned(worker.getScanOrder());
     }
   }
 

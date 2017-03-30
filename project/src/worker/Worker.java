@@ -74,17 +74,20 @@ public abstract class Worker extends Observable {
    * The result of a scan from a worker.
    *
    * @param sku      the sku being scanned.
-   * @param expected the getExpectedScan sku to match up with the sku being scanned.
+   * @param expected the getExpectedScan sku to match up with the sku being
+   *                 scanned.
    * @return true if the scan matches, else returns false.
    */
   boolean scanResult(String sku, String expected) {
     if (sku.equals(expected)) {
       System.out
-          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku + " correct scan");
+          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku
+              + " correct scan");
       return true;
     } else {
       System.out
-          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku + " incorrect scan");
+          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku
+              + " incorrect scan");
       return false;
     }
   }
@@ -95,7 +98,8 @@ public abstract class Worker extends Observable {
    * @param sku the sku being scanned.
    */
   public void scan(String sku) {
-    System.out.println(getClass().getSimpleName() + " " + name + " scanned sku: " + sku);
+    System.out.println(
+        getClass().getSimpleName() + " " + name + " scanned sku: " + sku);
     if (getCurrPickingReq() != null) {
       if (!scanResult(sku, getExpectedScan())) {
         masterSystem.getPickingRequestManager()
@@ -160,7 +164,7 @@ public abstract class Worker extends Observable {
    *
    * @param scanOrder sets the order that the sku's should be in.
    */
-  void setToBeScanned(LinkedList<String> scanOrder) {
+  private void setToBeScanned(LinkedList<String> scanOrder) {
     toBeScanned = scanOrder;
   }
 
@@ -185,5 +189,22 @@ public abstract class Worker extends Observable {
    */
   void resetScanCount() {
     scanCount = 0;
+  }
+
+  /**
+   * A helper method to try to make worker become ready.
+   */
+  void readyHelper() {
+    String job = getClass().getSimpleName();
+    String name = getName();
+    if (getCurrPickingReq() == null) {
+      System.out.println(job + " " + name + " tried to ready with no picking"
+          + " request. Ready " + "action aborted.");
+    } else {
+      System.out.println(job + " " + name + " is ready.");
+      readyAction();
+      resetScanCount();
+      setToBeScanned(getScanOrder());
+    }
   }
 }
