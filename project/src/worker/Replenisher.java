@@ -2,6 +2,8 @@ package worker;
 
 import util.MasterSystem;
 
+import java.util.logging.Level;
+
 /**
  * This worker replenish the stock levels when asked to.
  *
@@ -55,12 +57,12 @@ public class Replenisher {
    */
   public void finish() {
     if (needed) {
-      System.out.println("Fascia of SKU " + sku + " has been "
+      masterSystem.getLogger().log(Level.INFO,"SKU " + sku + " has been "
           + "replenished by " + name);
       masterSystem.getWarehouseFloor().addSku(sku, 25);
     } else {
-      System.out.println("Unneeded replenish, nothing was added to the "
-          + "inventory");
+      masterSystem.getLogger().log(Level.WARNING, "Unneeded replenish, nothing was added to "
+          + "the inventory");
     }
     if (sku != null) {
       masterSystem.getWarehouseFloor().addReplenishRequestToFront(sku);

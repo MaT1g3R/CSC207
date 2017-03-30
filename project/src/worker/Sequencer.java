@@ -1,6 +1,8 @@
 package worker;
 
 import java.util.LinkedList;
+import java.util.logging.Level;
+
 import util.MasterSystem;
 import warehousefloor.Location;
 
@@ -47,8 +49,7 @@ public class Sequencer extends Worker {
     masterSystem.getPickingRequestManager()
         .addPallets(new String[][]{frontPallet,
             backPallet}, getCurrPickingReq().getId());
-    System.out
-        .println("The sequencer " + getName() + " has finished "
-            + "sequencing and sent the picking request for loading.");
+    masterSystem.getLogger().log(Level.INFO, "The sequencer " + getName() + " has finished "
+        + "sequencing and sent the picking request for loading.");
   }
 }

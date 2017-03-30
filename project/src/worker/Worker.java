@@ -1,8 +1,11 @@
 package worker;
 
 import fascia.PickingRequest;
+
 import java.util.LinkedList;
 import java.util.Observable;
+import java.util.logging.Level;
+
 import util.MasterSystem;
 import warehousefloor.Location;
 
@@ -80,14 +83,12 @@ public abstract class Worker extends Observable {
    */
   boolean scanResult(String sku, String expected) {
     if (sku.equals(expected)) {
-      System.out
-          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku
-              + " correct scan");
+      masterSystem.getLogger().log(Level.INFO, getClass().getSimpleName() + " " + name
+          + " SKU: " + sku + " correct scan");
       return true;
     } else {
-      System.out
-          .println(getClass().getSimpleName() + " " + name + " SKU: " + sku
-              + " incorrect scan");
+      masterSystem.getLogger().log(Level.WARNING, getClass().getSimpleName() + " "
+          + name + " SKU: " + sku + " incorrect scan");
       return false;
     }
   }
@@ -98,8 +99,8 @@ public abstract class Worker extends Observable {
    * @param sku the sku being scanned.
    */
   public void scan(String sku) {
-    System.out.println(
-        getClass().getSimpleName() + " " + name + " scanned sku: " + sku);
+    masterSystem.getLogger().log(Level.INFO, getClass().getSimpleName()
+        + " " + name + " scanned sku: " + sku);
     if (getCurrPickingReq() != null) {
       if (!scanResult(sku, getExpectedScan())) {
         masterSystem.getPickingRequestManager()
@@ -108,8 +109,8 @@ public abstract class Worker extends Observable {
         addScanCount();
       }
     } else {
-      System.out.println(getClass().getSimpleName() + " " + getName() + " "
-          + "tried to scan with no picking request. Scan action aborted.");
+      masterSystem.getLogger().log(Level.WARNING, getClass().getSimpleName() + " "
+          + getName() + " Unneeded Scan");
     }
   }
 
@@ -117,7 +118,7 @@ public abstract class Worker extends Observable {
    * An event for rescan.
    */
   public void rescan() {
-    System.out.println(getClass().getSimpleName() + " " + getName() + " "
+    masterSystem.getLogger().log(Level.INFO, getClass().getSimpleName() + " " + getName() + " "
         + "rescanned");
     resetScanCount();
     setToBeScanned(getScanOrder());
@@ -198,10 +199,10 @@ public abstract class Worker extends Observable {
     String job = getClass().getSimpleName();
     String name = getName();
     if (getCurrPickingReq() == null) {
-      System.out.println(job + " " + name + " tried to ready with no picking"
-          + " request. Ready " + "action aborted.");
+      masterSystem.getLogger().log(Level.WARNING, job + " " + name
+          + ", No requests to process!");
     } else {
-      System.out.println(job + " " + name + " is ready.");
+      masterSystem.getLogger().log(Level.WARNING, job + " " + name + " is ready.");
       readyAction();
       resetScanCount();
       setToBeScanned(getScanOrder());

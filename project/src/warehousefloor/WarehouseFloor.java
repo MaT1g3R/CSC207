@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+
 import util.MasterSystem;
 
 public class WarehouseFloor {
@@ -70,7 +72,7 @@ public class WarehouseFloor {
     if (inventory.containsKey(sku)) {
       inventory.put(sku, Math.min(maxStock, inventory.get(sku) + amount));
     } else {
-      System.out.println("SKU does not exist");
+      masterSystem.getLogger().log(Level.WARNING, "SKU does not exist");
     }
   }
 
@@ -84,21 +86,20 @@ public class WarehouseFloor {
    */
   public boolean removeSku(String sku) {
     if (!inventory.containsKey(sku)) {
-      System.out.println("Sku " + sku + " doesn't exist.");
+      masterSystem.getLogger().log(Level.WARNING,"SKU " + sku + " does not exist");
       return false;
     }
     if (inventory.get(sku) < 1) {
-      System.out.println(
-          "Empty Rack Removal Attempt");
+      masterSystem.getLogger().log(Level.WARNING, "Empty Rack Removal Attempt");
       return false;
     } else {
       inventory.put(sku, inventory.get(sku) - 1);
-      System.out.println("SKU " + String.valueOf(sku) + " taken.");
+      masterSystem.getLogger().log(Level.INFO,"One SKU " + String.valueOf(sku) + " taken.");
     }
     if (inventory.get(sku) <= minStock && !toBeReplenished.contains(sku)) {
       // put a replenish request in the system when the amount is <= 5
       toBeReplenished.add(sku);
-      System.out.println("Repleneish Request for SKU: " + sku);
+      masterSystem.getLogger().log(Level.INFO, "Repleneish Request for SKU:" + sku);
     }
     return true;
   }

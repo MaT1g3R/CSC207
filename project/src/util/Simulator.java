@@ -2,6 +2,7 @@ package util;
 
 import fascia.Order;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import warehousefloor.Truck;
 import warehousefloor.WarehouseFloor;
@@ -135,7 +136,7 @@ public class Simulator {
    */
   public void run() {
     for (String s : eventList) {
-      System.out.println("SIMULATOR EVENT : " + s);
+      masterSystem.getLogger().log(Level.INFO, "SIMULATOR EVENT : " + s );
       if (isOrderMade(s)) {
         Order order = new Order(s, masterSystem.getSkuTranslator());
         masterSystem.getPickingRequestManager().addOrder(order);
@@ -148,7 +149,7 @@ public class Simulator {
       } else if (didWorkerRescan(s)) {
         rescanHelper(getJob(s), getName(s));
       } else {
-        System.out.println("Invalid Simulator Event");
+        masterSystem.getLogger().log(Level.SEVERE, "INVALID EVENT");
       }
       warehouseFloor.writeInventoryQuantities();
     }

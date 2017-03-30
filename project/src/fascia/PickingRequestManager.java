@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import util.MasterSystem;
 import warehousefloor.Location;
 
 /**
@@ -21,6 +25,11 @@ public class PickingRequestManager implements Observer {
   private HashMap<Integer, String[][]> pallets = new HashMap<>();
   private LinkedList<Order> orders = new LinkedList<>();
   private int pickingReqId = 0;
+  private Logger masterLogger;
+
+  public void setMasterLogger(Logger logger) {
+    masterLogger = logger;
+  }
 
   /**
    * This method is called whenever any PickingRequest is changed. Such as when it is ready for
@@ -100,7 +109,9 @@ public class PickingRequestManager implements Observer {
    */
   public void addOrder(Order order) {
     orders.add(order);
-    System.out.println("New Order:" + order);
+    if (masterLogger != null) {
+      masterLogger.log(Level.INFO, "New Order:" + order);
+    }
   }
 
   /**

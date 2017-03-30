@@ -5,6 +5,8 @@ import util.MasterSystem;
 import warehousefloor.Location;
 import warehousefloor.Truck;
 
+import java.util.logging.Level;
+
 /**
  * A class to represent Loaders.
  *
@@ -47,15 +49,16 @@ public class Loader extends Worker {
     if (truck == null
         || !truck.addCargo(
         frontPallet, backPallet, getCurrPickingReq().getId())) {
-      System.out.println("Loader " + getName() + " could not load picking "
-          + "request " + String.valueOf(getCurrPickingReq().getId())
-          + "\nThe picking request is sent back to loading area.");
+        masterSystem.getLogger().log(Level.WARNING, "Loader " + getName()
+            + " could not load picking "
+            + "request " + String.valueOf(getCurrPickingReq().getId())
+            + "\nThe picking request is sent back to loading area.");
       getCurrPickingReq().updateLocation(Location.load);
       masterSystem.getPickingRequestManager().addPallets(
           new String[][]{frontPallet, backPallet},
           getCurrPickingReq().getId());
     } else {
-      System.out.println("Loader " + getName() + " loaded picking request"
+      masterSystem.getLogger().log(Level.INFO, "Loader " + getName() + " loaded picking request"
           + " " + String.valueOf(getCurrPickingReq().getId()));
       for (Order o : getCurrPickingReq().getOrders()) {
         masterSystem.getWarehouseFloor().writeLoadedOrders(o.toString());

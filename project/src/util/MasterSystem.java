@@ -59,14 +59,16 @@ public class MasterSystem {
     ConsoleHandler ch = new ConsoleHandler();
     this.logger = Logger.getLogger(getClass().getSimpleName());
     try {
-      if (makeFile){
-      FileHandler fh = new FileHandler(outPutPath + "log.txt");
-      fh.setFormatter(new SimpleFormatter());
-      this.logger.addHandler(fh);}
+      if (makeFile) {
+        FileHandler fh = new FileHandler(outPutPath + "log.txt");
+        fh.setFormatter(new SimpleFormatter());
+        this.logger.addHandler(fh);
+      }
     } catch (IOException exception) {
       System.out.println("Logging file could not be opened. Logging only to console");
     }
-    this.logger.addHandler(ch);}
+    this.logger.addHandler(ch);
+  }
 
 
   /**
@@ -114,7 +116,20 @@ public class MasterSystem {
     return skuTranslator;
   }
 
-  public String getOutPutPath(){
+  /**
+   * Returns the output path for the system.
+   *
+   * @return The outputpath as a string
+   */
+  public String getOutPutPath() {
     return outPutPath;
   }
+
+  /**
+   * Returns the logger of the MasterSystem for use in other classes
+   */
+  public Logger getLogger() {
+    return this.logger;
+  }
+
 }

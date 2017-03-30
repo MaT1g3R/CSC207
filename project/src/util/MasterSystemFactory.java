@@ -49,6 +49,7 @@ public final class MasterSystemFactory {
 
     masterSystem.setAll(warehouseFloor, workerManager, pickingRequestManager,
         fileSystem, skuTranslator, outFilePath, makeFile);
+    masterSystem.getPickingRequestManager().setMasterLogger(masterSystem.getLogger());
     return masterSystem;
   }
 }

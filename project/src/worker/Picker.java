@@ -3,6 +3,8 @@ package worker;
 import fascia.Order;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+
 import util.MasterSystem;
 import warehousefloor.Location;
 
@@ -46,7 +48,7 @@ public class Picker extends Worker {
       displayString.append("\n");
 
     }
-    System.out.println(displayString.toString());
+    masterSystem.getLogger().log(Level.INFO,displayString.toString());
   }
 
   /**
@@ -55,8 +57,8 @@ public class Picker extends Worker {
   @Override
   void finishAction() {
     getCurrPickingReq().updateLocation(Location.marshall);
-    System.out.println(
-        "Picker " + getName() + " has gone to marshalling area.");
+    masterSystem.getLogger().log(Level.INFO,"Picker " + getName()
+        + " has gone to marshalling area.");
   }
 
   /**
@@ -90,8 +92,7 @@ public class Picker extends Worker {
       addScanCount();
       getToBeScanned().removeFirst();
     } else if (getCurrPickingReq() == null) {
-      System.out.println("Picker " + getName() + " tried to scan with no "
-          + "picking order assigned. Scan action aborted.");
+      masterSystem.getLogger().log(Level.WARNING, "Picker " + getName() + " Unneeded Scan!");
     }
   }
 
