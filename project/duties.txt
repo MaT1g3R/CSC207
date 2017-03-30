@@ -1,4 +1,5 @@
-﻿========================Tasbir Rahman=====================
+﻿Phase 1
+========================Tasbir Rahman=====================
 I converted all the print statements so that they use the logger.
 I added logging to all the events when read. I refactored a lot of
 the code so that the names are more descriptive. I also modified the 
@@ -36,3 +37,11 @@ the Sequencer class (up until we made some design changes near the end),
 and also the “generic software” that included the optimize method. I wrote
 test cases for these classes and also updated the UML diagram after each
 design change. We all took part in the design decisions for the program.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Phase 2
+========================Peijun Ma=========================
+I wrote all of the unit tests for phase 2 except for WorkerTest. I also
+implemented the rescan method in Worker.
+NOTE: In commit history, username is Umi and Unknown and email is 982341777@qq.com
