@@ -192,7 +192,7 @@ public class WarehouseFloorTest {
   @Test
   public void outPutResult() throws FileNotFoundException {
     warehouseFloor.writeLoadedOrders("TEST");
-    warehouseFloor.writeInventoryQuantities();
+    warehouseFloor.createOutputFiles();
     final File finalcsv = new File("tests/final.csv");
     final File orderscsv = new File("tests/orders.csv");
     ArrayList<String> actualFinal = CsvReadWrite.readCsv("tests/final.csv");

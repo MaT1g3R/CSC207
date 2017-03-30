@@ -151,7 +151,7 @@ public class Simulator {
       } else {
         masterSystem.getLogger().log(Level.SEVERE, "INVALID EVENT");
       }
-      warehouseFloor.writeInventoryQuantities();
+      warehouseFloor.createOutputFiles();
     }
   }
 
