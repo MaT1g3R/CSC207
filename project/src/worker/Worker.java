@@ -23,7 +23,7 @@ public abstract class Worker extends Observable {
   /**
    * Initialize a new instance of Worker.
    *
-   * @param name         the name of the worker
+   * @param name the name of the worker
    * @param masterSystem the MasterSystem the worker belongs to
    */
   Worker(String name, MasterSystem masterSystem) {
@@ -59,8 +59,8 @@ public abstract class Worker extends Observable {
   abstract void finishAction();
 
   /**
-   * The getExpectedScan order that the worker should scan in.
-   * The picker class overwrites this method.
+   * The getExpectedScan order that the worker should scan in. The picker class overwrites this
+   * method.
    *
    * @return The getExpectedScan order that the worker should scan in.
    */
@@ -80,21 +80,18 @@ public abstract class Worker extends Observable {
   /**
    * The result of a scan from a worker.
    *
-   * @param sku      the sku being scanned.
-   * @param expected the getExpectedScan sku to match up with the sku being
-   *                 scanned.
+   * @param sku the sku being scanned.
+   * @param expected the getExpectedScan sku to match up with the sku being scanned.
    * @return true if the scan matches, else returns false.
    */
   boolean scanResult(String sku, String expected) {
     if (sku.equals(expected)) {
-      masterSystem.getLogger()
-          .log(Level.INFO, getClass().getSimpleName() + " " + name
-              + " SKU: " + sku + " correct scan");
+      masterSystem.getLogger().log(Level.INFO,
+          getClass().getSimpleName() + " " + name + " SKU: " + sku + " correct scan");
       return true;
     } else {
-      masterSystem.getLogger()
-          .log(Level.WARNING, getClass().getSimpleName() + " "
-              + name + " SKU: " + sku + " incorrect scan");
+      masterSystem.getLogger().log(Level.WARNING,
+          getClass().getSimpleName() + " " + name + " SKU: " + sku + " incorrect scan");
       return false;
     }
   }
@@ -105,14 +102,13 @@ public abstract class Worker extends Observable {
    * @param sku the sku being scanned.
    */
   public void scan(String sku) {
-    masterSystem.getLogger().log(Level.INFO, getClass().getSimpleName()
-        + " " + name + " scanned sku: " + sku);
+    masterSystem.getLogger().log(Level.INFO,
+        getClass().getSimpleName() + " " + name + " scanned sku: " + sku);
     if (getCurrPickingReq() != null && scanResult(sku, getExpectedScan())) {
       addScanCount();
     } else if (getCurrPickingReq() == null) {
-      masterSystem.getLogger()
-          .log(Level.WARNING, getClass().getSimpleName() + " "
-              + getName() + " Unneeded Scan");
+      masterSystem.getLogger().log(Level.WARNING,
+          getClass().getSimpleName() + " " + getName() + " Unneeded Scan");
     }
   }
 
@@ -120,11 +116,10 @@ public abstract class Worker extends Observable {
    * An event for rescan.
    */
   public void rescan() {
-    masterSystem.getLogger()
-        .log(Level.INFO, getClass().getSimpleName() + " " + getName() + " "
-            + "rescanned");
+    masterSystem.getLogger().log(Level.INFO,
+        getClass().getSimpleName() + " " + getName() + " " + "rescanned");
     resetScanCount();
-    setToBeScanned(getScanOrder());
+    toBeScanned = getScanOrder();
   }
 
   /**
@@ -152,24 +147,6 @@ public abstract class Worker extends Observable {
    */
   public String getName() {
     return name;
-  }
-
-  /**
-   * A getter for scan count.
-   *
-   * @return scanCount
-   */
-  private int getScanCount() {
-    return scanCount;
-  }
-
-  /**
-   * A setter for toBeScanned.
-   *
-   * @param scanOrder sets the order that the sku's should be in.
-   */
-  private void setToBeScanned(LinkedList<String> scanOrder) {
-    toBeScanned = scanOrder;
   }
 
   /**
@@ -202,14 +179,12 @@ public abstract class Worker extends Observable {
     String job = getClass().getSimpleName();
     String name = getName();
     if (getCurrPickingReq() == null) {
-      masterSystem.getLogger().log(Level.WARNING, job + " " + name
-          + ", No requests to process!");
+      masterSystem.getLogger().log(Level.WARNING, job + " " + name + ", No requests to process!");
     } else {
-      masterSystem.getLogger()
-          .log(Level.WARNING, job + " " + name + " is ready.");
+      masterSystem.getLogger().log(Level.WARNING, job + " " + name + " is ready.");
       readyAction();
       resetScanCount();
-      setToBeScanned(getScanOrder());
+      toBeScanned = getScanOrder();
     }
   }
 
@@ -220,16 +195,14 @@ public abstract class Worker extends Observable {
     String job = getClass().getSimpleName();
     String name = getName();
     if (getCurrPickingReq() == null) {
-      masterSystem.getLogger().log(Level.WARNING, job + " " + name
-          + " can't finish with no request!");
-    } else if (getCurrPickingReq() != null
-        && getScanCount() < getScanOrder().size()) {
+      masterSystem.getLogger().log(Level.WARNING,
+          job + " " + name + " can't finish with no request!");
+    } else if (getCurrPickingReq() != null && scanCount < getScanOrder().size()) {
       getCurrPickingReq().updateLocation(Location.pick);
-      masterSystem.getLogger().log(Level.WARNING, job + name
-          + " can't finish without scanning all correct SKUs!");
-      masterSystem.getLogger().log(Level.WARNING, "Picking request "
-          + getCurrPickingReq().getId()
-          + " has been sent to be repicked.");
+      masterSystem.getLogger().log(Level.WARNING,
+          job + name + " can't finish without scanning all correct SKUs!");
+      masterSystem.getLogger().log(Level.WARNING,
+          "Picking request " + getCurrPickingReq().getId() + " has been sent to be repicked.");
     } else {
       finishAction();
     }
