@@ -22,3 +22,5 @@ lib/
 project/src/tests/orders\.csv
 !/project/src/
 /project/src/tests/final.csv
+
+project/log\.txt
