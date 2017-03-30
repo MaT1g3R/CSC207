@@ -7,8 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import util.MasterSystem;
 import warehousefloor.Location;
 
 /**
@@ -32,8 +30,8 @@ public class PickingRequestManager implements Observer {
   }
 
   /**
-   * This method is called whenever any PickingRequest is changed. Such as when it is ready for
-   * loading and sequencing.
+   * This method is called whenever any PickingRequest is changed. Such as when
+   * it is ready for loading and sequencing.
    *
    * @param request the observable object.
    * @param arg     an argument passed to the notifyObservers
@@ -88,14 +86,16 @@ public class PickingRequestManager implements Observer {
   }
 
   /**
-   * Get a picking request for the picker. Requests are sent in the order they are made.
+   * Get a picking request for the picker. Requests are sent in the order they
+   * are made.
    *
    * @return a picking request for the picker.
    */
   public PickingRequest getUnpickedRequest() {
     if (!outStandingPickingRequests.isEmpty()) {
       return popRequest(Location.pick);
-    } else if (orders.size() >= 4) { //Create one from earliest four orders if there aren't any.
+    } else if (orders.size()
+        >= 4) { //Create one from earliest four orders if there aren't any.
       return generatePickingReq();
     } else {
       return null;

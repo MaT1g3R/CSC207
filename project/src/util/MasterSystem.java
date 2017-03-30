@@ -1,14 +1,13 @@
 package util;
 
 import fascia.PickingRequestManager;
-import warehousefloor.WarehouseFloor;
-import worker.WorkerManager;
-
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import warehousefloor.WarehouseFloor;
+import worker.WorkerManager;
 
 /**
  * A class to keep track of all sub systems used in the program.
@@ -35,7 +34,7 @@ public class MasterSystem {
    * @param fileSystem            the fileSystem.
    * @param skuTranslator         the skuTranslator.
    */
-  public void setAll(
+  void setAll(
       WarehouseFloor warehouseFloor,
       WorkerManager workerManager,
       PickingRequestManager pickingRequestManager,
@@ -65,7 +64,8 @@ public class MasterSystem {
         this.logger.addHandler(fh);
       }
     } catch (IOException exception) {
-      System.out.println("Logging file could not be opened. Logging only to console");
+      System.out
+          .println("Logging file could not be opened. Logging only to console");
     }
     this.logger.addHandler(ch);
   }
