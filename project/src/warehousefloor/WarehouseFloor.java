@@ -134,7 +134,7 @@ public class WarehouseFloor {
     ArrayList<String> finalCsv = new ArrayList<>();
     //Create arrayList of Sku quantities
     for (String sku : this.inventory.keySet()) {
-      if (inventory.get(sku) < 30) {
+      if (inventory.get(sku) < maxStock) {
         finalCsv.add(
             masterSystem.getSkuTranslator().getLocation(sku) + "," + inventory
                 .get(sku));
