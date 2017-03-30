@@ -51,7 +51,6 @@ public class MasterSystem {
     this.skuTranslator = skuTranslator;
     this.warehouseFloor.setInventory();
     setLogger(makeFile);
-
   }
 
   /**
@@ -131,7 +130,7 @@ public class MasterSystem {
   }
 
   /**
-   * Returns the logger of the MasterSystem for use in other classes
+   * Returns the logger of the MasterSystem for use in other classes.
    */
   public Logger getLogger() {
     return this.logger;
