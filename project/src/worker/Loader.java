@@ -72,7 +72,7 @@ public class Loader extends Worker {
    * @param frontPallet the front pallet
    * @param backPallet  the back pallet
    */
-  void setPallets(String[] frontPallet, String[] backPallet) {
+  private void setPallets(String[] frontPallet, String[] backPallet) {
     this.frontPallet = frontPallet;
     this.backPallet = backPallet;
   }

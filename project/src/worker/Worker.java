@@ -158,7 +158,7 @@ public abstract class Worker extends Observable {
    *
    * @return scanCount
    */
-  int getScanCount() {
+  private int getScanCount() {
     return scanCount;
   }
 
@@ -190,7 +190,7 @@ public abstract class Worker extends Observable {
   /**
    * Resets the scanCount to 0.
    */
-  void resetScanCount() {
+  private void resetScanCount() {
     scanCount = 0;
   }
 
