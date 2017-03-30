@@ -2,7 +2,6 @@ package util;
 
 import fascia.PickingRequestManager;
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -59,7 +58,6 @@ public class MasterSystem {
    * @param makeFile weather if the logger is going to log to a file
    */
   private void setLogger(boolean makeFile) {
-    ConsoleHandler ch = new ConsoleHandler();
     this.logger = Logger.getLogger(getClass().getSimpleName());
     try {
       if (makeFile) {
@@ -71,7 +69,6 @@ public class MasterSystem {
       System.out
           .println("Logging file could not be opened. Logging only to console");
     }
-    this.logger.addHandler(ch);
   }
 
 
