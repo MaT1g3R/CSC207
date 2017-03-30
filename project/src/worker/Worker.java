@@ -21,8 +21,9 @@ public abstract class Worker extends Observable {
   private MasterSystem masterSystem;
 
   /**
-   * Initialize a new instance of Worker
-   * @param name the name of the worker
+   * Initialize a new instance of Worker.
+   *
+   * @param name         the name of the worker
    * @param masterSystem the MasterSystem the worker belongs to
    */
   Worker(String name, MasterSystem masterSystem) {
