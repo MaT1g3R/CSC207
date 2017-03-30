@@ -101,14 +101,9 @@ public abstract class Worker extends Observable {
   public void scan(String sku) {
     masterSystem.getLogger().log(Level.INFO, getClass().getSimpleName()
         + " " + name + " scanned sku: " + sku);
-    if (getCurrPickingReq() != null) {
-      if (!scanResult(sku, getExpectedScan())) {
-        masterSystem.getPickingRequestManager()
-            .update(getCurrPickingReq(), Location.load);
-      } else {
-        addScanCount();
-      }
-    } else {
+    if (getCurrPickingReq() != null && scanResult(sku, getExpectedScan())) {
+      addScanCount();
+    } else if (getCurrPickingReq() == null) {
       masterSystem.getLogger()
           .log(Level.WARNING, getClass().getSimpleName() + " "
               + getName() + " Unneeded Scan");
