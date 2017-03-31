@@ -1,4 +1,4 @@
-﻿Phase 2
+Phase 2
 ========================Tasbir Rahman=====================
 I converted all the print statements so that they use the logger.
 I added logging to all the events when read. I refactored a lot of
@@ -20,10 +20,9 @@ design decisions.
 NOTE: In commit history, username is betaman3 and email is chaitanya1998@gmail.com
 
 ========================Andrew Olechtchouk=========================
-I created, implemented, and documented the Abstract Worker class,
-the Sequencer class (up until we made some design changes near the end),
-and also the “generic software” that included the optimize method. I wrote
-test cases for these classes and also updated the UML diagram after each
-design change. We all took part in the design decisions for the program.
+I took part in redesigning and remaking the UML diagram along with 
+Chaitanya. I also made changes to documentation in some parts of the
+program by fixing things such as grammar and obsolete parts of
+the docstrings.
 
 
