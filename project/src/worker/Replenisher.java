@@ -1,8 +1,8 @@
 package worker;
 
+import java.util.logging.Level;
 import util.MasterSystem;
 
-import java.util.logging.Level;
 
 /**
  * This worker replenish the stock levels when asked to.

@@ -136,7 +136,7 @@ public class Simulator {
    */
   public void run() {
     for (String s : eventList) {
-      masterSystem.getLogger().log(Level.INFO, "SIMULATOR EVENT : " + s );
+      masterSystem.getLogger().log(Level.INFO, "SIMULATOR EVENT : " + s);
       if (isOrderMade(s)) {
         Order order = new Order(s, masterSystem.getSkuTranslator());
         masterSystem.getPickingRequestManager().addOrder(order);
