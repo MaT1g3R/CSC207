@@ -8,8 +8,10 @@ the walkthrough and created the TestSuite class along with updating
 help.txt to show how to run it. 
 
 ========================Peijun Ma=========================
+I broke up Warehouse class into smaller classes.I added FileSystem, PickingRequestManager, 
+WorkerManager, Location, MasterSystem classes. 
 I wrote all of the unit tests for phase 2 except for WorkerTest. I also
-implemented the rescan method in Worker.
+implemented the rescan method in Worker. I did some of the walkthrough.
 NOTE: In commit history, username is Umi and Unknown and email is 982341777@qq.com
 
 ==================Venkata Chaitanya Peesapati===================
