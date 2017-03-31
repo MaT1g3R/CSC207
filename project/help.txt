@@ -16,3 +16,8 @@ java util/Main ../fail_demo.txt
 
 After this, the program should run and automatically select files for input.
 It will output to orders.csv, final.csv and log.txt in project/.
+
+To compile and run tests, stay in the same directory and do these commands
+-------------------
+javac -cp lib/junit-4.12.jar:. tests/TestSuite.java
+java -cp lib/hamcrest-core-1.3.jar:lib/junit-4.12.jar:. org.junit.runner.JUnitCore tests.TestSuite
