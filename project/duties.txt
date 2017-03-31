@@ -2,11 +2,10 @@ Phase 2
 ========================Tasbir Rahman=====================
 I converted all the print statements so that they use the logger.
 I added logging to all the events when read. I refactored a lot of
-the code so that the names are more descriptive. I also modified the 
-documentation of a lot of the code to be more clear and added bits 
-and pieces of it throughout the program. I also removed some instances
-of hardcoding in WarehouseFloor and WorkerManager. I also did some of 
-the walkthrough as well.
+the code and documentation so that it is more descriptive. I also removed some 
+instances of hardcoding in WarehouseFloor and WorkerManager. I also did some of 
+the walkthrough and created the TestSuite class along with updating
+help.txt to show how to run it. 
 
 ========================Peijun Ma=========================
 I wrote all of the unit tests for phase 2 except for WorkerTest. I also
