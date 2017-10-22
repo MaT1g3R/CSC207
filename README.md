@@ -1,4 +1,5 @@
 Warehouse Simulation
+
 Copyright (C) 2017  Tasbir Rahman, Peijun Ma, Venkata Chaitanya Peesapati, Andrew Olechtchouk
 
 This program is free software: you can redistribute it and/or modify
